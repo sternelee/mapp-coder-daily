@@ -9,48 +9,75 @@
   .caidan
     margin-left 30px
   .title
-    width 64%
+    width 54%
+  .search
+    display flex
+    align-items center
+    input
+      width 60%
+      border 1px solid #ddd
+      border-radius 12px
+      margin 0 20px
+      font-size 30px
 
 .inner
   width 1500px;
+  height 100%
   display flex
   transition transform .2s linear
 
 
 .topics
-  display flex
-  flex-wrap wrap
   width: 750px
+  overflow-y: auto
+  max-height: 100%
   .topic
-    width 33%
+    width 250px
     display flex
     flex-direction: column
     align-items: center
     justify-content: center
     font-size 28px
-    margin-top 20px
+    margin-top 30px
+    float: left
     image
       width 120px
       height 120px
     text
       margin-top 8px
+      text-align center
+      display inline-block
+      height 60px
 
 .posts
   display flex
   flex-direction: column
   background #ddd
   width: 750px
+  max-height: auto
+  .the-topic
+    display flex
+    flex-direction: column
+    align-items: center
+    background #fff
+    padding 20px 0
+    image
+      width 160px
+      height 160px
+      border-radius: 50%
+    text
+      margin-top 8px
+      text-align center
   .post
     display flex
     flex-direction: column
     margin-top 20px
     background #fff
-    padding 0 20px 30px
     .topic
       display flex
       flex-direction: row
       align-items: center
-      padding 10px
+      padding 10px 30px
       image
         width 50px
         height 50px
@@ -64,13 +91,17 @@
       padding-top: 20px
       display flex
       flex-direction: column
+      padding-bottom 30px
       image
         margin: 0 auto
       .name
-        margin-bottom 10px
-      .tip
+        margin-bottom 20px
+        padding 0 30px
+      .tags
         font-size 26px
         display flex
         align-items: center
+        flex-wrap: wrap
+        padding 0 30px
         text
-          margin-left: 20px
+          margin-right: 20px

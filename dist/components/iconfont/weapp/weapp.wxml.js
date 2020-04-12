@@ -1,1 +1,1 @@
-(wx.webpackJsonp=wx.webpackJsonp||[]).push([[5],{"23":function(p,n,o){p.exports=o.p+"components/iconfont/weapp/weapp.wxml"}},[[23,0]]]);
+(wx.webpackJsonp=wx.webpackJsonp||[]).push([[6],{"34":function(p,n,o){p.exports=o.p+"components/iconfont/weapp/weapp.wxml"}},[[34,0]]]);

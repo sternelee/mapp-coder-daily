@@ -1,0 +1,1 @@
+.post{width:100%;overflow-x:hidden}.header,.post .title{color:#fff}.post .title text{border-bottom:1rpx solid #ddd}.header{text-align:center;display:flex;align-items:center}.header .title{width:64%}.content{padding:0 20rpx}

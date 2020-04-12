@@ -1,0 +1,14 @@
+<block wx:if="{{$taroCompReady}}">
+    <view class="post">
+        <view class="header" bindtap="onHome" style="{{anonymousState__temp}}">
+            <view>
+                <icon-font compid="{{$compid__4}}"></icon-font>
+            </view><text class="title">详情页</text>
+        </view>
+        <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl"><text>{{title}}</text>
+        </view>
+        <view class="content">
+            <wemark md="{{md}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
+        </view>
+    </view>
+</block>

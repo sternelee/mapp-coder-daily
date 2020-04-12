@@ -127,7 +127,7 @@ class Index extends Component {
       <View className='post'>
         <View className='header' onClick={this.onHome} style={{padding: `${top}px 0 0 10px`, height: `35px`}}>
           <View>
-            <IconFont name='home' size={50} color='#fff' />
+            <IconFont name='home' size={50} color='#000' />
           </View>
           <Text className='title'>详情页</Text>
         </View>

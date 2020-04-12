@@ -1,6 +1,6 @@
 Component({
   properties: {
-    // caidan1 | gengduo | check | check1 | home | caidan
+    // sousuo | caidan1 | gengduo | check | check1 | home | caidan
     name: {
       type: String,
     },

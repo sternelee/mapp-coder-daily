@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text, Image, Input, ScrollView } from '@tarojs/components'
 import IconFont from '../../components/iconfont'
 import { Uri } from '../../utils/index'
 import { setGlobalData } from '../../utils/store'
@@ -49,12 +49,16 @@ export default class Index extends Component {
       views: number
     }[]
     show: boolean
+    pub: string
+    keyword: string
   } = {
     top: 0,
     topics: [],
     populars: [],
     posts: [],
-    show: true
+    show: true,
+    pub: '',
+    keyword: ''
   }
 
   onShareAppMessage (ops) {
@@ -120,24 +124,30 @@ export default class Index extends Component {
       })
     })
   }
-  getPost = () => {
+  getPost = (pub = '') => {
+    const variables = pub ? `"pub":"${pub}"` : `"sortBy":"popularity"`
+    const query = `query ${pub ? 'fetchPostsByPublication' : 'fetchLatest'}($params: ${pub ? 'PostByPublicationInput' : 'QueryPostInput'}) { ${pub ? 'postsByPublication' : 'latest'}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }`
     Taro.request({
       url: `${Uri}graphql`,
       data: {
-        query: 'query fetchLatest($params: QueryPostInput) { latest(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }',
-        variables: '{"params":{"latest":"2020-04-12T04:45:16.804Z","page":0,"pageSize":30,"sortBy":"popularity"}}'
-        // {"params":{"latest":"2020-04-12T09:43:23.995Z","page":0,"pageSize":30,"pub":"angular"}}
+        query,
+        variables: `{"params":{"latest":"${new Date().toISOString()}","page":0,"pageSize":30,${variables}}}`
       }
     }).then(res => {
       const data = res.data.data
       this.setState({
-        posts: data.latest
+        show: true,
+        posts: pub ? data.postsByPublication : data.latest
       })
     })
   }
 
-  onTopic = (id) => {
-    console.log(id)
+  onTopic = (name: string) => {
+    this.setState({
+      pub: name,
+      keyword: ''
+    })
+    this.getPost(name)
   }
 
   onPost = (id) => {
@@ -149,42 +159,66 @@ export default class Index extends Component {
     })
   }
 
+  onSearch = (e) => {
+    this.setState({
+      keyword: e.detail.value.toLowerCase()
+    })
+  }
+
   render () {
-    const { top, topics, posts, populars, show } = this.state
-    // const tags = topics.filter(v => populars.includes(v.id))
+    const { top, topics, posts, populars, show, pub, keyword } = this.state
+    const theTopic = pub ? topics.filter(v => v.id === pub)[0] : {image: '', name: ''}
+    const tags = keyword ? topics.filter(v => v.name.toLowerCase().indexOf(keyword) > -1) : topics
     return (
       <View className='index'>
         <View className='header' style={{color: '#1c1e21', padding: `${top}px 0 0 10px`, height: `35px`}}>
           <View className='gengduo' onClick={() => this.setState({show: false})}>
-            <IconFont name='gengduo' size={40} color='#000' />
+            <IconFont name='gengduo' size={50} color='#000' />
           </View>
           <View className='caidan' onClick={() => this.setState({show: true})}>
-            <IconFont name='caidan' size={50} color='#000' />
+            <IconFont name='caidan' size={60} color='#000' />
           </View>
-          <Text className='title'>程序猿日常</Text>
+          {
+            !show &&
+            <View className='search'>
+              <Input value={keyword} onInput={this.onSearch} placeholder='搜索主题' />
+              <IconFont name='sousuo' size={40} color='#000' />
+            </View>
+          }
+          {
+            show &&
+            <Text className='title'>程序猿 Daily</Text>
+          }
         </View>
         <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
-          <View className='topics'>
+          <ScrollView className='topics' scrollY>
             {
-              topics.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
+              tags.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
                 <Image src={v.image} mode='aspectFit' />
                 <Text>{v.name}</Text>
                 {/* <IconFont name='home' size={50} color='#000' /> */}
               </View>)
             }
-          </View>
-          <View className='posts'>
+          </ScrollView>
+          <ScrollView scrollY className='posts'>
+            {
+              pub &&
+              <View className='the-topic'>
+                <Image src={theTopic.image} mode='aspectFit' />
+                <Text>{theTopic.name}</Text>
+              </View>
+            }
             {
               posts.map(v => <View key={v.id} className='post'>
                 <View className='topic'>
                   <Image src={v.publication.image} mode='aspectFit' />
                   <Text>{v.publication.name}</Text>
-                  <Text className='date'>{v.publishedAt}</Text>
+                  <Text className='date'>{new Date(v.createdAt).toLocaleDateString()}</Text>
                 </View>
                 <View className='content'>
                   <Image src={v.image} onClick={this.onPost.bind(this, v.id)} />
                   <Text className='name' onClick={this.onPost.bind(this, v.id)}>{v.title}</Text>
-                  <View className='tip'>
+                  <View className='tags'>
                     {
                       v.tags.map((tag, index) => <Text key={v.id + index}>{tag}</Text>)
                     }
@@ -192,7 +226,7 @@ export default class Index extends Component {
                 </View>
               </View>)
             }
-          </View>
+          </ScrollView>
         </View>
       </View>
     )
