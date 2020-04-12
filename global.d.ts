@@ -16,3 +16,10 @@ declare const process: {
     [key: string]: any;
   }
 }
+
+declare namespace JSX {
+  interface IntrinsicElements {
+      'import': React.DetailedHTMLProps<React.EmbedHTMLAttributes<HTMLEmbedElement>, HTMLEmbedElement>
+      'wemark': any
+  }
+}
