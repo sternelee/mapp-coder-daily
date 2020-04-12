@@ -1,0 +1,90 @@
+.inner {
+  overflow-x: hidden;
+}
+.header {
+  text-align: center;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+.header .title {
+  width: 84%;
+}
+.inner {
+  width: 1500rpx;
+  display: flex;
+  transition: -webkit-transform 0.2s linear;
+  transition: transform 0.2s linear;
+  transition: transform 0.2s linear, -webkit-transform 0.2s linear;
+}
+.topics {
+  display: flex;
+  flex-wrap: wrap;
+  width: 750rpx;
+}
+.topics .topic {
+  width: 33%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  margin-top: 20rpx;
+}
+.topics .topic image {
+  width: 120rpx;
+  height: 120rpx;
+}
+.topics .topic text {
+  margin-top: 8rpx;
+}
+.posts {
+  display: flex;
+  flex-direction: column;
+  background: #ddd;
+  width: 750rpx;
+}
+.posts .post {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20rpx;
+  background: #fff;
+  padding: 0 20rpx 30rpx;
+}
+.posts .post .topic {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10rpx;
+}
+.posts .post .topic image {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 6rpx;
+}
+.posts .post .topic text {
+  margin-left: 20rpx;
+}
+.posts .post .topic .date {
+  margin-left: auto;
+}
+.posts .post .content {
+  border-top: 2rpx solid #ddd;
+  padding-top: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+.posts .post .content image {
+  margin: 0 auto;
+}
+.posts .post .content .name {
+  margin-bottom: 10rpx;
+}
+.posts .post .content .tip {
+  font-size: 26rpx;
+  display: flex;
+  align-items: center;
+}
+.posts .post .content .tip text {
+  margin-left: 20rpx;
+}

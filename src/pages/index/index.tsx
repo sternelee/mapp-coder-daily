@@ -1,28 +1,10 @@
-import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text, Imgae } from '@tarojs/components'
-import { observer, inject } from '@tarojs/mobx'
-// import IconFont from '../../components/iconfont/index.weapp'
+import { View, Text, Image } from '@tarojs/components'
+import IconFont from '../../components/iconfont'
 import { Uri } from '../../utils/index'
-
 import './index.styl'
 
-type PageStateProps = {
-  counterStore: {
-    counter: number,
-    increment: Function,
-    decrement: Function,
-    incrementAsync: Function
-  }
-}
-
-interface Index {
-  props: PageStateProps;
-}
-
-@inject('counterStore')
-@observer
-class Index extends Component {
+export default class Index extends Component {
 
   /**
    * 指定config的类型声明为: Taro.Config
@@ -35,7 +17,6 @@ class Index extends Component {
     navigationBarTitleText: '程序猿日常',
     navigationStyle: 'custom'
   }
-
   state: {
     top: number
     topics: {
@@ -45,9 +26,34 @@ class Index extends Component {
       name: string
       twitter: string
     }[]
+    populars: string[]
+    posts: {
+      bookmarked: boolean
+      createdAt: string
+      id: string
+      image: string
+      placeholder: string
+      publication: {
+        id: string
+        image: string
+        name: string
+      }
+      publishedAt: string
+      ratio: number
+      read: boolean
+      readTime: number
+      tags: string[]
+      title: string
+      url: string
+      views: number
+    }[]
+    show: boolean
   } = {
     top: 0,
-    topics: []
+    topics: [],
+    populars: [],
+    posts: [],
+    show: true
   }
 
   onShareAppMessage (ops) {
@@ -72,8 +78,7 @@ class Index extends Component {
   componentWillMount () {
     const menuBtn = Taro.getMenuButtonBoundingClientRect()
     this.setState({
-      top: menuBtn.top + 2,
-      // topH: menuBtn.height
+      top: menuBtn.top + 2
     })
    }
 
@@ -83,6 +88,7 @@ class Index extends Component {
 
   componentDidMount () { 
     this.getTopics()
+    this.getPopular()
   }
 
   componentWillUnmount () { }
@@ -97,46 +103,84 @@ class Index extends Component {
     Taro.request({
       url: `${Uri}v1/publications`
     }).then(res => {
+      this.setState({
+        topics: res.data
+      })
       console.log(res)
     })
   }
 
   getPopular = () => {
     Taro.request({
-      url: `${Uri}v1/popular`
+      url: `${Uri}v1/tags/popular`
     }).then(res => {
-      console.log(res)
+      const tags = res.data.map(v => v.name)
+      this.setState({
+        populars: tags
+      })
     })
   }
   getPost = () => {
-
+    Taro.request({
+      url: `${Uri}graphql`,
+      data: {
+        query: 'query fetchLatest($params: QueryPostInput) { latest(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }',
+        variables: '{"params":{"latest":"2020-04-12T04:45:16.804Z","page":0,"pageSize":30,"sortBy":"popularity"}}'
+      }
+    }).then(res => {
+      const data = res.data.data
+      this.setState({
+        posts: data.latest
+      })
+    })
   }
 
   render () {
-    const { top, topics } = this.state
+    const { top, topics, posts, populars, show } = this.state
+    const tags = topics.filter(v => populars.includes(v.name))
     return (
       <View className='index'>
         <View className='header' style={{color: '#1c1e21', padding: `${top}px 0 0 10px`, height: `35px`}}>
-          <View className='daohang'>
-            {/* <IconFont name='gengduo' size={50} color='#fff' /> */}
+          <View className='daohang' onClick={() => this.setState({show: false})}>
+            <IconFont name='gengduo' size={40} color='#000' />
           </View>
-          <View className='list'>
-            {/* <IconFont name='caidan' size={50} color='#fff' /> */}
+          <View className='list' onClick={() => this.setState({show: true})}>
+            <IconFont name='caidan' size={50} color='#000' />
           </View>
           <Text className='title'>程序猿日常</Text>
         </View>
-        <View className='topics'>
-          {
-            topics.map(v => <View key={v.id} className='topic'>
-              <Imgae src={v.image} mode='aspectFit'></Imgae>
-              <Text>{v.name}</Text>
-              <IconFont name='home' size={50} color='#000' />
-            </View>)
-          }
+        <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
+          <View className='topics'>
+            {
+              tags.map(v => <View key={v.id} className='topic'>
+                <Image src={v.image} mode='aspectFit' />
+                <Text>{v.name}</Text>
+                {/* <IconFont name='home' size={50} color='#000' /> */}
+              </View>)
+            }
+          </View>
+          <View className='posts'>
+            {
+              posts.map(v => <View key={v.id} className='post'>
+                <View className='topic'>
+                  <Image src={v.publication.image} mode='aspectFit' />
+                  <Text>{v.publication.name}</Text>
+                  <Text className='date'>{v.publishedAt}</Text>
+                </View>
+                <View className='content'>
+                  <Image src={v.image} />
+                  <Text className='name'>{v.title}</Text>
+                  <View className='tip'>
+                    {
+                      v.tags.map((tag, index) => <Text key={v.id + index}>{tag}</Text>)
+                    }
+                  </View>
+                </View>
+              </View>)
+            }
+          </View>
         </View>
       </View>
     )
   }
 }
-
-export default Index  as ComponentType

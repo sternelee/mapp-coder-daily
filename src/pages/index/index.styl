@@ -1,3 +1,6 @@
+.inner
+  overflow-x: hidden
+
 .header
   text-align center
   color #fff
@@ -7,9 +10,66 @@
     width 84%
     // color: #fff
 
+.inner
+  width 1500px;
+  display flex
+  transition transform .2s linear
+
+
 .topics
   display flex
   flex-wrap wrap
+  width: 750px
   .topic
     width 33%
     display flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    font-size 28px
+    margin-top 20px
+    image
+      width 120px
+      height 120px
+    text
+      margin-top 8px
+
+.posts
+  display flex
+  flex-direction: column
+  background #ddd
+  width: 750px
+  .post
+    display flex
+    flex-direction: column
+    margin-top 20px
+    background #fff
+    padding 0 20px 30px
+    .topic
+      display flex
+      flex-direction: row
+      align-items: center
+      padding 10px
+      image
+        width 50px
+        height 50px
+        border-radius 6px
+      text
+        margin-left: 20px
+      .date
+        margin-left: auto
+    .content
+      border-top 2px solid #ddd
+      padding-top: 20px
+      display flex
+      flex-direction: column
+      image
+        margin: 0 auto
+      .name
+        margin-bottom 10px
+      .tip
+        font-size 26px
+        display flex
+        align-items: center
+        text
+          margin-left: 20px

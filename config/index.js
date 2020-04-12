@@ -1,6 +1,6 @@
 const config = {
-  projectName: 'mapp-coder-daily',
-  date: '2020-4-9',
+  projectName: 'mapp-coder-dy',
+  date: '2020-4-12',
   designWidth: 750,
   deviceRatio: {
     '640': 2.34 / 2,
@@ -21,14 +21,14 @@ const config = {
       'transform-class-properties',
       'transform-object-rest-spread',
       ['transform-runtime', {
-          helpers: false,
-          polyfill: false,
-          regenerator: true,
-          moduleName: 'babel-runtime'
-        }
-      ]
+        'helpers': false,
+        'polyfill': false,
+        'regenerator': true,
+        'moduleName': 'babel-runtime'
+      }]
     ]
   },
+  plugins: [],
   defineConstants: {
   },
   copy: {
@@ -44,21 +44,9 @@ const config = {
   },
   mini: {
     postcss: {
-      autoprefixer: {
-        enable: true,
-        config: {
-          browsers: [
-            'last 3 versions',
-            'Android >= 4.1',
-            'ios >= 8'
-          ]
-        }
-      },
       pxtransform: {
         enable: true,
-        config: {
-
-        }
+        config: {}
       },
       url: {
         enable: true,
