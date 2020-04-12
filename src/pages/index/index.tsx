@@ -51,6 +51,8 @@ export default class Index extends Component {
     show: boolean
     pub: string
     keyword: string
+    innerHeight: number
+    page: number
   } = {
     top: 0,
     topics: [],
@@ -58,7 +60,9 @@ export default class Index extends Component {
     posts: [],
     show: true,
     pub: '',
-    keyword: ''
+    keyword: '',
+    innerHeight: 750,
+    page: 0
   }
 
   onShareAppMessage (ops) {
@@ -80,10 +84,12 @@ export default class Index extends Component {
     }
   }
 
-  componentWillMount () {
+  async componentWillMount () {
     const menuBtn = Taro.getMenuButtonBoundingClientRect()
+    const info = await Taro.getSystemInfoSync()
     this.setState({
-      top: menuBtn.top + 2
+      top: menuBtn.top + 2,
+      innerHeight: info.windowHeight
     })
    }
 
@@ -124,14 +130,15 @@ export default class Index extends Component {
       })
     })
   }
-  getPost = (pub = '') => {
+  getPost = () => {
+    const { page, pub } = this.state
     const variables = pub ? `"pub":"${pub}"` : `"sortBy":"popularity"`
     const query = `query ${pub ? 'fetchPostsByPublication' : 'fetchLatest'}($params: ${pub ? 'PostByPublicationInput' : 'QueryPostInput'}) { ${pub ? 'postsByPublication' : 'latest'}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }`
     Taro.request({
       url: `${Uri}graphql`,
       data: {
         query,
-        variables: `{"params":{"latest":"${new Date().toISOString()}","page":0,"pageSize":30,${variables}}}`
+        variables: `{"params":{"latest":"${new Date().toISOString()}","page":${page},"pageSize":30,${variables}}}`
       }
     }).then(res => {
       const data = res.data.data
@@ -145,9 +152,9 @@ export default class Index extends Component {
   onTopic = (name: string) => {
     this.setState({
       pub: name,
-      keyword: ''
-    })
-    this.getPost(name)
+      keyword: '',
+      page: 0
+    }, () => this.getPost())
   }
 
   onPost = (id) => {
@@ -165,8 +172,25 @@ export default class Index extends Component {
     })
   }
 
+  onHome = () => {
+    this.setState({
+      show: true,
+      pub: '',
+      page: 0
+    }, () => {
+      this.getPost()
+    })
+  }
+
+  onNext = () => {
+    const { page } = this.state
+    this.setState({
+      page: page + 1
+    }, () => this.getPost())
+  }
+
   render () {
-    const { top, topics, posts, populars, show, pub, keyword } = this.state
+    const { top, topics, posts, populars, show, pub, keyword, innerHeight } = this.state
     const theTopic = pub ? topics.filter(v => v.id === pub)[0] : {image: '', name: ''}
     const tags = keyword ? topics.filter(v => v.name.toLowerCase().indexOf(keyword) > -1) : topics
     return (
@@ -175,14 +199,14 @@ export default class Index extends Component {
           <View className='gengduo' onClick={() => this.setState({show: false})}>
             <IconFont name='gengduo' size={50} color='#000' />
           </View>
-          <View className='caidan' onClick={() => this.setState({show: true})}>
+          <View className='caidan' onClick={this.onHome}>
             <IconFont name='caidan' size={60} color='#000' />
           </View>
           {
             !show &&
             <View className='search'>
               <Input value={keyword} onInput={this.onSearch} placeholder='搜索主题' />
-              <IconFont name='sousuo' size={40} color='#000' />
+              <IconFont name='sousuo' size={30} color='#000' />
             </View>
           }
           {
@@ -191,7 +215,7 @@ export default class Index extends Component {
           }
         </View>
         <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
-          <ScrollView className='topics' scrollY>
+          <ScrollView className='topics' scrollY style={{height: `${innerHeight - top - 35}px`}}>
             {
               tags.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
                 <Image src={v.image} mode='aspectFit' />
@@ -200,7 +224,7 @@ export default class Index extends Component {
               </View>)
             }
           </ScrollView>
-          <ScrollView scrollY className='posts'>
+          <ScrollView scrollY lowerThreshold={20} className='posts' style={{height: `${innerHeight - top - 35}px`}} onScrollToLower={this.onNext}>
             {
               pub &&
               <View className='the-topic'>
