@@ -106,7 +106,6 @@ export default class Index extends Component {
       this.setState({
         topics: res.data
       })
-      console.log(res)
     })
   }
 
@@ -137,14 +136,14 @@ export default class Index extends Component {
 
   render () {
     const { top, topics, posts, populars, show } = this.state
-    const tags = topics.filter(v => populars.includes(v.name))
+    // const tags = topics.filter(v => populars.includes(v.id))
     return (
       <View className='index'>
         <View className='header' style={{color: '#1c1e21', padding: `${top}px 0 0 10px`, height: `35px`}}>
-          <View className='daohang' onClick={() => this.setState({show: false})}>
+          <View className='gengduo' onClick={() => this.setState({show: false})}>
             <IconFont name='gengduo' size={40} color='#000' />
           </View>
-          <View className='list' onClick={() => this.setState({show: true})}>
+          <View className='caidan' onClick={() => this.setState({show: true})}>
             <IconFont name='caidan' size={50} color='#000' />
           </View>
           <Text className='title'>程序猿日常</Text>
@@ -152,7 +151,7 @@ export default class Index extends Component {
         <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
           <View className='topics'>
             {
-              tags.map(v => <View key={v.id} className='topic'>
+              topics.map(v => <View key={v.id} className='topic'>
                 <Image src={v.image} mode='aspectFit' />
                 <Text>{v.name}</Text>
                 {/* <IconFont name='home' size={50} color='#000' /> */}
