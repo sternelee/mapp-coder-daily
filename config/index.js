@@ -31,6 +31,17 @@ const config = {
   },
   defineConstants: {
   },
+  copy: {
+    patterns: [
+      {
+        from: 'src/wemark',
+        to: 'dist/wemark',
+      },
+      { from: './sitemap.json', to: './dist/'}
+    ],
+    options: {
+    }
+  },
   mini: {
     postcss: {
       autoprefixer: {

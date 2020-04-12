@@ -1,7 +1,9 @@
 import { ComponentType } from 'react'
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Button, Text } from '@tarojs/components'
+import { View, Button, Text, Imgae } from '@tarojs/components'
 import { observer, inject } from '@tarojs/mobx'
+// import IconFont from '../../components/iconfont/index.weapp'
+import { Uri } from '../../utils/index'
 
 import './index.styl'
 
@@ -30,46 +32,108 @@ class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   config: Config = {
-    navigationBarTitleText: '首页'
+    navigationBarTitleText: '程序猿日常',
+    navigationStyle: 'custom'
   }
 
-  componentWillMount () { }
+  state: {
+    top: number
+    topics: {
+      enabled: boolean
+      id: string
+      image: string
+      name: string
+      twitter: string
+    }[]
+  } = {
+    top: 0,
+    topics: []
+  }
+
+  onShareAppMessage (ops) {
+    if (ops.from === 'button') {
+      // 来自页面内转发按钮
+      console.log(ops.target)
+    }
+    return {
+      title: `程序猿日报`,
+      path: `pages/index/index`,
+      success: function (res) {
+        // 转发成功
+        console.log("转发成功:" + JSON.stringify(res));
+      },
+      fail: function (res) {
+        // 转发失败
+        console.log("转发失败:" + JSON.stringify(res));
+      }
+    }
+  }
+
+  componentWillMount () {
+    const menuBtn = Taro.getMenuButtonBoundingClientRect()
+    this.setState({
+      top: menuBtn.top + 2,
+      // topH: menuBtn.height
+    })
+   }
 
   componentWillReact () {
     console.log('componentWillReact')
   }
 
-  componentDidMount () { }
+  componentDidMount () { 
+    this.getTopics()
+  }
 
   componentWillUnmount () { }
 
-  componentDidShow () { }
+  componentDidShow () { 
+    this.getPost()
+  }
 
   componentDidHide () { }
 
-  increment = () => {
-    const { counterStore } = this.props
-    counterStore.increment()
+  getTopics = () => {
+    Taro.request({
+      url: `${Uri}v1/publications`
+    }).then(res => {
+      console.log(res)
+    })
   }
 
-  decrement = () => {
-    const { counterStore } = this.props
-    counterStore.decrement()
+  getPopular = () => {
+    Taro.request({
+      url: `${Uri}v1/popular`
+    }).then(res => {
+      console.log(res)
+    })
   }
+  getPost = () => {
 
-  incrementAsync = () => {
-    const { counterStore } = this.props
-    counterStore.incrementAsync()
   }
 
   render () {
-    const { counterStore: { counter } } = this.props
+    const { top, topics } = this.state
     return (
       <View className='index'>
-        <Button onClick={this.increment}>+</Button>
-        <Button onClick={this.decrement}>-</Button>
-        <Button onClick={this.incrementAsync}>Add Async</Button>
-        <Text>{counter}</Text>
+        <View className='header' style={{color: '#1c1e21', padding: `${top}px 0 0 10px`, height: `35px`}}>
+          <View className='daohang'>
+            {/* <IconFont name='gengduo' size={50} color='#fff' /> */}
+          </View>
+          <View className='list'>
+            {/* <IconFont name='caidan' size={50} color='#fff' /> */}
+          </View>
+          <Text className='title'>程序猿日常</Text>
+        </View>
+        <View className='topics'>
+          {
+            topics.map(v => <View key={v.id} className='topic'>
+              <Imgae src={v.image} mode='aspectFit'></Imgae>
+              <Text>{v.name}</Text>
+              <IconFont name='home' size={50} color='#000' />
+            </View>)
+          }
+        </View>
       </View>
     )
   }
