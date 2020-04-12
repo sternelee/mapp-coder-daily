@@ -2,6 +2,7 @@ import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
 import IconFont from '../../components/iconfont'
 import { Uri } from '../../utils/index'
+import { setGlobalData } from '../../utils/store'
 import './index.styl'
 
 export default class Index extends Component {
@@ -125,12 +126,26 @@ export default class Index extends Component {
       data: {
         query: 'query fetchLatest($params: QueryPostInput) { latest(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }',
         variables: '{"params":{"latest":"2020-04-12T04:45:16.804Z","page":0,"pageSize":30,"sortBy":"popularity"}}'
+        // {"params":{"latest":"2020-04-12T09:43:23.995Z","page":0,"pageSize":30,"pub":"angular"}}
       }
     }).then(res => {
       const data = res.data.data
       this.setState({
         posts: data.latest
       })
+    })
+  }
+
+  onTopic = (id) => {
+    console.log(id)
+  }
+
+  onPost = (id) => {
+    console.log(id)
+    setGlobalData('pid', id)
+    // setGlobalData('url', url)
+    Taro.navigateTo({
+      url: `/pages/post/index?&id=${id}`
     })
   }
 
@@ -151,7 +166,7 @@ export default class Index extends Component {
         <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
           <View className='topics'>
             {
-              topics.map(v => <View key={v.id} className='topic'>
+              topics.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
                 <Image src={v.image} mode='aspectFit' />
                 <Text>{v.name}</Text>
                 {/* <IconFont name='home' size={50} color='#000' /> */}
@@ -167,8 +182,8 @@ export default class Index extends Component {
                   <Text className='date'>{v.publishedAt}</Text>
                 </View>
                 <View className='content'>
-                  <Image src={v.image} />
-                  <Text className='name'>{v.title}</Text>
+                  <Image src={v.image} onClick={this.onPost.bind(this, v.id)} />
+                  <Text className='name' onClick={this.onPost.bind(this, v.id)}>{v.title}</Text>
                   <View className='tip'>
                     {
                       v.tags.map((tag, index) => <Text key={v.id + index}>{tag}</Text>)
