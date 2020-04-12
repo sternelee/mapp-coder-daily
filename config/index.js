@@ -45,7 +45,9 @@ const config = {
   mini: {
     compile: {
       exclude: [
-        'src/wemark/remarkable.js',
+        function (modulePath) {
+          return modulePath.indexOf('remarkable') >= 0
+        }
       ]
     },
     postcss: {

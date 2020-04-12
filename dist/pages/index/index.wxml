@@ -9,8 +9,8 @@
             </view>
             <block wx:if="{{!show}}">
                 <view class="search">
-                    <input value="{{keyword}}" bindinput="onSearch" placeholder="搜索主题" />
                     <icon-font compid="{{$compid__7}}"></icon-font>
+                    <input value="{{keyword}}" bindinput="onSearch" placeholder="搜索主题" />
                 </view>
             </block>
             <block wx:if="{{show}}"><text class="title">程序猿 Daily</text>

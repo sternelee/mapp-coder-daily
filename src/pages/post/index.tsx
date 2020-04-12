@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from '@tarojs/taro'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import IconFont from '../../components/iconfont'
 import { fixUrl } from '../../utils/index'
 
@@ -25,7 +25,8 @@ class Index extends Component {
     md: '',
     title: '',
     top: 0,
-    url: ''
+    url: '',
+    img: ''
   }
 
   onShareAppMessage (ops) {
@@ -93,6 +94,7 @@ class Index extends Component {
     this.setState({
       title: data.title,
       url: data.url,
+      img: data.lead_image_url,
       md: content
     })
   }
@@ -122,7 +124,7 @@ class Index extends Component {
   }
 
   render () {
-    const { md, title, top } = this.state
+    const { md, title, top, img } = this.state
     return (
       <View className='post'>
         <View className='header' onClick={this.onHome} style={{padding: `${top}px 0 0 10px`, height: `35px`}}>
@@ -137,6 +139,10 @@ class Index extends Component {
           </Text>
         </View>
         <View className='content'>
+          {
+            img &&
+            <Image src={img} mode='aspectFit' />
+          }
           <wemark md={md} link highlight type='wemark' />
         </View>
       </View>

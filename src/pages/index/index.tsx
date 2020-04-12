@@ -134,6 +134,9 @@ export default class Index extends Component {
     const { page, pub } = this.state
     const variables = pub ? `"pub":"${pub}"` : `"sortBy":"popularity"`
     const query = `query ${pub ? 'fetchPostsByPublication' : 'fetchLatest'}($params: ${pub ? 'PostByPublicationInput' : 'QueryPostInput'}) { ${pub ? 'postsByPublication' : 'latest'}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }`
+    Taro.showLoading({
+      title: 'Loading ...'
+    })
     Taro.request({
       url: `${Uri}graphql`,
       data: {
@@ -142,9 +145,16 @@ export default class Index extends Component {
       }
     }).then(res => {
       const data = res.data.data
+      Taro.hideLoading()
       this.setState({
         show: true,
         posts: pub ? data.postsByPublication : data.latest
+      })
+    }).catch(() => {
+      Taro.hideLoading()
+      Taro.showToast({
+        title: '数据拉取失败',
+        duration: 2000
       })
     })
   }
@@ -205,8 +215,8 @@ export default class Index extends Component {
           {
             !show &&
             <View className='search'>
-              <Input value={keyword} onInput={this.onSearch} placeholder='搜索主题' />
               <IconFont name='sousuo' size={30} color='#000' />
+              <Input value={keyword} onInput={this.onSearch} placeholder='搜索主题' />
             </View>
           }
           {

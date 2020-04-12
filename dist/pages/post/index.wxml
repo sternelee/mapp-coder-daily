@@ -8,6 +8,9 @@
         <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl"><text>{{title}}</text>
         </view>
         <view class="content">
+            <block wx:if="{{img}}">
+                <image src="{{img}}" mode="aspectFit"></image>
+            </block>
             <wemark md="{{md}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
         </view>
     </view>
