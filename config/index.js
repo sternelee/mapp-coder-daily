@@ -43,6 +43,11 @@ const config = {
     }
   },
   mini: {
+    compile: {
+      exclude: [
+        'src/wemark/remarkable.js',
+      ]
+    },
     postcss: {
       pxtransform: {
         enable: true,
