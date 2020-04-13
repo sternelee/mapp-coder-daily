@@ -4,7 +4,7 @@
             <view class="gengduo" bindtap="anonymousFunc0">
                 <icon-font compid="{{$compid__5}}"></icon-font>
             </view>
-            <view class="caidan" bindtap="onHome">
+            <view class="caidan" bindtap="onShowTag">
                 <icon-font compid="{{$compid__6}}"></icon-font>
             </view>
             <block wx:if="{{!show}}">
@@ -13,28 +13,30 @@
                     <input value="{{keyword}}" bindinput="onSearch" placeholder="搜索主题" />
                 </view>
             </block>
-            <block wx:if="{{show}}"><text class="title">程序猿 Daily</text>
+            <block wx:if="{{show}}"><text class="title" bindtap="onHome">程序猿 Daily</text>
             </block>
         </view>
         <view class="inner" style="{{anonymousState__temp2}}">
-            <scroll-view class="topics" scroll-y="{{true}}" style="{{anonymousState__temp3}}">
-                <view wx:key="id" class="topic" bindtap="onTopic" wx:for="{{tags}}" wx:for-item="v" wx:for-index="_anonIdx2" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">
+            <scroll-view enable-flex="{{true}}" class="topics" scroll-y="{{true}}" style="{{anonymousState__temp3}}">
+                <view wx:key="id" class="topic" bindtap="onTopic" wx:for="{{pubs}}" wx:for-item="v" wx:for-index="_anonIdx2" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">
                     <image src="{{v.image}}" mode="aspectFit"></image><text>{{v.name}}</text>
                 </view>
             </scroll-view>
-            <scroll-view scroll-y="{{true}}" lower-threshold="{{20}}" class="posts" style="{{anonymousState__temp4}}" bindscrolltolower="onNext">
+            <scroll-view enable-flex="{{true}}" scroll-y="{{true}}" lower-threshold="{{20}}" class="posts" style="{{anonymousState__temp4}}" bindscrolltolower="onNext">
+                <view class="{{showTag ? 'alltags' : 'alltags hide'}}"><text wx:key="tag" bindtap="onTag" wx:for="{{tags}}" wx:for-item="tag" wx:for-index="_anonIdx4" data-e-tap-so="this" data-e-tap-a-a="{{tag}}">#{{tag}}</text>
+                </view>
                 <block wx:if="{{pub}}">
                     <view class="the-topic">
                         <image src="{{theTopic.image}}" mode="aspectFit"></image><text>{{theTopic.name}}</text>
                     </view>
                 </block>
-                <view wx:key="id" class="post" wx:for="{{loopArray3}}" wx:for-item="v" wx:for-index="_anonIdx4">
+                <view wx:key="id" class="post" wx:for="{{loopArray5}}" wx:for-item="v" wx:for-index="_anonIdx6">
                     <view class="topic">
                         <image src="{{v.$original.publication.image}}" mode="aspectFit"></image><text>{{v.$original.publication.name}}</text><text class="date">{{v.$loopState__temp6}}</text>
                     </view>
                     <view class="content">
                         <image src="{{v.$original.image}}" bindtap="onPost" data-e-tap-so="this" data-e-tap-a-a="{{v.$original.id}}"></image><text class="name" bindtap="onPost" data-e-tap-so="this" data-e-tap-a-a="{{v.$original.id}}">{{v.$original.title}}</text>
-                        <view class="tags"><text wx:key="$loopState__temp8" wx:for="{{v.$anonymousCallee__1}}" wx:for-item="tag" wx:for-index="index">{{tag.$original}}</text>
+                        <view class="tags"><text wx:key="$loopState__temp8" bindtap="onTag" wx:for="{{v.$anonymousCallee__1}}" wx:for-item="tag" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{tag.$original}}">#{{tag.$original}}</text>
                         </view>
                     </view>
                 </view>

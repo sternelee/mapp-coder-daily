@@ -27,7 +27,7 @@ export default class Index extends Component {
       name: string
       twitter: string
     }[]
-    populars: string[]
+    tags: string[]
     posts: {
       bookmarked: boolean
       createdAt: string
@@ -53,16 +53,22 @@ export default class Index extends Component {
     keyword: string
     innerHeight: number
     page: number
+    tag: string
+    type: string
+    showTag: boolean
   } = {
     top: 0,
     topics: [],
-    populars: [],
+    tags: [],
     posts: [],
     show: true,
     pub: '',
     keyword: '',
     innerHeight: 750,
-    page: 0
+    page: 0,
+    tag: '',
+    type: 'latest',
+    showTag: false
   }
 
   onShareAppMessage (ops) {
@@ -97,20 +103,19 @@ export default class Index extends Component {
     console.log('componentWillReact')
   }
 
-  componentDidMount () { 
-    this.getTopics()
-    this.getPopular()
+  async componentDidMount () { 
+    await this.getPost()
+    await this.getTags()
+    await this.getPubs()
   }
 
   componentWillUnmount () { }
 
-  componentDidShow () { 
-    this.getPost()
-  }
+  componentDidShow () { }
 
   componentDidHide () { }
 
-  getTopics = () => {
+  getPubs = () => {
     Taro.request({
       url: `${Uri}v1/publications`
     }).then(res => {
@@ -120,20 +125,30 @@ export default class Index extends Component {
     })
   }
 
-  getPopular = () => {
+  getTags = () => {
     Taro.request({
       url: `${Uri}v1/tags/popular`
     }).then(res => {
       const tags = res.data.map(v => v.name)
       this.setState({
-        populars: tags
+        tags
       })
     })
   }
   getPost = () => {
-    const { page, pub } = this.state
-    const variables = pub ? `"pub":"${pub}"` : `"sortBy":"popularity"`
-    const query = `query ${pub ? 'fetchPostsByPublication' : 'fetchLatest'}($params: ${pub ? 'PostByPublicationInput' : 'QueryPostInput'}) { ${pub ? 'postsByPublication' : 'latest'}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }`
+    const { type, page, pub, tag, posts } = this.state
+    if (page === 0) {
+      this.setState({
+        posts: []
+      })
+    }
+    const types = {
+      latest: [`"sortBy":"popularity"`, 'fetchLatest', 'QueryPostInput', 'latest', 'latest'],
+      pub: [`"pub":"${pub}"`, 'fetchPostsByPublication', 'PostByPublicationInput', 'postsByPublication', 'postsByPublication' ],
+      tag: [`"tag":"${tag}"`, 'fetchPostsByTag', 'PostByTagInput', 'postsByTag', 'postsByTag']
+    }
+    const mapType = types[type]
+    const query = `query ${mapType[1]}($params: ${mapType[2]}) { ${mapType[3]}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }`
     Taro.showLoading({
       title: 'Loading ...'
     })
@@ -141,14 +156,14 @@ export default class Index extends Component {
       url: `${Uri}graphql`,
       data: {
         query,
-        variables: `{"params":{"latest":"${new Date().toISOString()}","page":${page},"pageSize":30,${variables}}}`
+        variables: `{"params":{"latest":"${new Date().toISOString()}","page":${page},"pageSize":20,${mapType[0]}}}`
       }
     }).then(res => {
       const data = res.data.data
       Taro.hideLoading()
       this.setState({
         show: true,
-        posts: pub ? data.postsByPublication : data.latest
+        posts: page > 0 ? posts.concat(data[mapType[4]]) : data[mapType[4]]
       })
     }).catch(() => {
       Taro.hideLoading()
@@ -159,10 +174,11 @@ export default class Index extends Component {
     })
   }
 
-  onTopic = (name: string) => {
+  onTopic = (pub: string) => {
     this.setState({
-      pub: name,
+      pub,
       keyword: '',
+      type: 'pub',
       page: 0
     }, () => this.getPost())
   }
@@ -182,14 +198,17 @@ export default class Index extends Component {
     })
   }
 
-  onHome = () => {
-    this.setState({
-      show: true,
-      pub: '',
-      page: 0
-    }, () => {
-      this.getPost()
-    })
+  onShowTag = () => {
+    const { showTag, show } = this.state
+    if (show) {
+      this.setState({
+        showTag: !showTag
+      })
+    } else {
+      this.setState({
+        show: true
+      })
+    }
   }
 
   onNext = () => {
@@ -199,17 +218,32 @@ export default class Index extends Component {
     }, () => this.getPost())
   }
 
+  onTag = (tag) => {
+    this.setState({
+      tag,
+      page: 0,
+      type: 'tag'
+    }, () => this.getPost())
+  }
+
+  onHome = () => {
+    this.setState({
+      page: 0,
+      type: 'latest'
+    }, () => this.getPost())
+  }
+
   render () {
-    const { top, topics, posts, populars, show, pub, keyword, innerHeight } = this.state
+    const { top, topics, posts, show, pub, keyword, innerHeight, tags, showTag } = this.state
     const theTopic = pub ? topics.filter(v => v.id === pub)[0] : {image: '', name: ''}
-    const tags = keyword ? topics.filter(v => v.name.toLowerCase().indexOf(keyword) > -1) : topics
+    const pubs = keyword ? topics.filter(v => v.name.toLowerCase().indexOf(keyword) > -1) : topics
     return (
       <View className='index'>
         <View className='header' style={{color: '#1c1e21', padding: `${top}px 0 0 10px`, height: `35px`}}>
           <View className='gengduo' onClick={() => this.setState({show: false})}>
             <IconFont name='gengduo' size={50} color='#000' />
           </View>
-          <View className='caidan' onClick={this.onHome}>
+          <View className='caidan' onClick={this.onShowTag}>
             <IconFont name='caidan' size={60} color='#000' />
           </View>
           {
@@ -221,20 +255,26 @@ export default class Index extends Component {
           }
           {
             show &&
-            <Text className='title'>程序猿 Daily</Text>
+            <Text className='title' onClick={this.onHome}>程序猿 Daily</Text>
           }
         </View>
         <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
-          <ScrollView className='topics' scrollY style={{height: `${innerHeight - top - 35}px`}}>
+          <ScrollView enableFlex className='topics' scrollY style={{height: `${innerHeight - top - 35}px`}}>
             {
-              tags.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
+              pubs.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
                 <Image src={v.image} mode='aspectFit' />
                 <Text>{v.name}</Text>
                 {/* <IconFont name='home' size={50} color='#000' /> */}
               </View>)
             }
           </ScrollView>
-          <ScrollView scrollY lowerThreshold={20} className='posts' style={{height: `${innerHeight - top - 35}px`}} onScrollToLower={this.onNext}>
+          <ScrollView enableFlex scrollY lowerThreshold={20} className='posts' style={{height: `${innerHeight - top - 35}px`}} onScrollToLower={this.onNext}>
+            <View className={showTag ? 'alltags' : 'alltags hide'}>
+              {/* <View>流行标签#TAG</View> */}
+              {
+                tags.map(tag => <Text key={tag} onClick={this.onTag.bind(this, tag)}>#{tag}</Text>)
+              }
+            </View>
             {
               pub &&
               <View className='the-topic'>
@@ -254,7 +294,7 @@ export default class Index extends Component {
                   <Text className='name' onClick={this.onPost.bind(this, v.id)}>{v.title}</Text>
                   <View className='tags'>
                     {
-                      v.tags.map((tag, index) => <Text key={v.id + index}>{tag}</Text>)
+                      v.tags.map((tag, index) => <Text key={v.id + index} onClick={this.onTag.bind(this, tag)}>#{tag}</Text>)
                     }
                   </View>
                 </View>
