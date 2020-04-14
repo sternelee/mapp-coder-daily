@@ -2,7 +2,7 @@
     <view class="post">
         <view class="header" bindtap="onHome" style="{{anonymousState__temp}}">
             <view>
-                <icon-font compid="{{$compid__4}}"></icon-font>
+                <icon-font compid="{{$compid__7}}"></icon-font>
             </view><text class="title">详情页</text>
         </view>
         <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl"><text>{{title}}</text>

@@ -2,14 +2,14 @@
     <view class="index">
         <view class="header" style="{{anonymousState__temp}}">
             <view class="gengduo" bindtap="anonymousFunc0">
-                <icon-font compid="{{$compid__5}}"></icon-font>
+                <icon-font compid="{{$compid__4}}"></icon-font>
             </view>
             <view class="caidan" bindtap="onShowTag">
-                <icon-font compid="{{$compid__6}}"></icon-font>
+                <icon-font compid="{{$compid__5}}"></icon-font>
             </view>
             <block wx:if="{{!show}}">
                 <view class="search">
-                    <icon-font compid="{{$compid__7}}"></icon-font>
+                    <icon-font compid="{{$compid__6}}"></icon-font>
                     <input value="{{keyword}}" bindinput="onSearch" placeholder="搜索主题" />
                 </view>
             </block>
@@ -17,12 +17,12 @@
             </block>
         </view>
         <view class="inner" style="{{anonymousState__temp2}}">
-            <scroll-view enable-flex="{{true}}" class="topics" scroll-y="{{true}}" style="{{anonymousState__temp3}}">
+            <scroll-view class="topics" scroll-y="{{true}}" style="{{anonymousState__temp3}}">
                 <view wx:key="id" class="topic" bindtap="onTopic" wx:for="{{pubs}}" wx:for-item="v" wx:for-index="_anonIdx2" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">
                     <image src="{{v.image}}" mode="aspectFit"></image><text>{{v.name}}</text>
                 </view>
             </scroll-view>
-            <scroll-view enable-flex="{{true}}" scroll-y="{{true}}" lower-threshold="{{20}}" class="posts" style="{{anonymousState__temp4}}" bindscrolltolower="onNext">
+            <scroll-view scroll-y="{{true}}" lower-threshold="{{20}}" class="posts" style="{{anonymousState__temp4}}" bindscrolltolower="onNext">
                 <view class="{{showTag ? 'alltags' : 'alltags hide'}}"><text wx:key="tag" bindtap="onTag" wx:for="{{tags}}" wx:for-item="tag" wx:for-index="_anonIdx4" data-e-tap-so="this" data-e-tap-a-a="{{tag}}">#{{tag}}</text>
                 </view>
                 <block wx:if="{{pub}}">

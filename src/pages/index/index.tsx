@@ -221,6 +221,7 @@ export default class Index extends Component {
   onTag = (tag) => {
     this.setState({
       tag,
+      showTag: false,
       page: 0,
       type: 'tag'
     }, () => this.getPost())
@@ -259,7 +260,7 @@ export default class Index extends Component {
           }
         </View>
         <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
-          <ScrollView enableFlex className='topics' scrollY style={{height: `${innerHeight - top - 35}px`}}>
+          <ScrollView className='topics' scrollY style={{height: `${innerHeight - top - 35}px`}}>
             {
               pubs.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
                 <Image src={v.image} mode='aspectFit' />
@@ -268,7 +269,7 @@ export default class Index extends Component {
               </View>)
             }
           </ScrollView>
-          <ScrollView enableFlex scrollY lowerThreshold={20} className='posts' style={{height: `${innerHeight - top - 35}px`}} onScrollToLower={this.onNext}>
+          <ScrollView scrollY lowerThreshold={20} className='posts' style={{height: `${innerHeight - top - 35}px`}} onScrollToLower={this.onNext}>
             <View className={showTag ? 'alltags' : 'alltags hide'}>
               {/* <View>流行标签#TAG</View> */}
               {
