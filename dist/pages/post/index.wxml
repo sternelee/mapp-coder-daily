@@ -1,11 +1,9 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="post">
-        <view class="header" bindtap="onHome" style="{{anonymousState__temp}}">
-            <view>
-                <icon-font compid="{{$compid__7}}"></icon-font>
-            </view><text class="title">详情页</text>
-        </view>
-        <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl"><text>{{title}}</text>
+        <view class="header" style="{{anonymousState__temp}}">
+            <view bindtap="onHome">
+                <icon-font compid="{{$compid__4}}"></icon-font>
+            </view><text class="title" bindtap="onCopyUrl">{{title}}</text>
         </view>
         <view class="content">
             <block wx:if="{{img}}">

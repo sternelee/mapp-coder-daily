@@ -1,7 +1,7 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image, Input, ScrollView } from '@tarojs/components'
 import IconFont from '../../components/iconfont'
-import { Uri } from '../../utils/index'
+import { Uri, dateForLatest } from '../../utils/index'
 import { setGlobalData } from '../../utils/store'
 import './index.styl'
 
@@ -56,6 +56,7 @@ export default class Index extends Component {
     tag: string
     type: string
     showTag: boolean
+    title: string
   } = {
     top: 0,
     topics: [],
@@ -68,7 +69,8 @@ export default class Index extends Component {
     page: 0,
     tag: '',
     type: 'latest',
-    showTag: false
+    showTag: false,
+    title: 'Daily 最新动态'
   }
 
   onShareAppMessage (ops) {
@@ -100,7 +102,7 @@ export default class Index extends Component {
    }
 
   componentWillReact () {
-    console.log('componentWillReact')
+    // console.log('componentWillReact')
   }
 
   async componentDidMount () { 
@@ -179,6 +181,7 @@ export default class Index extends Component {
       pub,
       keyword: '',
       type: 'pub',
+      title: `@ ${pub}`,
       page: 0
     }, () => this.getPost())
   }
@@ -223,28 +226,33 @@ export default class Index extends Component {
       tag,
       showTag: false,
       page: 0,
-      type: 'tag'
+      keyword: '',
+      type: 'tag',
+      title: `# ${tag}`
     }, () => this.getPost())
   }
 
   onHome = () => {
     this.setState({
       page: 0,
-      type: 'latest'
+      type: 'latest',
+      pub: '',
+      title: 'Daily 最新动态'
     }, () => this.getPost())
   }
 
   render () {
-    const { top, topics, posts, show, pub, keyword, innerHeight, tags, showTag } = this.state
-    const theTopic = pub ? topics.filter(v => v.id === pub)[0] : {image: '', name: ''}
+    const { top, topics, posts, show, pub, keyword, innerHeight, tags, showTag, title } = this.state
+    // const theTopic = pub ? topics.filter(v => v.id === pub)[0] : {image: '', name: ''}
     const pubs = keyword ? topics.filter(v => v.name.toLowerCase().indexOf(keyword) > -1) : topics
+    const showTags = keyword ? tags.filter(v => v.indexOf(keyword) > -1) : tags
     return (
       <View className='index'>
         <View className='header' style={{color: '#1c1e21', padding: `${top}px 0 0 10px`, height: `35px`}}>
           <View className='gengduo' onClick={() => this.setState({show: false})}>
             <IconFont name='gengduo' size={50} color='#000' />
           </View>
-          <View className='caidan' onClick={this.onShowTag}>
+          <View className='caidan' onClick={() => this.setState({show: true})}>
             <IconFont name='caidan' size={60} color='#000' />
           </View>
           {
@@ -256,11 +264,17 @@ export default class Index extends Component {
           }
           {
             show &&
-            <Text className='title' onClick={this.onHome}>程序猿 Daily</Text>
+            <Text className='title' onClick={this.onHome}>{title}</Text>
           }
         </View>
         <View className='inner' style={{transform: `translateX(${show ? '-50%' : '0'})`}}>
           <ScrollView className='topics' scrollY style={{height: `${innerHeight - top - 35}px`}}>
+            <View className='alltags'>
+              {/* <Text>常用标签#TAG</Text> */}
+              {
+                showTags.map(tag => <Text key={tag} onClick={this.onTag.bind(this, tag)}>#{tag}</Text>)
+              }
+            </View>
             {
               pubs.map(v => <View key={v.id} className='topic' onClick={this.onTopic.bind(this, v.id)}>
                 <Image src={v.image} mode='aspectFit' />
@@ -270,25 +284,19 @@ export default class Index extends Component {
             }
           </ScrollView>
           <ScrollView scrollY lowerThreshold={20} className='posts' style={{height: `${innerHeight - top - 35}px`}} onScrollToLower={this.onNext}>
-            <View className={showTag ? 'alltags' : 'alltags hide'}>
-              {/* <View>流行标签#TAG</View> */}
-              {
-                tags.map(tag => <Text key={tag} onClick={this.onTag.bind(this, tag)}>#{tag}</Text>)
-              }
-            </View>
-            {
+            {/* {
               pub &&
               <View className='the-topic'>
                 <Image src={theTopic.image} mode='aspectFit' />
                 <Text>{theTopic.name}</Text>
               </View>
-            }
+            } */}
             {
               posts.map(v => <View key={v.id} className='post'>
                 <View className='topic'>
                   <Image src={v.publication.image} mode='aspectFit' />
                   <Text>{v.publication.name}</Text>
-                  <Text className='date'>{new Date(v.createdAt).toLocaleDateString()}</Text>
+                  <Text className='date'>{dateForLatest(v.createdAt)}</Text>
                 </View>
                 <View className='content'>
                   <Image src={v.image} onClick={this.onPost.bind(this, v.id)} />

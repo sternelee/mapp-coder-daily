@@ -127,17 +127,17 @@ class Index extends Component {
     const { md, title, top, img } = this.state
     return (
       <View className='post'>
-        <View className='header' onClick={this.onHome} style={{padding: `${top}px 0 0 10px`, height: `35px`}}>
-          <View>
-            <IconFont name='home' size={50} color='#000' />
+        <View className='header' style={{padding: `${top}px 0 0 10px`,}}>
+          <View onClick={this.onHome}>
+            <IconFont name='home' size={60} color='#000' />
           </View>
-          <Text className='title'>详情页</Text>
+          <Text className='title' onClick={this.onCopyUrl}>{title}</Text>
         </View>
-        <View className='title' style={{padding: '10px'}} onClick={this.onCopyUrl}>
+        {/* <View className='title' style={{padding: '10px'}} onClick={this.onCopyUrl}>
           <Text>
             { title }
           </Text>
-        </View>
+        </View> */}
         <View className='content'>
           {
             img &&
