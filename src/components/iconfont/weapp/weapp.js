@@ -1,6 +1,6 @@
 Component({
   properties: {
-    // sousuo | caidan1 | gengduo | check | check1 | home | caidan
+    // bookmark-add | xiala | sousuo | caidan1 | gengduo | check | check1 | home | caidan
     name: {
       type: String,
     },

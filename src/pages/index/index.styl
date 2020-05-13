@@ -9,17 +9,26 @@
   .caidan
     margin-left 30px
   .title
-    width 54%
+    width 60%
+    display: flex;
+    margin-left: auto;
+    text
+      margin: 0 10px;
+      line-height: 60px;
+    .on
+      font-weight: 600;
+      border-bottom: 4px solid rgba(0,0,255, .7);
+      color: rgba(0,0,255, .7);
   .search
     display flex
     align-items center
     margin-left 40px
     input
-      width 60%
+      width 80%
       border 2px solid #ddd
       border-radius 12px
       margin-left -50px
-      font-size 30px
+      font-size 26px
       padding-left 60px
       text-align: left
 
@@ -32,58 +41,107 @@
 .topics
   width: 750px
   overflow-y: auto
-  .alltags
-    width 100%
-    background #1c1e21
-    padding 30px
-    box-sizing border-box
-    height auto
-    overflow: hidden
-    display flex
-    flex-wrap wrap
-    &.hide
-      height 0
-      padding 0
-    text
-      display inline-block
-      color #a9abb3
-      margin 20px
+  background #1c1e21
+  .pubs
+    width: 100%;
+    height: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    white-space: nowrap;
   .topic
-    width 250px
-    display flex
-    flex-direction: column
-    align-items: center
-    justify-content: center
-    font-size 28px
-    margin-top 30px
-    float: left
+    width 180px
+    display inline-block
+    font-size 20px
+    .box
+      display: flex;
+      flex-direction: column
+      align-items: center
+      justify-content: center
     image
-      width 120px
-      height 120px
+      width 100px
+      height 100px
     text
       margin-top 8px
       text-align center
       display inline-block
       height 60px
+      color: #fff
+  .alltags
+    width 100%
+    color #a9abb3
+    background #1c1e21
+    padding 30px 0 0 30px
+    box-sizing border-box
+    height auto
+    overflow: hidden
+    flex-wrap wrap
+    &.hide
+      height 0
+      padding 0
+    .my-tags
+      margin-top: 20px;
+      text
+        color: #fff;
+    .my-empty
+      margin-top: 30px;
+      text-align: center;
+    .tag-tips
+      margin-top: 80px;
+    .search-tag
+      margin 20px auto
+      padding 40px 20px
+      width: 600px
+      background: #fff
+      border-radius 12px
+      overflow hidden
+      .search-input
+        display flex
+        width: 100%;
+        align-items: center;
+        justify-content: center;
+      input
+        width 70%
+        height: 60px;
+        line-height: 60px;
+        border 2px solid #ddd
+        border-radius 12px
+        font-size 28px
+        padding-left 10px
+        text-align: left
+        color: #000
+        margin: 0 10px;
+    text
+      display inline-block
+      color #a9abb3
+      margin 20px
+
 
 .posts
   display flex
   flex-direction: column
   background #ddd
   width: 750px
-  // .the-topic
-  //   display flex
-  //   flex-direction: column
-  //   align-items: center
-  //   background #fff
-  //   padding 20px 0
-  //   image
-  //     width 160px
-  //     height 160px
-  //     border-radius: 50%
-  //   text
-  //     margin-top 8px
-  //     text-align center
+  .the-topic
+    display flex
+    flex-direction: column
+    align-items: center
+    background #fff
+    padding 20px 0
+    image
+      width 160px
+      height 160px
+      border-radius: 50%
+    text
+      margin 8px 20px
+      text-align center
+  .the-tag
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding 20px 0
+    font-size: 50px;
+    text
+      margin:0 20px;
   .post
     display flex
     flex-direction: column
