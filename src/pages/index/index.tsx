@@ -499,7 +499,7 @@ export default class Index extends Component {
                 </View>
               </View>
               <View className='tag-tips'>常见标签#TAG ( ↕ )</View>
-              <ScrollView scrollY style={{height: '300px'}}>
+              <ScrollView scrollY style={{height: '200px'}}>
                 {popularTags.map(ptag => (
                   <Text key={ptag} onClick={this.onTag.bind(this, ptag)}>
                     #{ptag}
