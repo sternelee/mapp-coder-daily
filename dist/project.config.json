@@ -1,13 +1,15 @@
 {
-  "miniprogramRoot": "./",
-  "projectname": "mapp-coder-daily",
-  "description": "程序猿的日常",
-  "appid": "wx47cf84f458781f68",
-  "setting": {
-    "urlCheck": true,
-    "es6": false,
-    "postcss": false,
-    "minified": false
-  },
-  "compileType": "miniprogram"
+	"projectname": "mapp-coder-daily",
+	"description": "程序猿的日常",
+	"appid": "wx47cf84f458781f68",
+	"setting": {
+		"urlCheck": true,
+		"es6": false,
+		"postcss": false,
+		"minified": false
+	},
+	"compileType": "miniprogram",
+	"simulatorType": "wechat",
+	"simulatorPluginLibVersion": {},
+	"condition": {}
 }

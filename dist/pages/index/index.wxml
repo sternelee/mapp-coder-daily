@@ -2,10 +2,10 @@
     <view class="index">
         <view class="header" style="{{anonymousState__temp}}">
             <view class="gengduo" bindtap="anonymousFunc0">
-                <icon-font compid="{{$compid__7}}"></icon-font>
+                <icon-font compid="{{$compid__6}}"></icon-font>
             </view>
             <view class="caidan" bindtap="anonymousFunc1">
-                <icon-font compid="{{$compid__8}}"></icon-font>
+                <icon-font compid="{{$compid__7}}"></icon-font>
             </view>
             <block wx:if="{{show}}">
                 <view class="title"><text class="{{index === tabId ? 'on' : ''}}" bindtap="onTabs" wx:key="index" wx:for="{{tabs}}" wx:for-item="v" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{index}}">{{v}}</text>
@@ -35,7 +35,7 @@
                     </block>
                     <view class="search-tag">
                         <view class="search-input">
-                            <icon-font compid="{{$compid__9}}"></icon-font>
+                            <icon-font compid="{{$compid__8}}"></icon-font>
                             <input value="{{keyword}}" bindconfirm="onSearch" placeholder="搜索标签" />
                         </view>
                         <view class="hit-tags"><text wx:key="hit" bindtap="onLikeTag" wx:for="{{hits}}" wx:for-item="hit" wx:for-index="_anonIdx6" data-e-tap-so="this" data-e-tap-a-a="{{hit}}">#{{hit}}</text>
@@ -51,13 +51,13 @@
                     <view class="the-topic" bindtap="onLikePub" data-e-tap-so="this" data-e-tap-a-a="{{pub}}">
                         <image src="{{thePub.image}}" mode="aspectFit"></image>
                         <view style="{{anonymousState__temp7}}"><text style="{{anonymousState__temp8}}">{{title}}</text>
-                            <icon-font compid="{{$compid__10}}"></icon-font>
+                            <icon-font compid="{{$compid__9}}"></icon-font>
                         </view>
                     </view>
                 </block>
                 <block wx:if="{{tag}}">
                     <view class="the-tag" bindtap="onLikeTag" data-e-tap-so="this" data-e-tap-a-a="{{tag}}"><text style="{{anonymousState__temp9}}">{{title}}</text>
-                        <icon-font compid="{{$compid__11}}"></icon-font>
+                        <icon-font compid="{{$compid__10}}"></icon-font>
                     </view>
                 </block>
                 <view wx:key="id" class="post" wx:for="{{loopArray11}}" wx:for-item="v" wx:for-index="_anonIdx10">
