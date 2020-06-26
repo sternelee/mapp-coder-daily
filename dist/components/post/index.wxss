@@ -1,0 +1,51 @@
+.post {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20rpx;
+  background: #fff;
+}
+.post .topic {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10rpx 30rpx;
+}
+.post .topic image {
+  width: 50rpx;
+  height: 50rpx;
+  border-radius: 6rpx;
+}
+.post .topic text {
+  margin-left: 20rpx;
+}
+.post .topic .date {
+  margin-left: auto;
+  font-size: 30rpx;
+}
+.post .content {
+  border-top: 2rpx solid #ddd;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 30rpx;
+}
+.post .content image {
+  margin: 0 auto;
+  width: 100%;
+  min-height: 240rpx;
+}
+.post .content .name {
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+  border: 1rpx solid #ddd;
+}
+.post .content .tags {
+  font-size: 30rpx;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 0 30rpx;
+}
+.post .content .tags .tag {
+  margin: 10rpx;
+  color: rgba(0,0,255,0.7);
+}

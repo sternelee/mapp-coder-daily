@@ -1,11 +1,27 @@
-import Taro, { Component, Config } from '@tarojs/taro';
-import { View, Text, Image, Input, ScrollView } from '@tarojs/components';
-import IconFont from '../../components/iconfont';
-import { Uri, dateForLatest } from '../../utils/index';
-import { setGlobalData } from '../../utils/store';
-import './index.styl';
+import Taro, { Component, Config } from "@tarojs/taro";
+import { View, Text, Image, Input, ScrollView } from "@tarojs/components";
+import { observer, inject } from "@tarojs/mobx";
+import IconFont from "@components/iconfont";
+import { setGlobalData } from "@utils/store";
+// eslint-disable-next-line no-unused-vars
+import { StoreInterface } from "@store/index";
+import { Uri, AuthUri } from "@api/index";
+import project from "@project";
+import Post from "@components/post/index";
 
-export default class Index extends Component {
+import "./index.styl";
+
+interface PageStateProps {
+  indexStore: StoreInterface;
+}
+
+interface Index {
+  props: PageStateProps;
+}
+
+@inject("indexStore")
+@observer
+class Index extends Component {
   /**
    * 指定config的类型声明为: Taro.Config
    *
@@ -13,79 +29,58 @@ export default class Index extends Component {
    * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
-  config: Config = {
-    navigationBarTitleText: '程序猿日常',
-    navigationStyle: 'custom'
-  };
   state: {
     top: number;
-    publications: {
-      enabled: boolean;
-      id: string;
-      image: string;
-      name: string;
-      twitter: string;
-    }[];
-    posts: {
-      bookmarked: boolean;
-      createdAt: string;
-      id: string;
-      image: string;
-      placeholder: string;
-      publication: {
-        id: string;
-        image: string;
-        name: string;
-      };
-      publishedAt: string;
-      ratio: number;
-      read: boolean;
-      readTime: number;
-      tags: string[];
-      title: string;
-      url: string;
-      views: number;
-    }[];
     show: boolean;
     pub: string;
     keyword: string;
     innerHeight: number;
-    page: number;
     tag: string;
     type: string;
     title: string;
     tabs: string[];
     tabId: number;
-    popularTags: string[];
     hits: string[];
-    store: { // 缓存记录用户收藏的tagst和pubs
-      pubs: string[];
-      tags: string[];
-    };
   } = {
     top: 0,
-    publications: [],
-    posts: [],
     show: true,
-    pub: '',
-    keyword: '',
+    pub: "",
+    keyword: "",
     innerHeight: 750,
-    page: 0,
-    tag: '',
-    type: 'latest',
-    title: 'Daily 最新动态',
-    tabs: ['关注', '全部'],
-    tabId: 0,
-    popularTags: [],
-    hits: [],
-    store: {
-      tags: [],
-      pubs: []
-    }
+    tag: "",
+    type: "latest",
+    title: "Daily 最新动态",
+    tabs: ["关注", "全部"],
+    tabId: 1,
+    hits: []
   };
 
+  async componentWillMount() {
+    const menuBtn = await Taro.getMenuButtonBoundingClientRect();
+    const info = await Taro.getSystemInfoSync();
+    this.setState({
+      top: menuBtn.top + 2,
+      innerHeight: info.windowHeight
+    });
+  }
+
+  async componentDidMount() {
+    await this.getPost();
+    this.getPopularTags();
+    this.getPubs();
+  }
+
+  componentWillUnmount() {}
+
+  config: Config = {
+    navigationBarTitleText: project.description,
+    navigationStyle: "custom"
+  };
+
+  componentWillReact() {}
+
   onShareAppMessage(ops) {
-    if (ops.from === 'button') {
+    if (ops.from === "button") {
       // 来自页面内转发按钮
       console.log(ops.target);
     }
@@ -94,127 +89,132 @@ export default class Index extends Component {
       path: `pages/index/index`,
       success: function(res) {
         // 转发成功
-        console.log('转发成功:' + JSON.stringify(res));
+        console.log("转发成功:" + JSON.stringify(res));
       },
       fail: function(res) {
         // 转发失败
-        console.log('转发失败:' + JSON.stringify(res));
+        console.log("转发失败:" + JSON.stringify(res));
       }
     };
   }
 
-  async componentWillMount() {
-    const menuBtn = Taro.getMenuButtonBoundingClientRect();
-    const info = await Taro.getSystemInfoSync();
-    this.setState({
-      top: menuBtn.top + 2,
-      innerHeight: info.windowHeight
-    });
-    const store = await Taro.getStorageSync('store');
-    console.log(store);
-    if (store) {
-      this.setState({
-        store
-      });
-    }
+  componentDidShow() {
+    this.auth();
   }
-
-  componentWillReact() {
-    // console.log('componentWillReact')
-  }
-
-  async componentDidMount() {
-    await this.getPost();
-    await this.getPopularTags();
-    await this.getPubs();
-  }
-
-  componentWillUnmount() {}
-
-  componentDidShow() {}
 
   componentDidHide() {}
 
+  auth = async () => {
+    const { indexStore } = this.props;
+    Taro.getStorage({
+      key: "auth"
+    })
+      .then(res => {
+        indexStore.setAuth(res.data);
+        setTimeout(() => this.checkUser(), 1000);
+      })
+      .catch(() => {
+        Taro.login().then(res => {
+          Taro.request({
+            url: `${AuthUri}auth?js_code=${res.code}&type=daily`
+          })
+            .then(res1 => res1.data)
+            .then(res2 => {
+              if (res2.openid) {
+                indexStore.setAuth(res2);
+                Taro.setStorageSync("auth", res2);
+                setTimeout(() => this.checkUser(), 1000);
+              }
+            });
+        });
+      });
+  };
+
+  checkUser = async () => {
+    const { indexStore } = this.props;
+    const {
+      auth: { openid }
+    } = indexStore;
+    Taro.request({
+      url: `${Uri}user/me?uid=${openid}&platform=wechat`
+    }).then(res => {
+      console.log(res);
+      const { tags, pubs, favs } = res.data.data;
+      indexStore.setTags(tags);
+      indexStore.setPubs(pubs);
+      indexStore.setFavs(favs);
+    });
+  };
+
   getPubs = async () => {
-    let publications = await Taro.getStorageSync('publications')
-    if (publications) {
-      this.setState({
-        publications
-      })
+    let allPubs = await Taro.getStorageSync("publications");
+    if (allPubs) {
+      this.props.indexStore.allPubs = allPubs;
     } else {
       Taro.request({
-        url: `${Uri}v1/publications`
+        url: `${Uri}daily/v1/publications`
       }).then(res => {
-        this.setState({
-          publications: res.data
-        })
-        Taro.setStorageSync('publications', res.data)
-      })
-    }
-  }
-
-  getPopularTags = async () => {
-    let popularTags = await Taro.getStorageSync('popularTags')
-    if (popularTags) {
-      this.setState({
-        popularTags
-      })
-    } else {
-      Taro.request({
-        url: `${Uri}v1/tags/popular`
-      }).then(res => {
-        popularTags = res.data.map(v => v.name);
-        this.setState({
-          popularTags
-        })
-        Taro.setStorageSync('popularTags', popularTags)
-      })
-    }
-  }
-
-  getPost = () => {
-    const { type, page, pub, tag, posts } = this.state;
-    if (page === 0) {
-      this.setState({
-        posts: []
+        this.props.indexStore.allPubs = res.data;
+        Taro.setStorageSync("publications", res.data);
       });
     }
+  };
+
+  getPopularTags = async () => {
+    let allTags = await Taro.getStorageSync("popularTags");
+    if (allTags) {
+      this.props.indexStore.allTags = allTags;
+    } else {
+      Taro.request({
+        url: `${Uri}daily/v1/tags/popular`
+      }).then(res => {
+        allTags = res.data.map(v => v.name);
+        this.props.indexStore.allTags = allTags;
+        Taro.setStorageSync("popularTags", allTags);
+      });
+    }
+  };
+
+  getPost = () => {
+    const { indexStore } = this.props;
+    const { page } = indexStore;
+    const { type, pub, tag } = this.state;
     const types = {
       latest: [
         `"sortBy":"popularity"`,
-        'fetchLatest',
-        'QueryPostInput',
-        'latest',
-        'latest'
+        "fetchLatest",
+        "QueryPostInput",
+        "latest",
+        "latest"
       ],
       pub: [
         `"pub":"${pub}"`,
-        'fetchPostsByPublication',
-        'PostByPublicationInput',
-        'postsByPublication',
-        'postsByPublication'
+        "fetchPostsByPublication",
+        "PostByPublicationInput",
+        "postsByPublication",
+        "postsByPublication"
       ],
       tag: [
         `"tag":"${tag}"`,
-        'fetchPostsByTag',
-        'PostByTagInput',
-        'postsByTag',
-        'postsByTag'
+        "fetchPostsByTag",
+        "PostByTagInput",
+        "postsByTag",
+        "postsByTag"
       ]
     };
     const mapType = types[type];
-    const query = `query ${mapType[1]}($params: ${mapType[2]}) { ${mapType[3]}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags,bookmarked,read } }`;
+    const query = `query ${mapType[1]}($params: ${mapType[2]}) { ${mapType[3]}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags } }`;
     Taro.showLoading({
-      title: 'Loading ...'
+      title: "Loading ..."
     });
     let variables = `{"params":{"latest":"${new Date().toISOString()}","page":${page},"pageSize":20,${
       mapType[0]
     }}}`;
-    if (type === 'latest') {
+    if (type === "latest") {
       variables = JSON.stringify(this.fetchLatestVariables());
     }
     Taro.request({
-      url: `${Uri}graphql`,
+      url: `${Uri}daily/graphql`,
       data: {
         query,
         variables
@@ -223,35 +223,34 @@ export default class Index extends Component {
       .then(res => {
         const data = res.data.data;
         Taro.hideLoading();
-        this.setState({
-          show: true,
-          posts: page > 0 ? posts.concat(data[mapType[4]]) : data[mapType[4]]
+        const newPosts = data[mapType[4]];
+        const ids = newPosts.map(v => {
+          indexStore.setPost(v);
+          return v.id;
         });
+        indexStore.setList(ids, page > 0);
+        this.savePosts(newPosts.map(v => ({ id: v.id, title: v.title })));
       })
       .catch(() => {
         Taro.hideLoading();
         Taro.showToast({
-          title: '数据拉取失败',
+          title: "数据拉取失败",
           duration: 2000
-        })
-      })
-  }
+        });
+      });
+  };
 
   fetchLatestVariables = () => {
-    const {
-      tabId,
-      store,
-      page
-    } = this.state;
-    // const pubs = tabId ? [] : store.pubs
-    const tags = tabId ? [] : store.tags
+    const { indexStore } = this.props;
+    const { tabId } = this.state;
+    const tags = tabId ? [] : indexStore.tags;
     const inputParams = {
       latest: new Date().toISOString(),
-      page,
+      page: indexStore.page,
       pageSize: 20,
       // ...(pubs && { pubs: pubs.join() }),
       ...(tags && { tags: tags.join() }),
-      sortBy: tabId ? 'popularity' : 'creation' // creation, popularity
+      sortBy: tabId ? "popularity" : "creation" // creation, popularity
     };
     return {
       params: inputParams
@@ -259,166 +258,221 @@ export default class Index extends Component {
   };
 
   onTopic = (pub: string) => {
+    this.props.indexStore.page = 0;
     this.setState(
       {
         pub,
-        keyword: '',
-        type: 'pub',
-        tag: '',
-        title: `@ ${pub}`,
-        page: 0
+        keyword: "",
+        type: "pub",
+        tag: "",
+        title: `@ ${pub}`
       },
       () => this.getPost()
     );
   };
 
   onPost = id => {
-    console.log(id);
-    setGlobalData('pid', id);
-    // setGlobalData('url', url)
-    Taro.navigateTo({
-      url: `/pages/post/index?&id=${id}`
+    const { indexStore } = this.props;
+    const { posts } = indexStore;
+    const post = posts[id];
+    console.log(post);
+    if (post.content) {
+      return Taro.navigateTo({
+        url: `/pages/post/index?&id=${id}`
+      });
+    }
+    Taro.showLoading({
+      title: "请求数据中"
     });
+    Taro.request({
+      url: `${Uri}post/fetch`,
+      data: {
+        pid: id,
+        link: post.url
+      }
+    })
+      .then(res => {
+        if (res.data.code === 0) {
+          const data = res.data.data;
+          indexStore.setPost({
+            id,
+            pid: data.id,
+            author: data.author,
+            lead_image_url: data.lead_image_url,
+            word_count: data.word_count,
+            content: data.content,
+            content_cn: data.content_cn
+          });
+          Taro.hideLoading();
+          Taro.navigateTo({
+            url: `/pages/post/index?&id=${id}`
+          });
+        }
+      })
+      .catch(err => {
+        Taro.showToast({
+          title: "拉取数据失败",
+          duration: 2000
+        });
+      });
   };
 
   onSearch = e => {
-    const keyword = e.detail.value.toLowerCase()
+    const keyword = e.detail.value.toLowerCase();
     this.setState({
       keyword
     });
-    this.searchTag(keyword)
-    // 搜索 tag 标签
-    // https://app.dailynow.co/v1/tags/search?query=react
+    this.searchTag(keyword);
     // 授权
     // https://app.dailynow.co/v1/auth/authorize?provider=github&redirect_uri=http://pi.leeapps.cn:5000/?provider=github&code_challenge=hUj93mi0vqKM0zehTG5dXQBvQ8h0-l-R6nlCuc9A_KU
   };
 
-  searchTag = async (tag) => {
+  searchTag = async tag => {
     const result = await Taro.request({
-      url: `${Uri}v1/tags/search?query=${tag}`
-    })
-    const hits = result.data.hits.map(v => v.name)
+      url: `${Uri}daily/v1/tags/search?query=${tag}`
+    });
+    const hits = result.data.hits.map(v => v.name);
     this.setState({
       hits
-    })
-    console.log(result)
-  }
+    });
+    console.log(result);
+  };
 
   onNext = () => {
-    const { page } = this.state;
-    this.setState(
-      {
-        page: page + 1
-      },
-      () => this.getPost()
-    );
+    this.props.indexStore.page += 1;
+    this.getPost();
   };
 
   onTag = tag => {
+    const { indexStore } = this.props;
+    indexStore.page = 0;
     this.setState(
       {
         tag,
-        page: 0,
-        keyword: '',
-        pub: '',
-        type: 'tag',
+        keyword: "",
+        pub: "",
+        type: "tag",
         title: `# ${tag}`
       },
       () => this.getPost()
     );
   };
 
-  onTabs = (index) => {
-    this.setState({
-      tabId: index,
-      keyword: '',
-      pub: '',
-      tag: '',
-      type: 'latest',
-      page: 0
-    }, () => {
-      this.getPost()
-    })
-  }
+  onTabs = index => {
+    const { indexStore } = this.props;
+    indexStore.page = 0;
+    this.setState(
+      {
+        tabId: index,
+        keyword: "",
+        pub: "",
+        tag: "",
+        type: "latest"
+      },
+      () => {
+        this.getPost();
+      }
+    );
+  };
 
-  onLikeTag = (tag) => {
-    let { tags, pubs } = this.state.store
+  onLikeTag = tag => {
+    let { tags, auth: { openid } } = this.props.indexStore;
     if (tags.includes(tag)) {
-      tags = tags.filter(v => v !== tag)
+      tags = tags.filter(v => v !== tag);
     } else {
-      tags.push(tag)
+      tags.push(tag);
     }
-    const newStore = {
-      tags,
-      pubs
-    }
-    this.setState({
-      store: newStore
-    })
-    Taro.setStorageSync('store', newStore)
-  }
+    this.props.indexStore.tags = tags;
+    Taro.request({
+      url: `${Uri}user/me`,
+      method: "POST",
+      data: {
+        uid: openid,
+        platform: 'wechat',
+        tag
+      }
+    });
+  };
 
-  onLikePub = (pub) => {
-    let { tags, pubs } = this.state.store
+  onLikePub = pub => {
+    let { pubs, auth: { openid } } = this.props.indexStore;
     if (pubs.includes(pub)) {
-      pubs = pubs.filter(v => v !== pub)
+      pubs = pubs.filter(v => v !== pub);
     } else {
-      pubs.push(pub)
+      pubs.push(pub);
     }
-    const newStore = {
-      tags,
-      pubs
-    }
-    this.setState({
-      store: newStore
-    })
-    Taro.setStorageSync('store', newStore)
-  }
+    this.props.indexStore.pubs = pubs;
+    Taro.request({
+      url: `${Uri}user/me`,
+      method: "POST",
+      data: {
+        uid: openid,
+        platform: 'wechat',
+        pub
+      }
+    });
+  };
+
+  savePosts = list => {
+    const { indexStore } = this.props;
+    Taro.request({
+      url: "https://daily.leeapps.cn/post/create",
+      method: "POST",
+      data: {
+        list
+      }
+    }).then(res => {
+      if (res.data.code === 0) {
+        res.data.data.forEach(v => {
+          indexStore.setPost({ id: v.id, title_cn: v.title });
+        });
+      }
+    });
+  };
 
   render() {
     const {
       title,
       top,
-      publications,
-      posts,
       show,
       pub,
       tag,
       keyword,
       innerHeight,
-      popularTags,
-      store,
       tabs,
       tabId,
       hits
     } = this.state;
-    const thePub = pub ? publications.filter(v => v.id === pub)[0] : {image: '', name: ''}
-    const isPub = store.pubs.includes(pub)
-    const isTag = store.tags.includes(tag)
-    const publication1 = publications.filter(v => store.pubs.includes(v.id))
-    const publication2 = publications.filter(v =>!store.pubs.includes(v.id))
-    const Publications = [...publication1, ...publication2]
+    const { list, posts, allPubs, allTags, tags, pubs, setting } = this.props.indexStore;
+    const thePub = pub
+      ? allPubs.filter(v => v.id === pub)[0]
+      : { image: "", name: "" };
+    const isPub = pubs.includes(pub);
+    const isTag = tags.includes(tag);
+    const publication1 = allPubs.filter(v => pubs.includes(v.id));
+    const publication2 = allPubs.filter(v => !pubs.includes(v.id));
+    const Publications = [...publication1, ...publication2];
     return (
-      <View className='index'>
+      <View className="index">
         <View
-          className='header'
+          className="header"
           style={{
-            color: '#1c1e21',
+            color: "#1c1e21",
             padding: `${top}px 0 0 10px`,
             height: `35px`
           }}
         >
           <View
-            className='gengduo'
+            className="gengduo"
             onClick={() => this.setState({ show: false })}
           >
-            <IconFont name='gengduo' size={50} color='#000' />
+            <IconFont name="gengduo" size={50} color="#000" />
           </View>
           <View
-            className='caidan'
+            className="caidan"
             onClick={() => this.setState({ show: true })}
           >
-            <IconFont name='caidan' size={60} color='#000' />
+            <IconFont name="caidan" size={60} color="#000" />
           </View>
           {/* {!show && (
             <View className='search'>
@@ -430,77 +484,85 @@ export default class Index extends Component {
               />
             </View>
           )} */}
-          {
-            show &&
-            <View className='title'>
-            {
-              tabs.map((v, index) => <Text className={index === tabId ? 'on' : ''} onClick={this.onTabs.bind(this, index)} key={index}>{v}</Text>)
-            }
+          {show && (
+            <View className="title">
+              {tabs.map((v, index) => (
+                <Text
+                  className={index === tabId ? "on" : ""}
+                  onClick={this.onTabs.bind(this, index)}
+                  key={index}
+                >
+                  {v}
+                </Text>
+              ))}
             </View>
-          }
+          )}
         </View>
         <View
-          className='inner'
-          style={{ transform: `translateX(${show ? '-50%' : '0'})` }}
+          className="inner"
+          style={{ transform: `translateX(${show ? "-50%" : "0"})` }}
         >
           <ScrollView
-            className='topics'
+            className="topics"
             scrollY
             style={{ height: `${innerHeight - top - 35}px` }}
+            enableFlex
           >
-            <View style={{color:'#fff',padding: '20px 0 10px 20px'}}>常见频道</View>
-            <ScrollView className='pubs' scrollX lowerThreshold={20}>
+            <View style={{ color: "#fff", padding: "20px 0 10px 20px" }}>
+              常见频道
+            </View>
+            <ScrollView className="pubs" scrollX lowerThreshold={20}>
               {Publications.map(v => (
                 <View
                   key={v.id}
-                  className='topic'
+                  className="topic"
                   onClick={this.onTopic.bind(this, v.id)}
                 >
-                  <View className='box'>
-                    <Image src={v.image} mode='aspectFit' />
+                  <View className="box">
+                    <Image src={v.image} mode="aspectFit" />
                     <Text>{v.name}</Text>
                   </View>
                   {/* <IconFont name='home' size={50} color='#000' /> */}
                 </View>
               ))}
             </ScrollView>
-            <View className='alltags'>
+            <View className="alltags">
               <View>Ni~关注的标签#TAG</View>
-              {
-                store.tags.length ?
-                <View className='my-tags'>
-                  {
-                    store.tags.map(mtag => <Text key={mtag} onClick={this.onTag.bind(this, mtag)}>
-                    #{mtag}
-                  </Text>)
-                  }
-                </View>:
-                <View className='my-empty'>暂无关注，请搜索添加</View>
-              }
-              <View className='search-tag'>
-                <View className='search-input'>
-                  <IconFont name='sousuo' size={36} color='#000' />
+              {tags.length ? (
+                <View className="my-tags">
+                  {tags.map(mtag => (
+                    <Text key={mtag} onClick={this.onTag.bind(this, mtag)}>
+                      #{mtag}
+                    </Text>
+                  ))}
+                </View>
+              ) : (
+                <View className="my-empty">暂无关注，请搜索添加</View>
+              )}
+              <View className="search-tag">
+                <View className="search-input">
+                  <IconFont name="sousuo" size={36} color="#000" />
                   {/* <IconFont name='bookmark-add' size={36} color='#000' /> */}
                   <Input
                     value={keyword}
                     onConfirm={this.onSearch}
-                    placeholder='搜索标签'
+                    placeholder="搜索标签"
                   />
                   {/* <View onClick={this.addBookmark}>
                   <IconFont name='bookmark-add' size={36} color='#000' />
                   </View> */}
                 </View>
-                <View className='hit-tags'>
-                {
-                    hits.map(hit => <Text key={hit} onClick={this.onLikeTag.bind(this, hit)}>
-                    #{hit}
-                  </Text>)
-                  }
+                <View className="hit-tags">
+                  {hits.map(hit => (
+                    <Text key={hit} onClick={this.onLikeTag.bind(this, hit)}>
+                      #{hit}
+                    </Text>
+                  ))}
                 </View>
               </View>
-              <View className='tag-tips'>常见标签#TAG ( ↕ )</View>
-              <ScrollView scrollY style={{height: '200px'}}>
-                {popularTags.map(ptag => (
+              <View className="tag-tips">常见标签#TAG ( ↕ )</View>
+              <ScrollView scrollY style={{ height: "200px" }} enableFlex>
+                {allTags.map(ptag => (
                   <Text key={ptag} onClick={this.onTag.bind(this, ptag)}>
                     #{ptag}
                   </Text>
@@ -511,51 +573,53 @@ export default class Index extends Component {
           <ScrollView
             scrollY
             lowerThreshold={20}
-            className='posts'
+            className="posts"
             style={{ height: `${innerHeight - top - 35}px` }}
             onScrollToLower={this.onNext}
+            enableFlex
           >
-            {
-              pub &&
-              <View className='the-topic' onClick={this.onLikePub.bind(this, pub)}>
-                <Image src={thePub.image} mode='aspectFit' />
-                <View style={{display: 'flex', alignItems: 'center'}}>
-                  <Text style={{color: isPub ? '#f58301' : '#000'}}>{title}</Text>
-                  <IconFont name='bookmark-add' size={36} color={isPub ? '#f58301' : '#000'} />
-                </View>
-              </View>
-            }
-            {
-              tag &&
-              <View className='the-tag' onClick={this.onLikeTag.bind(this, tag)}>
-                <Text style={{color: isTag ? '#f58301' : '#000'}}>{title}</Text>
-                <IconFont name='bookmark-add' size={50} color={isTag ? '#f58301' : '#000'} />
-              </View>
-            }
-            {posts.map(v => (
-              <View key={v.id} className='post'>
-                <View className='topic'>
-                  <Image src={v.publication.image} mode='aspectFit' />
-                  <Text>{v.publication.name}</Text>
-                  <Text className='date'>{dateForLatest(v.createdAt)}</Text>
-                </View>
-                <View className='content'>
-                  <Image src={v.image} onClick={this.onPost.bind(this, v.id)} />
-                  <Text className='name' onClick={this.onPost.bind(this, v.id)}>
-                    {v.title}
+            {pub && (
+              <View
+                className="the-topic"
+                onClick={this.onLikePub.bind(this, pub)}
+              >
+                <Image src={thePub.image} mode="aspectFit" />
+                <View style={{ display: "flex", alignItems: "center" }}>
+                  <Text style={{ color: isPub ? "#f58301" : "#000" }}>
+                    {title}
                   </Text>
-                  <View className='tags'>
-                    {v.tags.map((vtag, index) => (
-                      <Text
-                        key={v.id + index}
-                        onClick={this.onTag.bind(this, vtag)}
-                      >
-                        #{vtag}
-                      </Text>
-                    ))}
-                  </View>
+                  <IconFont
+                    name="bookmark-add"
+                    size={36}
+                    color={isPub ? "#f58301" : "#000"}
+                  />
                 </View>
               </View>
+            )}
+            {tag && (
+              <View
+                className="the-tag"
+                onClick={this.onLikeTag.bind(this, tag)}
+              >
+                <Text style={{ color: isTag ? "#f58301" : "#000" }}>
+                  {title}
+                </Text>
+                <IconFont
+                  name="bookmark-add"
+                  size={50}
+                  color={isTag ? "#f58301" : "#000"}
+                />
+              </View>
+            )}
+            {list.map(id => (
+              <Post
+                key={id}
+                pid={id}
+                post={posts[id]}
+                setting={setting}
+                onPost={this.onPost}
+                onTag={this.onTag}
+              />
             ))}
           </ScrollView>
         </View>
@@ -563,3 +627,5 @@ export default class Index extends Component {
     );
   }
 }
+
+export default Index;

@@ -1,4 +1,4 @@
-export const Uri = "https://api.leeapps.cn/dialy/";
+export const Uri = "https://daily.leeapps.cn/daily/";
 
 export const fixUrl = (content, url) => {
   let str = content.replace(/(\.\.\/)+/g, $1 => {
@@ -18,7 +18,7 @@ export const fixUrl = (content, url) => {
   return str;
 };
 
-export const dateForLatest = timestamp => {
+export const dateForLatest = (timestamp, language = 0) => {
   timestamp = new Date(timestamp).getTime()
   const minute = 1000 * 60
   const hour = minute * 60
@@ -29,7 +29,7 @@ export const dateForLatest = timestamp => {
 
   // 如果本地时间反而小于变量时间
   if (diffValue < 0) {
-    return "不久前"
+    return language ? "不久前" : "just a moment ago"
   }
 
   // 计算差异时间的量级
@@ -62,15 +62,15 @@ export const dateForLatest = timestamp => {
       );
     })();
   } else if (monthC >= 1) {
-    return parseInt(monthC) + "月前";
+    return parseInt(monthC) + (language ? "月前" : "months ago");
   } else if (weekC >= 1) {
-    return parseInt(weekC) + "周前";
+    return parseInt(weekC) + (language ? "周前" : "weeks ago");
   } else if (dayC >= 1) {
-    return parseInt(dayC) + "天前";
+    return parseInt(dayC) + (language ? "天前" : "d ago");
   } else if (hourC >= 1) {
-    return parseInt(hourC) + "小时前";
+    return parseInt(hourC) + (language ? "小时前" : "h ago");
   } else if (minC >= 1) {
-    return parseInt(minC) + "分钟前";
+    return parseInt(minC) + (language ? "分钟前" : "m ago");
   }
   return "刚刚";
 };

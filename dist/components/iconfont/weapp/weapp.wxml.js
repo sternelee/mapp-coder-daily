@@ -1,1 +1,14 @@
-(wx.webpackJsonp=wx.webpackJsonp||[]).push([[6],{"34":function(p,n,o){p.exports=o.p+"components/iconfont/weapp/weapp.wxml"}},[[34,0]]]);
+(wx["webpackJsonp"] = wx["webpackJsonp"] || []).push([["components/iconfont/weapp/weapp.wxml"],{
+
+/***/ "./src/components/iconfont/weapp/weapp.wxml":
+/*!**************************************************!*\
+  !*** ./src/components/iconfont/weapp/weapp.wxml ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "components/iconfont/weapp/weapp.wxml";
+
+/***/ })
+
+},[["./src/components/iconfont/weapp/weapp.wxml","runtime"]]]);

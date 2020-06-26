@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "./dist",
   "projectname": "mapp-coder-daily",
-  "description": "程序猿的日常",
+  "description": "程序猿日常",
   "appid": "wx47cf84f458781f68",
   "setting": {
     "urlCheck": true,

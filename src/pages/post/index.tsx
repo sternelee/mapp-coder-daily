@@ -1,10 +1,23 @@
 import Taro, { Component, Config } from '@tarojs/taro'
 import { View, Text, Image } from '@tarojs/components'
-import IconFont from '../../components/iconfont'
-import { fixUrl } from '../../utils/index'
+import { observer, inject } from "@tarojs/mobx";
+import IconFont from '@components/iconfont'
+// eslint-disable-next-line no-unused-vars
+import { StoreInterface } from "@store/index";
+import { fixUrl } from '@utils/index'
 
 import './index.styl'
 
+interface PageStateProps {
+  indexStore: StoreInterface;
+}
+
+interface Index {
+  props: PageStateProps;
+}
+
+@inject("indexStore")
+@observer
 class Index extends Component {
 
   /**
@@ -14,19 +27,27 @@ class Index extends Component {
    * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
-  config: Config = {
-    navigationBarTitleText: '详情页',
-    navigationStyle: 'custom',
-    usingComponents: {
-      wemark: '../../wemark/wemark'
-    }
-  }
   state = {
     md: '',
     title: '',
     top: 0,
     url: '',
     img: ''
+  }
+
+  componentWillMount () {
+    const menuBtn = Taro.getMenuButtonBoundingClientRect()
+    this.setState({
+      top: menuBtn.top + 2
+    })
+  }
+
+  config: Config = {
+    navigationBarTitleText: '详情页',
+    navigationStyle: 'custom',
+    usingComponents: {
+      wemark: '../../wemark/wemark'
+    }
   }
 
   onShareAppMessage (ops) {
@@ -50,51 +71,15 @@ class Index extends Component {
     }
   }
 
-  componentWillMount () {
-    const menuBtn = Taro.getMenuButtonBoundingClientRect()
-    this.setState({
-      top: menuBtn.top + 2
-    })
-  }
-
   async componentDidShow () {
     const query = this.$router.params
-    Taro.showLoading({
-      title: 'Loading ...'
-    })
-    const res = await Taro.request({
-      url: `https://api.leeapps.cn/cooperpress-posts?category=100&pid=${query.id}&_limit=1`
-    })
-    let data = res.data[0]
-    if (!data) {
-      const res2 = await Taro.request({
-        url: `https://api.leeapps.cn/koa/weekly/post?category=100&id=${query.id}&type=markdown`
-      })
-      data = res2.data[0]
-    }
-    Taro.hideLoading()
-    if (!data.content) {
-      Taro.showToast({
-        title: '无法拉取数据',
-        duration: 1000
-      }).then(() => {
-        Taro.setClipboardData({
-          data: data.url,
-          success: () => {
-            Taro.showToast({
-              title: '原文链接已复制',
-              duration: 1000
-            }).then(() => this.onHome())
-          }
-        })
-      })
-      return
-    }
+    const { posts } = this.props.indexStore
+    const data = posts[query.id]
     const content = fixUrl(data.content, data.url)
     this.setState({
       title: data.title,
       url: data.url,
-      img: data.lead_image_url,
+      img: data.image,
       md: content
     })
   }

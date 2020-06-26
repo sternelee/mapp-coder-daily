@@ -1,1 +1,3 @@
-.icon{background-repeat:no-repeat}
+.icon {
+  background-repeat: no-repeat;
+}

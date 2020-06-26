@@ -1,3 +1,5 @@
+const { resolve } = require('path')
+
 const config = {
   projectName: 'mapp-coder-dy',
   date: '2020-4-12',
@@ -9,6 +11,14 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
+  alias: {
+    '@components': resolve(__dirname, '..', 'src/components'),
+    '@utils': resolve(__dirname, '..', 'src/utils'),
+    '@api': resolve(__dirname, '..', 'src/api'),
+    '@assets': resolve(__dirname, '..', 'src/assets'),
+    '@store': resolve(__dirname, '..', 'src/store'),
+    '@project': resolve(__dirname, '..', 'project.config.json')
+  },
   babel: {
     sourceMap: true,
     presets: [

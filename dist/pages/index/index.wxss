@@ -1,1 +1,171 @@
-.inner{overflow-x:hidden}.header{text-align:center;color:#fff;display:flex;align-items:center}.header .caidan{margin-left:30rpx}.header .title{width:60%;display:flex;margin-left:auto}.header .title text{margin:0 10rpx;line-height:60rpx}.header .title .on{font-weight:600;border-bottom:4rpx solid rgba(0,0,255,.7);color:rgba(0,0,255,.7)}.header .search{display:flex;align-items:center;margin-left:40rpx}.header .search input,.topics .alltags .search-tag input{border:2rpx solid #ddd;border-radius:12rpx;text-align:left}.header .search input{width:80%;margin-left:-50rpx;font-size:26rpx;padding-left:60rpx}.inner{width:1500rpx;display:flex;transition:transform .2s linear;transition:transform .2s linear,-webkit-transform .2s linear}.topics{width:750rpx;overflow-y:auto;background:#1c1e21}.topics .pubs{width:100%;height:200rpx;display:flex;flex-wrap:wrap;white-space:nowrap}.topics .topic{width:180rpx;display:inline-block;font-size:20rpx}.posts,.topics .topic .box{display:flex;flex-direction:column}.topics .topic .box{align-items:center;justify-content:center}.topics .topic image{width:100rpx;height:100rpx}.topics .topic text{margin-top:8rpx;text-align:center;display:inline-block;height:60rpx;color:#fff}.topics .alltags{width:100%;color:#a9abb3;background:#1c1e21;padding:30rpx 0 0 30rpx;box-sizing:border-box;height:auto;overflow:hidden;flex-wrap:wrap}.topics .alltags.hide{height:0;padding:0}.topics .alltags .my-tags{margin-top:20rpx}.topics .alltags .my-tags text{color:#f58301}.topics .alltags .my-empty{margin-top:30rpx;text-align:center}.topics .alltags .tag-tips{margin-top:80rpx}.topics .alltags .search-tag{margin:20rpx auto;padding:40rpx 20rpx;width:600rpx;background:#fff;border-radius:12rpx;overflow:hidden}.topics .alltags .search-tag .search-input{display:flex;width:100%;align-items:center;justify-content:center}.topics .alltags .search-tag input{width:70%;height:60rpx;line-height:60rpx;font-size:28rpx;padding-left:10rpx;color:#000;margin:0 10rpx}.topics .alltags text{display:inline-block;color:#a9abb3;margin:20rpx}.posts{background:#ddd;width:750rpx}.posts .the-tag,.posts .the-topic{display:flex;align-items:center;padding:20rpx 0}.posts .the-topic{flex-direction:column;background:#fff}.posts .the-topic image{width:160rpx;height:160rpx;border-radius:50%}.posts .the-topic text{margin:8rpx 20rpx;text-align:center}.posts .the-tag{justify-content:center;font-size:50rpx}.posts .the-tag text{margin:0 20rpx}.posts .post{display:flex;flex-direction:column;margin-top:20rpx;background:#fff}.posts .post .topic{display:flex;flex-direction:row;align-items:center;padding:10rpx 30rpx}.posts .post .topic image{width:50rpx;height:50rpx;border-radius:6rpx}.posts .post .topic text{margin-left:20rpx}.posts .post .topic .date{margin-left:auto;font-size:30rpx}.posts .post .content{border-top:2rpx solid #ddd;display:flex;flex-direction:column;padding-bottom:30rpx}.posts .post .content image{margin:0 auto;width:100%;min-height:240rpx}.posts .post .content .name{margin-bottom:20rpx;padding:30rpx;border:1rpx solid #ddd}.posts .post .content .tags{font-size:30rpx;display:flex;align-items:center;flex-wrap:wrap;padding:0 30rpx}.posts .post .content .tags text{margin:10rpx;color:rgba(0,0,255,.7)}
+.inner {
+  overflow-x: hidden;
+}
+.header {
+  text-align: center;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+.header .caidan {
+  margin-left: 30rpx;
+}
+.header .title {
+  width: 60%;
+  display: flex;
+  margin-left: auto;
+}
+.header .title text {
+  margin: 0 10rpx;
+  line-height: 60rpx;
+}
+.header .title .on {
+  font-weight: 600;
+  border-bottom: 4rpx solid rgba(0,0,255,0.7);
+  color: rgba(0,0,255,0.7);
+}
+.header .search {
+  display: flex;
+  align-items: center;
+  margin-left: 40rpx;
+}
+.header .search input {
+  width: 80%;
+  border: 2rpx solid #ddd;
+  border-radius: 12rpx;
+  margin-left: -50rpx;
+  font-size: 26rpx;
+  padding-left: 60rpx;
+  text-align: left;
+}
+.inner {
+  width: 1500rpx;
+  display: flex;
+  transition: -webkit-transform 0.2s linear;
+  transition: transform 0.2s linear;
+  transition: transform 0.2s linear, -webkit-transform 0.2s linear;
+}
+.topics {
+  width: 750rpx;
+  overflow-y: auto;
+  background: #1c1e21;
+}
+.topics .pubs {
+  width: 100%;
+  height: 200rpx;
+  display: flex;
+  flex-wrap: wrap;
+  white-space: nowrap;
+}
+.topics .topic {
+  width: 180rpx;
+  display: inline-block;
+  font-size: 20rpx;
+}
+.topics .topic .box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.topics .topic image {
+  width: 100rpx;
+  height: 100rpx;
+}
+.topics .topic text {
+  margin-top: 8rpx;
+  text-align: center;
+  display: inline-block;
+  height: 60rpx;
+  color: #fff;
+}
+.topics .alltags {
+  width: 100%;
+  color: #a9abb3;
+  background: #1c1e21;
+  padding: 30rpx 0 0 30rpx;
+  box-sizing: border-box;
+  height: auto;
+  overflow: hidden;
+  flex-wrap: wrap;
+}
+.topics .alltags.hide {
+  height: 0;
+  padding: 0;
+}
+.topics .alltags .my-tags {
+  margin-top: 20rpx;
+}
+.topics .alltags .my-tags text {
+  color: #f58301;
+}
+.topics .alltags .my-empty {
+  margin-top: 30rpx;
+  text-align: center;
+}
+.topics .alltags .tag-tips {
+  margin-top: 80rpx;
+}
+.topics .alltags .search-tag {
+  margin: 20rpx auto;
+  padding: 40rpx 20rpx;
+  width: 600rpx;
+  background: #fff;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+.topics .alltags .search-tag .search-input {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.topics .alltags .search-tag input {
+  width: 70%;
+  height: 60rpx;
+  line-height: 60rpx;
+  border: 2rpx solid #ddd;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  padding-left: 10rpx;
+  text-align: left;
+  color: #000;
+  margin: 0 10rpx;
+}
+.topics .alltags text {
+  display: inline-block;
+  color: #a9abb3;
+  margin: 20rpx;
+}
+.posts {
+  display: flex;
+  flex-direction: column;
+  background: #ddd;
+  width: 750rpx;
+}
+.posts .the-topic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  padding: 20rpx 0;
+}
+.posts .the-topic image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+}
+.posts .the-topic text {
+  margin: 8rpx 20rpx;
+  text-align: center;
+}
+.posts .the-tag {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20rpx 0;
+  font-size: 50rpx;
+}
+.posts .the-tag text {
+  margin: 0 20rpx;
+}
