@@ -12,7 +12,7 @@
 
 Component({
   properties: {
-    // home | Settingscontroloptions | bqxin | xin
+    // gengduo | sousuo | caidan | iconfonttoggleon | more | guan | more1 | home | Settingscontroloptions | bqxin | xin
     name: {
       type: String
     },

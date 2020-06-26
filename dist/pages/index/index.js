@@ -71,7 +71,7 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "anonymousState__temp2", "anonymousState__temp3", "anonymousState__temp4", "anonymousState__temp5", "anonymousState__temp6", "anonymousState__temp7", "anonymousState__temp8", "anonymousState__temp9", "loopArray12", "$compid__10", "$compid__11", "$compid__12", "$compid__13", "$compid__14", "show", "tabId", "tabs", "Publications", "tags", "keyword", "hits", "allTags", "pub", "thePub", "tag", "list", "title", "top", "innerHeight", "type", "indexStore"], _this.config = {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "anonymousState__temp2", "anonymousState__temp3", "anonymousState__temp4", "anonymousState__temp5", "anonymousState__temp6", "anonymousState__temp7", "anonymousState__temp8", "anonymousState__temp9", "loopArray272", "$compid__339", "$compid__340", "$compid__341", "$compid__342", "$compid__343", "$compid__344", "showTabsOptions", "tabId", "Publications", "tags", "keyword", "hits", "allTags", "pub", "thePub", "tag", "list", "title", "top", "show", "innerHeight", "type", "tabs", "indexStore"], _this.config = {
       navigationBarTitleText: _project2.default.description,
       navigationStyle: "custom"
     }, _this.getPubs = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
@@ -293,12 +293,19 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       }, function () {
         return _this.getPost();
       });
-    }, _this.onTabs = function (index) {
+    }, _this.onChangeTab = function (index) {
+      var tabId = _this.state.tabId;
       var indexStore = _this.props.indexStore;
 
+      if (tabId === index) {
+        return _this.setState({
+          showTabsOptions: false
+        });
+      }
       indexStore.page = 0;
       _this.setState({
-        tabId: index,
+        showTabsOptions: false,
+        tabId: index === 2 ? tabId : index,
         keyword: "",
         pub: "",
         tag: "",
@@ -388,7 +395,11 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       return function (_x3) {
         return _ref6.apply(this, arguments);
       };
-    }(), _this.customComponents = ["IconFont", "Post"], _temp), _possibleConstructorReturn(_this, _ret);
+    }(), _this.onTabs = function () {
+      _this.setState({
+        showTabsOptions: true
+      });
+    }, _this.customComponents = ["IconFont", "Post"], _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Index, [{
@@ -413,7 +424,8 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         title: "Daily 最新动态",
         tabs: ["关注", "全部"],
         tabId: 1,
-        hits: []
+        hits: [],
+        showTabsOptions: false
       };
       this.$$refs = new _taroWeapp2.default.RefsArray();
     }
@@ -534,30 +546,35 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       var __prefix = this.$prefix;
       ;
 
-      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__10"),
+      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__339"),
           _genCompid2 = _slicedToArray(_genCompid, 2),
-          $prevCompid__10 = _genCompid2[0],
-          $compid__10 = _genCompid2[1];
+          $prevCompid__339 = _genCompid2[0],
+          $compid__339 = _genCompid2[1];
 
-      var _genCompid3 = (0, _taroWeapp.genCompid)(__prefix + "$compid__11"),
+      var _genCompid3 = (0, _taroWeapp.genCompid)(__prefix + "$compid__340"),
           _genCompid4 = _slicedToArray(_genCompid3, 2),
-          $prevCompid__11 = _genCompid4[0],
-          $compid__11 = _genCompid4[1];
+          $prevCompid__340 = _genCompid4[0],
+          $compid__340 = _genCompid4[1];
 
-      var _genCompid5 = (0, _taroWeapp.genCompid)(__prefix + "$compid__12"),
+      var _genCompid5 = (0, _taroWeapp.genCompid)(__prefix + "$compid__341"),
           _genCompid6 = _slicedToArray(_genCompid5, 2),
-          $prevCompid__12 = _genCompid6[0],
-          $compid__12 = _genCompid6[1];
+          $prevCompid__341 = _genCompid6[0],
+          $compid__341 = _genCompid6[1];
 
-      var _genCompid7 = (0, _taroWeapp.genCompid)(__prefix + "$compid__13"),
+      var _genCompid7 = (0, _taroWeapp.genCompid)(__prefix + "$compid__342"),
           _genCompid8 = _slicedToArray(_genCompid7, 2),
-          $prevCompid__13 = _genCompid8[0],
-          $compid__13 = _genCompid8[1];
+          $prevCompid__342 = _genCompid8[0],
+          $compid__342 = _genCompid8[1];
 
-      var _genCompid9 = (0, _taroWeapp.genCompid)(__prefix + "$compid__14"),
+      var _genCompid9 = (0, _taroWeapp.genCompid)(__prefix + "$compid__343"),
           _genCompid10 = _slicedToArray(_genCompid9, 2),
-          $prevCompid__14 = _genCompid10[0],
-          $compid__14 = _genCompid10[1];
+          $prevCompid__343 = _genCompid10[0],
+          $compid__343 = _genCompid10[1];
+
+      var _genCompid11 = (0, _taroWeapp.genCompid)(__prefix + "$compid__344"),
+          _genCompid12 = _slicedToArray(_genCompid11, 2),
+          $prevCompid__344 = _genCompid12[0],
+          $compid__344 = _genCompid12[1];
 
       var _state = this.__state,
           title = _state.title,
@@ -569,7 +586,8 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
           innerHeight = _state.innerHeight,
           tabs = _state.tabs,
           tabId = _state.tabId,
-          hits = _state.hits;
+          hits = _state.hits,
+          showTabsOptions = _state.showTabsOptions;
       var _props$indexStore = this.__props.indexStore,
           list = _props$indexStore.list,
           posts = _props$indexStore.posts,
@@ -593,18 +611,9 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       var Publications = [].concat(_toConsumableArray(publication1), _toConsumableArray(publication2));
       var anonymousState__temp = (0, _taroWeapp.internal_inline_style)({
         color: "#1c1e21",
-        padding: top + "px 0 0 10px",
+        padding: top + "px 0 10px 10px",
         height: "35px"
       });
-
-      this.anonymousFunc0 = function () {
-        return _this3.setState({ show: false });
-      };
-
-      this.anonymousFunc1 = function () {
-        return _this3.setState({ show: true });
-      };
-
       var anonymousState__temp2 = (0, _taroWeapp.internal_inline_style)({ transform: "translateX(" + (show ? "-50%" : "0") + ")" });
       var anonymousState__temp3 = (0, _taroWeapp.internal_inline_style)({ height: innerHeight - top - 35 + "px" });
       var anonymousState__temp4 = (0, _taroWeapp.internal_inline_style)({ color: "#fff", padding: "20px 0 10px 20px" });
@@ -613,15 +622,15 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       var anonymousState__temp7 = pub ? (0, _taroWeapp.internal_inline_style)({ display: "flex", alignItems: "center" }) : null;
       var anonymousState__temp8 = pub ? (0, _taroWeapp.internal_inline_style)({ color: isPub ? "#f58301" : "#000" }) : null;
       var anonymousState__temp9 = tag ? (0, _taroWeapp.internal_inline_style)({ color: isTag ? "#f58301" : "#000" }) : null;
-      var loopArray12 = list.map(function (id, _anonIdx9) {
+      var loopArray272 = list.map(function (id, _anonIdx9) {
         id = {
           $original: (0, _taroWeapp.internal_get_original)(id)
         };
 
-        var _genCompid11 = (0, _taroWeapp.genCompid)(__prefix + "czzzzzzzzz" + _anonIdx9, true),
-            _genCompid12 = _slicedToArray(_genCompid11, 2),
-            $prevCompid__9 = _genCompid12[0],
-            $compid__9 = _genCompid12[1];
+        var _genCompid13 = (0, _taroWeapp.genCompid)(__prefix + "gdzzzzzzzz" + _anonIdx9, true),
+            _genCompid14 = _slicedToArray(_genCompid13, 2),
+            $prevCompid__338 = _genCompid14[0],
+            $compid__338 = _genCompid14[1];
 
         _taroWeapp.propsManager.set({
           "pid": id.$original,
@@ -629,37 +638,42 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
           "setting": setting,
           "onPost": _this3.onPost,
           "onTag": _this3.onTag
-        }, $compid__9, $prevCompid__9);
+        }, $compid__338, $prevCompid__338);
         return {
-          $compid__9: $compid__9,
+          $compid__338: $compid__338,
           $original: id.$original
         };
       });
       _taroWeapp.propsManager.set({
         "name": "gengduo",
-        "size": 50,
-        "color": "#000"
-      }, $compid__10, $prevCompid__10);
+        "size": 40,
+        "color": "#323E70"
+      }, $compid__339, $prevCompid__339);
+      _taroWeapp.propsManager.set({
+        "name": "Settingscontroloptions",
+        "size": 40,
+        "color": "#323E70"
+      }, $compid__340, $prevCompid__340);
       _taroWeapp.propsManager.set({
         "name": "caidan",
-        "size": 60,
-        "color": "#000"
-      }, $compid__11, $prevCompid__11);
+        "size": 50,
+        "color": "#323E70"
+      }, $compid__341, $prevCompid__341);
       _taroWeapp.propsManager.set({
-        "name": "sousuo",
+        "name": "home",
         "size": 36,
         "color": "#000"
-      }, $compid__12, $prevCompid__12);
+      }, $compid__342, $prevCompid__342);
       pub && _taroWeapp.propsManager.set({
-        "name": "bookmark-add",
+        "name": "home",
         "size": 36,
         "color": isPub ? "#f58301" : "#000"
-      }, $compid__13, $prevCompid__13);
+      }, $compid__343, $prevCompid__343);
       tag && _taroWeapp.propsManager.set({
-        "name": "bookmark-add",
+        "name": "home",
         "size": 50,
         "color": isTag ? "#f58301" : "#000"
-      }, $compid__14, $prevCompid__14);
+      }, $compid__344, $prevCompid__344);
       Object.assign(this.__state, {
         anonymousState__temp: anonymousState__temp,
         anonymousState__temp2: anonymousState__temp2,
@@ -670,12 +684,13 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         anonymousState__temp7: anonymousState__temp7,
         anonymousState__temp8: anonymousState__temp8,
         anonymousState__temp9: anonymousState__temp9,
-        loopArray12: loopArray12,
-        $compid__10: $compid__10,
-        $compid__11: $compid__11,
-        $compid__12: $compid__12,
-        $compid__13: $compid__13,
-        $compid__14: $compid__14,
+        loopArray272: loopArray272,
+        $compid__339: $compid__339,
+        $compid__340: $compid__340,
+        $compid__341: $compid__341,
+        $compid__342: $compid__342,
+        $compid__343: $compid__343,
+        $compid__344: $compid__344,
         Publications: Publications,
         tags: tags,
         allTags: allTags,
@@ -684,20 +699,10 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       });
       return this.__state;
     }
-  }, {
-    key: "anonymousFunc0",
-    value: function anonymousFunc0(e) {
-      ;
-    }
-  }, {
-    key: "anonymousFunc1",
-    value: function anonymousFunc1(e) {
-      ;
-    }
   }]);
 
   return Index;
-}(_taroWeapp.Component), _class.$$events = ["anonymousFunc0", "anonymousFunc1", "onTabs", "onTopic", "onTag", "onSearch", "onLikeTag", "onNext", "onLikePub"], _class.$$componentPath = "pages/index/index", _temp2);
+}(_taroWeapp.Component), _class.$$events = ["onTabs", "onChangeTab", "onTopic", "onTag", "onSearch", "onLikeTag", "onNext", "onLikePub"], _class.$$componentPath = "pages/index/index", _temp2);
 Index = (0, _tslib.__decorate)([(0, _mobx.inject)("indexStore"), _mobx.observer], Index);
 exports.default = Index;
 

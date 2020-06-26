@@ -38,6 +38,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var maxLen = 8;
+
 var Post = (_temp2 = _class = function (_Taro$Component) {
   _inherits(Post, _Taro$Component);
 
@@ -52,7 +54,7 @@ var Post = (_temp2 = _class = function (_Taro$Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Post.__proto__ || Object.getPrototypeOf(Post)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "post", "loopArray13", "pid", "Themes", "theme", "title"], _this.anonymousFunc2Map = {}, _this.customComponents = [], _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Post.__proto__ || Object.getPrototypeOf(Post)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "loopArray202", "pid", "Themes", "theme", "post", "language", "tags", "maxLen"], _this.anonymousFunc2Map = {}, _this.customComponents = [], _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Post, [{
@@ -82,7 +84,7 @@ var Post = (_temp2 = _class = function (_Taro$Component) {
       var language = setting.language,
           theme = setting.theme;
 
-      var title = language[1] === 0 ? post.title : language[1] === 1 ? post.title_cn : post.title + "-" + post.title_cn;
+      var tags = post.tags.length > maxLen ? post.tags.slice(0, maxLen) : post.tags;
       var anonymousState__temp = (0, _index.dateForLatest)(post.createdAt, language[0]);
 
       this.anonymousFunc0 = function () {
@@ -93,13 +95,13 @@ var Post = (_temp2 = _class = function (_Taro$Component) {
         return onPost(pid);
       };
 
-      var loopArray13 = post.tags.map(function (vtag, index) {
+      var loopArray202 = tags.map(function (vtag, index) {
         vtag = {
           $original: (0, _taroWeapp.internal_get_original)(vtag)
         };
         var $loopState__temp3 = pid + index;
 
-        var _$indexKey = "dzzzz" + index;
+        var _$indexKey = "ejzzz" + index;
 
         _this2.anonymousFunc2Map[_$indexKey] = function () {
           return onTag(vtag.$original);
@@ -115,12 +117,14 @@ var Post = (_temp2 = _class = function (_Taro$Component) {
       });
       Object.assign(this.__state, {
         anonymousState__temp: anonymousState__temp,
-        post: post,
-        loopArray13: loopArray13,
+        loopArray202: loopArray202,
         pid: pid,
         Themes: _index2.Themes,
         theme: theme,
-        title: title
+        post: post,
+        language: language,
+        tags: tags,
+        maxLen: maxLen
       });
       return this.__state;
     }

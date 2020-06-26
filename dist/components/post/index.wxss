@@ -1,14 +1,21 @@
 .post {
   display: flex;
   flex-direction: column;
-  margin-top: 20rpx;
-  background: #fff;
+  border-radius: 20rpx;
+  width: 92%;
+  margin: 20rpx auto 0;
+  background: #d4e4ec;
+  box-shadow: 20rpx 20rpx 60rpx #b4c2c9, -20rpx -20rpx 60rpx #f4ffff;
 }
 .post .topic {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 10rpx 30rpx;
+  border-radius: 20rpx 20rpx 0 0;
+  background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+  box-shadow: 30rpx 30rpx 60rpx #b4c2c9, -30rpx -30rpx 60rpx #f4ffff;
+  font-size: 24rpx;
 }
 .post .topic image {
   width: 50rpx;
@@ -20,13 +27,12 @@
 }
 .post .topic .date {
   margin-left: auto;
-  font-size: 30rpx;
 }
 .post .content {
   border-top: 2rpx solid #ddd;
   display: flex;
   flex-direction: column;
-  padding-bottom: 30rpx;
+  padding-bottom: 10rpx;
 }
 .post .content image {
   margin: 0 auto;
@@ -36,16 +42,22 @@
 .post .content .name {
   margin-bottom: 20rpx;
   padding: 30rpx;
-  border: 1rpx solid #ddd;
+  background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+  box-shadow: 30rpx 30rpx 60rpx #b4c2c9, -30rpx -30rpx 60rpx #f4ffff;
+}
+.post .content .name .text {
+  margin-top: 10rpx;
+  color: #001f3f;
 }
 .post .content .tags {
-  font-size: 30rpx;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   padding: 0 30rpx;
+  word-break: break-all;
 }
 .post .content .tags .tag {
   margin: 10rpx;
   color: rgba(0,0,255,0.7);
+  font-size: 24rpx;
 }

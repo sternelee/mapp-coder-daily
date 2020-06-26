@@ -5,15 +5,12 @@ import { Themes } from '@api/index';
 
 import "./index.styl";
 
+const maxLen = 8
+
 function Post(props) {
   const { post, pid, onPost, onTag, setting } = props;
   const { language, theme } = setting;
-  const title =
-    language[1] === 0
-      ? post.title
-      : language[1] === 1
-      ? post.title_cn
-      : post.title + "-" + post.title_cn;
+  const tags = post.tags.length > maxLen ? post.tags.slice(0, maxLen) : post.tags
   return (
     <View key={pid} className={`post ${Themes[theme]}`}>
       <View className="topic">
@@ -25,15 +22,26 @@ function Post(props) {
       </View>
       <View className="content">
         <Image src={post.image} onClick={() => onPost(pid)} />
-        <Text className="name" onClick={() => onPost(pid)}>
-          {title}
-        </Text>
+        <View className="name" onClick={() => onPost(pid)}>
+        {
+          (language[1] === 0 || language[1] === 2) &&
+          <View className="text">{ post.title }</View>
+        }
+        {
+          (language[1] === 1 || language[1] === 2) &&
+          <View className="text">{ post.title_cn }</View>
+        }
+        </View>
         <View className="tags">
-          {post.tags.map((vtag, index) => (
+          {tags.map((vtag, index) => (
             <Text className="tag" key={pid + index} onClick={() => onTag(vtag)}>
               #{vtag.toUpperCase()}
             </Text>
           ))}
+          {
+            post.tags.length > maxLen &&
+            <Text>...</Text>
+          }
         </View>
       </View>
     </View>

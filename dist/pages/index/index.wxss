@@ -1,11 +1,29 @@
 .inner {
   overflow-x: hidden;
+  background: #d4e4ec;
 }
 .header {
   text-align: center;
   color: #fff;
   display: flex;
   align-items: center;
+  background: #d4e4ec;
+  box-shadow: 20rpx 20rpx 60rpx #b4c2c9, -20rpx -20rpx 60rpx #f4ffff;
+}
+.header .btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60rpx;
+  height: 60rpx;
+  margin-right: 30rpx;
+  border-radius: 10rpx;
+  background: #d4e4ec;
+  box-shadow: 20rpx 20rpx 60rpx #b4c2c9, -20rpx -20rpx 60rpx #f4ffff;
+}
+.header .btn.on {
+  background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+  box-shadow: 30rpx 30rpx 60rpx #b4c2c9, -30rpx -30rpx 60rpx #f4ffff;
 }
 .header .caidan {
   margin-left: 30rpx;
@@ -14,15 +32,29 @@
   width: 60%;
   display: flex;
   margin-left: auto;
+  position: relative;
 }
-.header .title text {
-  margin: 0 10rpx;
-  line-height: 60rpx;
+.header .title .options {
+  position: absolute;
+  left: -12rpx;
+  top: 70rpx;
+  font-size: 24rpx;
+  padding: 12rpx;
+  z-index: 2;
+  border-radius: 10rpx;
+  background: #d4e4ec;
+  box-shadow: 20rpx 20rpx 60rpx #b4c2c9, -20rpx -20rpx 60rpx #f4ffff;
+  display: none;
 }
-.header .title .on {
-  font-weight: 600;
-  border-bottom: 4rpx solid rgba(0,0,255,0.7);
-  color: rgba(0,0,255,0.7);
+.header .title .options.on {
+  display: block;
+}
+.header .title .options .option {
+  padding: 10rpx;
+}
+.header .title .options .option.on {
+  background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+  box-shadow: 10rpx 10rpx 20rpx #b4c2c9, -10rpx -10rpx 20rpx #f4ffff;
 }
 .header .search {
   display: flex;
@@ -40,6 +72,7 @@
 }
 .inner {
   width: 1500rpx;
+  background: #d4e4ec;
   display: flex;
   transition: -webkit-transform 0.2s linear;
   transition: transform 0.2s linear;
@@ -140,7 +173,6 @@
 .posts {
   display: flex;
   flex-direction: column;
-  background: #ddd;
   width: 750rpx;
 }
 .posts .the-topic {

@@ -2,13 +2,13 @@
     <view class="{{'post ' + Themes[theme]}}">
         <view class="header" style="{{anonymousState__temp}}">
             <view bindtap="onHome" class="btn">
-                <icon-font compid="{{$compid__33}}"></icon-font>
+                <icon-font compid="{{$compid__39}}"></icon-font>
             </view>
             <view bindtap="onSet" class="btn">
-                <icon-font compid="{{$compid__34}}"></icon-font>
+                <icon-font compid="{{$compid__40}}"></icon-font>
             </view>
             <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
-                <icon-font compid="{{$compid__35}}"></icon-font>
+                <icon-font compid="{{$compid__41}}"></icon-font>
             </view>
         </view>
         <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl">

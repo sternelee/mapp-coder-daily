@@ -171,7 +171,7 @@ class Index extends Component {
       data: {
         uid: openid,
         platform: 'wechat',
-        fav: pid
+        fav
       }
     })
   }

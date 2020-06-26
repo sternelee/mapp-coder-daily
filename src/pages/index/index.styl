@@ -1,24 +1,52 @@
 .inner
   overflow-x: hidden
+  background: #d4e4ec;
 
 .header
   text-align center
   color #fff
   display flex
   align-items center
+  background: #d4e4ec;
+  box-shadow:  20px 20px 60px #b4c2c9, -20px -20px 60px #f4ffff;
+  .btn
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin-right: 30px;
+    border-radius: 10px;
+    background: #d4e4ec;
+    box-shadow:  20px 20px 60px #b4c2c9, -20px -20px 60px #f4ffff;
+    &.on
+      background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+      box-shadow:  30px 30px 60px #b4c2c9, -30px -30px 60px #f4ffff;
   .caidan
     margin-left 30px
   .title
     width 60%
     display: flex;
     margin-left: auto;
-    text
-      margin: 0 10px;
-      line-height: 60px;
-    .on
-      font-weight: 600;
-      border-bottom: 4px solid rgba(0,0,255, .7);
-      color: rgba(0,0,255, .7);
+    position relative;
+    .options
+      position: absolute;
+      left: -12px;
+      top: 70px;
+      font-size: 24px;
+      padding: 12px;
+      z-index: 2;
+      border-radius: 10px;
+      background: #d4e4ec;
+      box-shadow:  20px 20px 60px #b4c2c9, -20px -20px 60px #f4ffff;
+      display: none;
+      &.on
+        display: block;
+      .option
+        padding: 10px;
+        &.on
+          background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+          box-shadow:  10px 10px 20px #b4c2c9, -10px -10px 20px #f4ffff;
   .search
     display flex
     align-items center
@@ -34,6 +62,7 @@
 
 .inner
   width 1500px;
+  background: #d4e4ec;
   display flex
   transition transform .2s linear
 
@@ -119,7 +148,6 @@
 .posts
   display flex
   flex-direction: column
-  background #ddd
   width: 750px
   .the-topic
     display flex

@@ -64,7 +64,7 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "anonymousState__temp2", "$compid__33", "$compid__34", "$compid__35", "Themes", "theme", "isLike", "language", "img", "md", "title", "title_cn", "pid", "top", "url", "indexStore"], _this.config = {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "anonymousState__temp2", "$compid__39", "$compid__40", "$compid__41", "Themes", "theme", "isLike", "language", "img", "md", "title", "title_cn", "pid", "top", "url", "indexStore"], _this.config = {
       navigationBarTitleText: "详情页",
       navigationStyle: "custom",
       usingComponents: {
@@ -122,7 +122,7 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         data: {
           uid: openid,
           platform: 'wechat',
-          fav: pid
+          fav: fav
         }
       });
     }, _this.onSet = function () {}, _this.customComponents = ["IconFont"], _temp), _possibleConstructorReturn(_this, _ret);
@@ -260,20 +260,20 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       var __prefix = this.$prefix;
       ;
 
-      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__33"),
+      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__39"),
           _genCompid2 = _slicedToArray(_genCompid, 2),
-          $prevCompid__33 = _genCompid2[0],
-          $compid__33 = _genCompid2[1];
+          $prevCompid__39 = _genCompid2[0],
+          $compid__39 = _genCompid2[1];
 
-      var _genCompid3 = (0, _taroWeapp.genCompid)(__prefix + "$compid__34"),
+      var _genCompid3 = (0, _taroWeapp.genCompid)(__prefix + "$compid__40"),
           _genCompid4 = _slicedToArray(_genCompid3, 2),
-          $prevCompid__34 = _genCompid4[0],
-          $compid__34 = _genCompid4[1];
+          $prevCompid__40 = _genCompid4[0],
+          $compid__40 = _genCompid4[1];
 
-      var _genCompid5 = (0, _taroWeapp.genCompid)(__prefix + "$compid__35"),
+      var _genCompid5 = (0, _taroWeapp.genCompid)(__prefix + "$compid__41"),
           _genCompid6 = _slicedToArray(_genCompid5, 2),
-          $prevCompid__35 = _genCompid6[0],
-          $compid__35 = _genCompid6[1];
+          $prevCompid__41 = _genCompid6[0],
+          $compid__41 = _genCompid6[1];
 
       var _props$indexStore = this.__props.indexStore,
           _props$indexStore$set = _props$indexStore.setting,
@@ -295,23 +295,23 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         "name": "home",
         "size": 40,
         "color": "#323E70"
-      }, $compid__33, $prevCompid__33);
+      }, $compid__39, $prevCompid__39);
       _taroWeapp.propsManager.set({
         "name": "Settingscontroloptions",
         "size": 40,
         "color": "#323E70"
-      }, $compid__34, $prevCompid__34);
+      }, $compid__40, $prevCompid__40);
       _taroWeapp.propsManager.set({
         "name": isLike ? 'bqxin' : 'xin',
         "size": 40,
         "color": "#323E70"
-      }, $compid__35, $prevCompid__35);
+      }, $compid__41, $prevCompid__41);
       Object.assign(this.__state, {
         anonymousState__temp: anonymousState__temp,
         anonymousState__temp2: anonymousState__temp2,
-        $compid__33: $compid__33,
-        $compid__34: $compid__34,
-        $compid__35: $compid__35,
+        $compid__39: $compid__39,
+        $compid__40: $compid__40,
+        $compid__41: $compid__41,
         Themes: _index.Themes,
         theme: theme,
         isLike: isLike,

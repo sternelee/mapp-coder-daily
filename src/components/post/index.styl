@@ -1,13 +1,20 @@
 .post
   display flex
   flex-direction: column
-  margin-top 20px
-  background #fff
+  border-radius: 20px;
+  width: 92%;
+  margin: 20px auto 0;
+  background: #d4e4ec;
+  box-shadow:  20px 20px 60px #b4c2c9, -20px -20px 60px #f4ffff;
   .topic
     display flex
     flex-direction: row
     align-items: center
     padding 10px 30px
+    border-radius: 20px 20px 0 0;
+    background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+    box-shadow:  30px 30px 60px #b4c2c9, -30px -30px 60px #f4ffff;
+    font-size: 24px;
     image
       width 50px
       height 50px
@@ -16,13 +23,11 @@
       margin-left: 20px
     .date
       margin-left: auto
-      font-size 30px
   .content
     border-top 2px solid #ddd
-    // padding-top: 20px
     display flex
     flex-direction: column
-    padding-bottom 30px
+    padding-bottom 10px
     image
       margin: 0 auto
       width 100%
@@ -30,13 +35,18 @@
     .name
       margin-bottom 20px
       padding 30px
-      border 1px solid #ddd
+      background: linear-gradient(145deg, #bfcdd4, #e3f4fd);
+      box-shadow:  30px 30px 60px #b4c2c9, -30px -30px 60px #f4ffff;
+      .text
+        margin-top: 10px;
+        color: rgb(0, 31, 63);
     .tags
-      font-size 30px
       display flex
       align-items: center
       flex-wrap: wrap
       padding 0 30px
+      word-break: break-all;
       .tag
         margin: 10px
         color rgba(0,0,255, .7);
+        font-size: 24px;

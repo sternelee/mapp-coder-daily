@@ -2,10 +2,9 @@ import Taro, { Component, Config } from "@tarojs/taro";
 import { View, Text, Image, Input, ScrollView } from "@tarojs/components";
 import { observer, inject } from "@tarojs/mobx";
 import IconFont from "@components/iconfont";
-import { setGlobalData } from "@utils/store";
 // eslint-disable-next-line no-unused-vars
 import { StoreInterface } from "@store/index";
-import { Uri, AuthUri } from "@api/index";
+import { Uri } from "@api/index";
 import project from "@project";
 import Post from "@components/post/index";
 
@@ -41,6 +40,7 @@ class Index extends Component {
     tabs: string[];
     tabId: number;
     hits: string[];
+    showTabsOptions: boolean;
   } = {
     top: 0,
     show: true,
@@ -52,7 +52,8 @@ class Index extends Component {
     title: "Daily 最新动态",
     tabs: ["关注", "全部"],
     tabId: 1,
-    hits: []
+    hits: [],
+    showTabsOptions: false
   };
 
   async componentWillMount() {
@@ -278,12 +279,19 @@ class Index extends Component {
     );
   };
 
-  onTabs = index => {
+  onChangeTab = index => {
+    const { tabId } = this.state
     const { indexStore } = this.props;
+    if (tabId === index) {
+      return this.setState({
+        showTabsOptions: false
+      })
+    }
     indexStore.page = 0;
     this.setState(
       {
-        tabId: index,
+        showTabsOptions: false,
+        tabId: index === 2 ? tabId : index,
         keyword: "",
         pub: "",
         tag: "",
@@ -356,6 +364,12 @@ class Index extends Component {
     return datas;
   };
 
+  onTabs = () => {
+    this.setState({
+      showTabsOptions: true
+    })
+  }
+
   render() {
     const {
       title,
@@ -367,7 +381,8 @@ class Index extends Component {
       innerHeight,
       tabs,
       tabId,
-      hits
+      hits,
+      showTabsOptions
     } = this.state;
     const {
       list,
@@ -392,45 +407,27 @@ class Index extends Component {
           className="header"
           style={{
             color: "#1c1e21",
-            padding: `${top}px 0 0 10px`,
+            padding: `${top}px 0 10px 10px`,
             height: `35px`
           }}
         >
-          <View
-            className="gengduo"
-            onClick={() => this.setState({ show: false })}
-          >
-            <IconFont name="gengduo" size={50} color="#000" />
+          <View className="btn">
+            <IconFont name="gengduo" size={40} color="#323E70" />
           </View>
-          <View
-            className="caidan"
-            onClick={() => this.setState({ show: true })}
-          >
-            <IconFont name="caidan" size={60} color="#000" />
+          <View className="btn">
+            <IconFont name="Settingscontroloptions" size={40} color="#323E70" />
           </View>
-          {/* {!show && (
-            <View className='search'>
-              <IconFont name='sousuo' size={26} color='#000' />
-              <Input
-                value={keyword}
-                onInput={this.onSearch}
-                placeholder='搜索主题'
-              />
+          <View className="title">
+            <View className="btn" onClick={this.onTabs}>
+              {/* 根据关注，全部使用不同的颜色，点击可选择 关注、全部、刷新 */}
+              <IconFont name="caidan" size={50} color="#323E70" />
             </View>
-          )} */}
-          {show && (
-            <View className="title">
-              {tabs.map((v, index) => (
-                <Text
-                  className={index === tabId ? "on" : ""}
-                  onClick={this.onTabs.bind(this, index)}
-                  key={index}
-                >
-                  {v}
-                </Text>
-              ))}
+            <View className={`options ${showTabsOptions ? 'on' : ''}`}>
+              <View className={`option ${tabId === 0 ? 'on' : ''}`} onClick={this.onChangeTab.bind(this, 0)}>关注</View>
+              <View className={`option ${tabId === 1 ? 'on' : ''}`} onClick={this.onChangeTab.bind(this, 1)}>全部</View>
+              <View className="option" onClick={this.onChangeTab.bind(this, 2)}>刷新</View>
             </View>
-          )}
+          </View>
         </View>
         <View
           className="inner"
@@ -475,7 +472,7 @@ class Index extends Component {
               )}
               <View className="search-tag">
                 <View className="search-input">
-                  <IconFont name="sousuo" size={36} color="#000" />
+                  <IconFont name="home" size={36} color="#000" />
                   {/* <IconFont name='bookmark-add' size={36} color='#000' /> */}
                   <Input
                     value={keyword}
@@ -523,7 +520,7 @@ class Index extends Component {
                     {title}
                   </Text>
                   <IconFont
-                    name="bookmark-add"
+                    name="home"
                     size={36}
                     color={isPub ? "#f58301" : "#000"}
                   />
@@ -539,7 +536,7 @@ class Index extends Component {
                   {title}
                 </Text>
                 <IconFont
-                  name="bookmark-add"
+                  name="home"
                   size={50}
                   color={isTag ? "#f58301" : "#000"}
                 />
