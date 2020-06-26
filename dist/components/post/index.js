@@ -26,6 +26,8 @@ var _taroWeapp2 = _interopRequireDefault(_taroWeapp);
 
 var _index = __webpack_require__(/*! ../../utils/index */ "./src/utils/index.ts");
 
+var _index2 = __webpack_require__(/*! ../../api/index */ "./src/api/index.ts");
+
 __webpack_require__(/*! ./index.styl */ "./src/components/post/index.styl");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -35,8 +37,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var themes = ["light", "dark", "auto"];
 
 var Post = (_temp2 = _class = function (_Taro$Component) {
   _inherits(Post, _Taro$Component);
@@ -52,7 +52,7 @@ var Post = (_temp2 = _class = function (_Taro$Component) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Post.__proto__ || Object.getPrototypeOf(Post)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "post", "loopArray19", "pid", "themes", "theme", "title"], _this.anonymousFunc2Map = {}, _this.customComponents = [], _temp), _possibleConstructorReturn(_this, _ret);
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Post.__proto__ || Object.getPrototypeOf(Post)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "post", "loopArray13", "pid", "Themes", "theme", "title"], _this.anonymousFunc2Map = {}, _this.customComponents = [], _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Post, [{
@@ -93,30 +93,32 @@ var Post = (_temp2 = _class = function (_Taro$Component) {
         return onPost(pid);
       };
 
-      var loopArray19 = post.tags.map(function (vtag, index) {
+      var loopArray13 = post.tags.map(function (vtag, index) {
         vtag = {
           $original: (0, _taroWeapp.internal_get_original)(vtag)
         };
         var $loopState__temp3 = pid + index;
 
-        var _$indexKey = "jzzzz" + index;
+        var _$indexKey = "dzzzz" + index;
 
         _this2.anonymousFunc2Map[_$indexKey] = function () {
           return onTag(vtag.$original);
         };
 
+        var $loopState__temp5 = vtag.$original.toUpperCase();
         return {
           $loopState__temp3: $loopState__temp3,
           _$indexKey: _$indexKey,
+          $loopState__temp5: $loopState__temp5,
           $original: vtag.$original
         };
       });
       Object.assign(this.__state, {
         anonymousState__temp: anonymousState__temp,
         post: post,
-        loopArray19: loopArray19,
+        loopArray13: loopArray13,
         pid: pid,
-        themes: themes,
+        Themes: _index2.Themes,
         theme: theme,
         title: title
       });

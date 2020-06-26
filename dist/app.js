@@ -67,7 +67,7 @@ var _App = function (_BaseComponent) {
     var _this = _possibleConstructorReturn(this, (_App.__proto__ || Object.getPrototypeOf(_App)).apply(this, arguments));
 
     _this.config = {
-      pages: ['pages/index/index', 'pages/post/index'],
+      pages: ['pages/post/index', 'pages/index/index'],
       window: {
         backgroundTextStyle: 'light',
         navigationBarBackgroundColor: '#fff',
@@ -178,7 +178,15 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _tslib = __webpack_require__(/*! tslib */ "./node_modules/tslib/tslib.es6.js");
 
+var _taroWeapp = __webpack_require__(/*! @tarojs/taro-weapp */ "./node_modules/@tarojs/taro-weapp/index.js");
+
+var _taroWeapp2 = _interopRequireDefault(_taroWeapp);
+
 var _mobx = __webpack_require__(/*! mobx */ "./node_modules/mobx/lib/mobx.module.js");
+
+var _index = __webpack_require__(/*! ../api/index */ "./src/api/index.ts");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -189,6 +197,7 @@ var Store = function () {
     _classCallCheck(this, Store);
 
     this.auth = { openid: '', session_key: '' };
+    this.isAuth = false;
     this.list = [];
     this.posts = {};
     this.tags = [];
@@ -205,36 +214,87 @@ var Store = function () {
   }
 
   _createClass(Store, [{
-    key: 'setAuth',
+    key: "setAuth",
     value: function setAuth(obj) {
+      this.isAuth = true;
       this.auth = obj;
     }
   }, {
-    key: 'setList',
+    key: "setList",
     value: function setList(list, more) {
       this.list = more ? [].concat(_toConsumableArray(this.list), _toConsumableArray(list)) : list;
     }
   }, {
-    key: 'setPost',
+    key: "setPost",
     value: function setPost(newObj) {
       var id = newObj.id;
       var old = this.posts[id] || {};
       this.posts[id] = _extends({}, old, newObj);
     }
   }, {
-    key: 'setTags',
+    key: "setTags",
     value: function setTags(list) {
       this.tags = list;
     }
   }, {
-    key: 'setPubs',
+    key: "setPubs",
     value: function setPubs(list) {
       this.pubs = list;
     }
   }, {
-    key: 'setFavs',
+    key: "setFavs",
     value: function setFavs(list) {
       this.favs = list;
+    }
+  }, {
+    key: "getAuth",
+    value: function getAuth() {
+      var _this = this;
+
+      _taroWeapp2.default.getStorage({
+        key: "auth"
+      }).then(function (res) {
+        _this.setAuth(res.data);
+        setTimeout(function () {
+          return _this.checkUser();
+        }, 1000);
+      }).catch(function () {
+        _taroWeapp2.default.login().then(function (res) {
+          _taroWeapp2.default.request({
+            url: _index.AuthUri + "auth?js_code=" + res.code + "&type=daily"
+          }).then(function (res1) {
+            return res1.data;
+          }).then(function (res2) {
+            if (res2.openid) {
+              _this.setAuth(res2);
+              _taroWeapp2.default.setStorageSync("auth", res2);
+              setTimeout(function () {
+                return _this.checkUser();
+              }, 1000);
+            }
+          });
+        });
+      });
+    }
+  }, {
+    key: "checkUser",
+    value: function checkUser() {
+      var _this2 = this;
+
+      var openid = this.auth.openid;
+
+      _taroWeapp2.default.request({
+        url: _index.Uri + "user/me?uid=" + openid + "&platform=wechat"
+      }).then(function (res) {
+        var _res$data$data = res.data.data,
+            tags = _res$data$data.tags,
+            pubs = _res$data$data.pubs,
+            favs = _res$data$data.favs;
+
+        _this2.setTags(tags);
+        _this2.setPubs(pubs);
+        _this2.setFavs(favs);
+      });
     }
   }]);
 
@@ -242,6 +302,7 @@ var Store = function () {
 }();
 
 (0, _tslib.__decorate)([_mobx.observable], Store.prototype, "auth", undefined);
+(0, _tslib.__decorate)([_mobx.observable], Store.prototype, "isAuth", undefined);
 (0, _tslib.__decorate)([_mobx.observable], Store.prototype, "list", undefined);
 (0, _tslib.__decorate)([_mobx.observable], Store.prototype, "posts", undefined);
 (0, _tslib.__decorate)([_mobx.observable], Store.prototype, "tags", undefined);
@@ -257,8 +318,10 @@ var Store = function () {
 (0, _tslib.__decorate)([_mobx.action], Store.prototype, "setTags", null);
 (0, _tslib.__decorate)([_mobx.action], Store.prototype, "setPubs", null);
 (0, _tslib.__decorate)([_mobx.action], Store.prototype, "setFavs", null);
+(0, _tslib.__decorate)([_mobx.action], Store.prototype, "getAuth", null);
+(0, _tslib.__decorate)([_mobx.action], Store.prototype, "checkUser", null);
 exports.default = new Store();
 
 /***/ })
 
-},[["./src/app.tsx","runtime","vendors"]]]);;
+},[["./src/app.tsx","runtime","vendors","common"]]]);;

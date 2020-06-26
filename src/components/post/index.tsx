@@ -1,10 +1,9 @@
 import Taro from "@tarojs/taro";
 import { View, Text, Image } from "@tarojs/components";
 import { dateForLatest } from "@utils/index";
+import { Themes } from '@api/index';
 
 import "./index.styl";
-
-const themes = ["light", "dark", "auto"];
 
 function Post(props) {
   const { post, pid, onPost, onTag, setting } = props;
@@ -16,7 +15,7 @@ function Post(props) {
       ? post.title_cn
       : post.title + "-" + post.title_cn;
   return (
-    <View key={pid} className={`post ${themes[theme]}`}>
+    <View key={pid} className={`post ${Themes[theme]}`}>
       <View className="topic">
         <Image src={post.publication.image} mode="aspectFit" />
         <Text>{post.publication.name}</Text>
@@ -32,7 +31,7 @@ function Post(props) {
         <View className="tags">
           {post.tags.map((vtag, index) => (
             <Text className="tag" key={pid + index} onClick={() => onTag(vtag)}>
-              #{vtag}
+              #{vtag.toUpperCase()}
             </Text>
           ))}
         </View>

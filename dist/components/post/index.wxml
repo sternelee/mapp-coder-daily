@@ -1,11 +1,11 @@
 <block wx:if="{{$taroCompReady}}">
-    <view wx:key="pid" class="{{'post ' + themes[theme]}}">
+    <view wx:key="pid" class="{{'post ' + Themes[theme]}}">
         <view class="topic">
             <image src="{{post.publication.image}}" mode="aspectFit"></image><text>{{post.publication.name}}</text><text class="date">{{anonymousState__temp}}</text>
         </view>
         <view class="content">
             <image src="{{post.image}}" bindtap="anonymousFunc0"></image><text class="name" bindtap="anonymousFunc1">{{title}}</text>
-            <view class="tags"><text class="tag" wx:key="$loopState__temp3" bindtap="anonymousFunc2" wx:for="{{loopArray19}}" wx:for-item="vtag" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{vtag._$indexKey}}">#{{vtag.$original}}</text>
+            <view class="tags"><text class="tag" wx:key="$loopState__temp3" bindtap="anonymousFunc2" wx:for="{{loopArray13}}" wx:for-item="vtag" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{vtag._$indexKey}}">#{{vtag.$loopState__temp5}}</text>
             </view>
         </view>
     </view>

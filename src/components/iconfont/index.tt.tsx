@@ -4,7 +4,7 @@
 import Taro, { FunctionComponent } from '@tarojs/taro';
 
 interface Props {
-  name: 'bookmark-add' | 'xiala' | 'sousuo' | 'caidan1' | 'gengduo' | 'check' | 'check1' | 'home' | 'caidan';
+  name: 'home' | 'Settingscontroloptions' | 'bqxin' | 'xin';
   size?: number;
   color?: string | string[];
 }

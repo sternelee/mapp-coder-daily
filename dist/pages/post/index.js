@@ -34,7 +34,9 @@ var _taroWeapp2 = _interopRequireDefault(_taroWeapp);
 
 var _mobx = __webpack_require__(/*! @tarojs/mobx */ "./node_modules/@tarojs/mobx/index.js");
 
-var _index = __webpack_require__(/*! ../../utils/index */ "./src/utils/index.ts");
+var _index = __webpack_require__(/*! ../../api/index */ "./src/api/index.ts");
+
+var _index2 = __webpack_require__(/*! ../../utils/index */ "./src/utils/index.ts");
 
 __webpack_require__(/*! ./index.styl */ "./src/pages/post/index.styl");
 
@@ -62,19 +64,29 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "$compid__13", "img", "md", "title", "top", "url", "indexStore"], _this.config = {
-      navigationBarTitleText: '详情页',
-      navigationStyle: 'custom',
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "anonymousState__temp2", "$compid__33", "$compid__34", "$compid__35", "Themes", "theme", "isLike", "language", "img", "md", "title", "title_cn", "pid", "top", "url", "indexStore"], _this.config = {
+      navigationBarTitleText: "详情页",
+      navigationStyle: "custom",
       usingComponents: {
-        wemark: '../../wemark/wemark'
+        wemark: "../../wemark/wemark"
       }
+    }, _this.setData = function (data) {
+      var content = (0, _index2.fixUrl)(data.content, data.url);
+      _this.setState({
+        pid: data.id,
+        title: data.title,
+        title_cn: data.title_cn,
+        url: data.url,
+        img: data.image,
+        md: content
+      });
     }, _this.onHome = function () {
       var len = _taroWeapp2.default.getCurrentPages().length;
       if (len > 1) {
         _taroWeapp2.default.navigateBack();
       } else {
         _taroWeapp2.default.navigateTo({
-          url: '/pages/index/index'
+          url: "/pages/index/index"
         });
       }
     }, _this.onCopyUrl = function () {
@@ -84,12 +96,36 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         data: url,
         success: function success() {
           _taroWeapp2.default.showToast({
-            title: '原文链接已复制',
+            title: "原文链接已复制",
             duration: 1000
           });
         }
       });
-    }, _this.customComponents = ["IconFont"], _temp), _possibleConstructorReturn(_this, _ret);
+    }, _this.onLike = function () {
+      var _this$props$indexStor = _this.props.indexStore,
+          favs = _this$props$indexStor.favs,
+          openid = _this$props$indexStor.auth.openid;
+      var pid = _this.state.pid;
+
+      var fav = String(pid);
+      if (favs.includes(fav)) {
+        favs = favs.filter(function (v) {
+          return v !== fav;
+        });
+      } else {
+        favs.push(fav);
+      }
+      _this.props.indexStore.favs = favs;
+      _taroWeapp2.default.request({
+        url: _index.Uri + "user/me",
+        method: 'POST',
+        data: {
+          uid: openid,
+          platform: 'wechat',
+          fav: pid
+        }
+      });
+    }, _this.onSet = function () {}, _this.customComponents = ["IconFont"], _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Index, [{
@@ -104,11 +140,13 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
        * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
        */
       this.state = {
-        md: '',
-        title: '',
+        pid: 0,
+        md: "",
+        title: "",
+        title_cn: "",
         top: 0,
-        url: '',
-        img: ''
+        url: "",
+        img: ""
       };
       this.$$refs = new _taroWeapp2.default.RefsArray();
     }
@@ -126,7 +164,7 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       var query = this.$router.params;
       var title = this.state.title;
 
-      if (ops.from === 'button') {
+      if (ops.from === "button") {
         // 来自页面内转发按钮
         console.log(ops.target);
       }
@@ -147,24 +185,59 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
     key: "componentDidShow",
     value: function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-        var query, posts, data, content;
+        var _this2 = this;
+
+        var query, indexStore, posts, isAuth, id, data;
         return _regenerator2.default.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 query = this.$router.params;
-                posts = this.props.indexStore.posts;
-                data = posts[query.id];
-                content = (0, _index.fixUrl)(data.content, data.url);
+                indexStore = this.props.indexStore;
+                posts = indexStore.posts, isAuth = indexStore.isAuth;
 
-                this.setState({
-                  title: data.title,
-                  url: data.url,
-                  img: data.image,
-                  md: content
-                });
+                if (!isAuth) {
+                  indexStore.getAuth();
+                }id = query.id || '74b935d8749907d4cfad7386b7e6b5e5';
+                data = posts[id] || {};
 
-              case 5:
+                if (data && data.content) {
+                  // 已有数据
+                  this.setData(data);
+                } else {
+                  _taroWeapp2.default.showLoading({
+                    title: "请求数据中"
+                  });
+                  _taroWeapp2.default.request({
+                    url: _index.Uri + "post/fetch",
+                    data: {
+                      pid: id,
+                      link: data.url || null
+                    }
+                  }).then(function (res) {
+                    if (res.data.code === 0) {
+                      data = res.data.data;
+                      indexStore.setPost({
+                        id: id,
+                        pid: data.id,
+                        author: data.author,
+                        lead_image_url: data.lead_image_url,
+                        word_count: data.word_count,
+                        content: data.content,
+                        content_cn: data.content_cn
+                      });
+                      _this2.setData(data);
+                      _taroWeapp2.default.hideLoading();
+                    }
+                  }).catch(function (err) {
+                    _taroWeapp2.default.showToast({
+                      title: "拉取数据失败",
+                      duration: 2000
+                    });
+                  });
+                }
+
+              case 7:
               case "end":
                 return _context.stop();
             }
@@ -187,33 +260,69 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       var __prefix = this.$prefix;
       ;
 
-      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__13"),
+      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__33"),
           _genCompid2 = _slicedToArray(_genCompid, 2),
-          $prevCompid__13 = _genCompid2[0],
-          $compid__13 = _genCompid2[1];
+          $prevCompid__33 = _genCompid2[0],
+          $compid__33 = _genCompid2[1];
 
+      var _genCompid3 = (0, _taroWeapp.genCompid)(__prefix + "$compid__34"),
+          _genCompid4 = _slicedToArray(_genCompid3, 2),
+          $prevCompid__34 = _genCompid4[0],
+          $compid__34 = _genCompid4[1];
+
+      var _genCompid5 = (0, _taroWeapp.genCompid)(__prefix + "$compid__35"),
+          _genCompid6 = _slicedToArray(_genCompid5, 2),
+          $prevCompid__35 = _genCompid6[0],
+          $compid__35 = _genCompid6[1];
+
+      var _props$indexStore = this.__props.indexStore,
+          _props$indexStore$set = _props$indexStore.setting,
+          language = _props$indexStore$set.language,
+          theme = _props$indexStore$set.theme,
+          favs = _props$indexStore.favs;
       var _state = this.__state,
           md = _state.md,
           title = _state.title,
           top = _state.top,
-          img = _state.img;
+          img = _state.img,
+          title_cn = _state.title_cn,
+          pid = _state.pid;
 
+      var isLike = favs.includes(String(pid));
       var anonymousState__temp = (0, _taroWeapp.internal_inline_style)({ padding: top + "px 0 0 10px" });
+      var anonymousState__temp2 = (0, _taroWeapp.internal_inline_style)({ padding: '10px' });
       _taroWeapp.propsManager.set({
         "name": "home",
-        "size": 60,
-        "color": "#000"
-      }, $compid__13, $prevCompid__13);
+        "size": 40,
+        "color": "#323E70"
+      }, $compid__33, $prevCompid__33);
+      _taroWeapp.propsManager.set({
+        "name": "Settingscontroloptions",
+        "size": 40,
+        "color": "#323E70"
+      }, $compid__34, $prevCompid__34);
+      _taroWeapp.propsManager.set({
+        "name": isLike ? 'bqxin' : 'xin',
+        "size": 40,
+        "color": "#323E70"
+      }, $compid__35, $prevCompid__35);
       Object.assign(this.__state, {
         anonymousState__temp: anonymousState__temp,
-        $compid__13: $compid__13
+        anonymousState__temp2: anonymousState__temp2,
+        $compid__33: $compid__33,
+        $compid__34: $compid__34,
+        $compid__35: $compid__35,
+        Themes: _index.Themes,
+        theme: theme,
+        isLike: isLike,
+        language: language
       });
       return this.__state;
     }
   }]);
 
   return Index;
-}(_taroWeapp.Component), _class.$$events = ["onHome", "onCopyUrl"], _class.$$componentPath = "pages/post/index", _temp2);
+}(_taroWeapp.Component), _class.$$events = ["onHome", "onSet", "onLike", "onCopyUrl"], _class.$$componentPath = "pages/post/index", _temp2);
 Index = (0, _tslib.__decorate)([(0, _mobx.inject)("indexStore"), _mobx.observer], Index);
 exports.default = Index;
 

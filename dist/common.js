@@ -1,5 +1,24 @@
 (wx["webpackJsonp"] = wx["webpackJsonp"] || []).push([["common"],{
 
+/***/ "./src/api/index.ts":
+/*!**************************!*\
+  !*** ./src/api/index.ts ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var Uri = exports.Uri = "https://daily.leeapps.cn/";
+var AuthUri = exports.AuthUri = "https://api.leeapps.cn/koa/";
+var Themes = exports.Themes = ["light", "dark", "auto"];
+
+/***/ }),
+
 /***/ "./src/utils/index.ts":
 /*!****************************!*\
   !*** ./src/utils/index.ts ***!

@@ -71,88 +71,20 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       args[_key] = arguments[_key];
     }
 
-    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "anonymousState__temp2", "anonymousState__temp3", "anonymousState__temp4", "anonymousState__temp5", "anonymousState__temp6", "anonymousState__temp7", "anonymousState__temp8", "anonymousState__temp9", "loopArray12", "$compid__8", "$compid__9", "$compid__10", "$compid__11", "$compid__12", "show", "tabId", "tabs", "Publications", "tags", "keyword", "hits", "allTags", "pub", "thePub", "tag", "list", "title", "top", "innerHeight", "type", "indexStore"], _this.config = {
+    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Index.__proto__ || Object.getPrototypeOf(Index)).call.apply(_ref, [this].concat(args))), _this), _this.$usedState = ["anonymousState__temp", "anonymousState__temp2", "anonymousState__temp3", "anonymousState__temp4", "anonymousState__temp5", "anonymousState__temp6", "anonymousState__temp7", "anonymousState__temp8", "anonymousState__temp9", "loopArray12", "$compid__10", "$compid__11", "$compid__12", "$compid__13", "$compid__14", "show", "tabId", "tabs", "Publications", "tags", "keyword", "hits", "allTags", "pub", "thePub", "tag", "list", "title", "top", "innerHeight", "type", "indexStore"], _this.config = {
       navigationBarTitleText: _project2.default.description,
       navigationStyle: "custom"
-    }, _this.auth = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
-      var indexStore;
+    }, _this.getPubs = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee() {
+      var allPubs;
       return _regenerator2.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              indexStore = _this.props.indexStore;
-
-              _taroWeapp2.default.getStorage({
-                key: "auth"
-              }).then(function (res) {
-                indexStore.setAuth(res.data);
-                setTimeout(function () {
-                  return _this.checkUser();
-                }, 1000);
-              }).catch(function () {
-                _taroWeapp2.default.login().then(function (res) {
-                  _taroWeapp2.default.request({
-                    url: _index.AuthUri + "auth?js_code=" + res.code + "&type=daily"
-                  }).then(function (res1) {
-                    return res1.data;
-                  }).then(function (res2) {
-                    if (res2.openid) {
-                      indexStore.setAuth(res2);
-                      _taroWeapp2.default.setStorageSync("auth", res2);
-                      setTimeout(function () {
-                        return _this.checkUser();
-                      }, 1000);
-                    }
-                  });
-                });
-              });
-
-            case 2:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, _this2);
-    })), _this.checkUser = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
-      var indexStore, openid;
-      return _regenerator2.default.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              indexStore = _this.props.indexStore;
-              openid = indexStore.auth.openid;
-
-              _taroWeapp2.default.request({
-                url: _index.Uri + "user/me?uid=" + openid + "&platform=wechat"
-              }).then(function (res) {
-                console.log(res);
-                var _res$data$data = res.data.data,
-                    tags = _res$data$data.tags,
-                    pubs = _res$data$data.pubs,
-                    favs = _res$data$data.favs;
-
-                indexStore.setTags(tags);
-                indexStore.setPubs(pubs);
-                indexStore.setFavs(favs);
-              });
-
-            case 3:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, _this2);
-    })), _this.getPubs = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3() {
-      var allPubs;
-      return _regenerator2.default.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.next = 2;
+              _context.next = 2;
               return _taroWeapp2.default.getStorageSync("publications");
 
             case 2:
-              allPubs = _context3.sent;
+              allPubs = _context.sent;
 
               if (allPubs) {
                 _this.props.indexStore.allPubs = allPubs;
@@ -167,21 +99,21 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
 
             case 4:
             case "end":
-              return _context3.stop();
+              return _context.stop();
           }
         }
-      }, _callee3, _this2);
-    })), _this.getPopularTags = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4() {
+      }, _callee, _this2);
+    })), _this.getPopularTags = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee2() {
       var allTags;
-      return _regenerator2.default.wrap(function _callee4$(_context4) {
+      return _regenerator2.default.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              _context4.next = 2;
+              _context2.next = 2;
               return _taroWeapp2.default.getStorageSync("popularTags");
 
             case 2:
-              allTags = _context4.sent;
+              allTags = _context2.sent;
 
               if (allTags) {
                 _this.props.indexStore.allTags = allTags;
@@ -199,10 +131,10 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
 
             case 4:
             case "end":
-              return _context4.stop();
+              return _context2.stop();
           }
         }
-      }, _callee4, _this2);
+      }, _callee2, _this2);
     })), _this.getPost = function () {
       var indexStore = _this.props.indexStore;
       var page = indexStore.page;
@@ -231,19 +163,43 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
           query: query,
           variables: variables
         }
-      }).then(function (res) {
-        var data = res.data.data;
-        _taroWeapp2.default.hideLoading();
-        var newPosts = data[mapType[4]];
-        var ids = newPosts.map(function (v) {
-          indexStore.setPost(v);
-          return v.id;
-        });
-        indexStore.setList(ids, page > 0);
-        _this.savePosts(newPosts.map(function (v) {
-          return { id: v.id, title: v.title };
+      }).then(function () {
+        var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee3(res) {
+          var data, newPosts, cns, ids;
+          return _regenerator2.default.wrap(function _callee3$(_context3) {
+            while (1) {
+              switch (_context3.prev = _context3.next) {
+                case 0:
+                  data = res.data.data;
+
+                  _taroWeapp2.default.hideLoading();
+                  newPosts = data[mapType[4]];
+                  _context3.next = 5;
+                  return _this.savePosts(newPosts.map(function (v) {
+                    return { id: v.id, title: v.title };
+                  }));
+
+                case 5:
+                  cns = _context3.sent;
+                  ids = newPosts.map(function (v) {
+                    indexStore.setPost(_extends({}, v, { title_cn: cns[v.id] }));
+                    return v.id;
+                  });
+
+                  indexStore.setList(ids, page > 0);
+
+                case 8:
+                case "end":
+                  return _context3.stop();
+              }
+            }
+          }, _callee3, _this2);
         }));
-      }).catch(function () {
+
+        return function (_x) {
+          return _ref4.apply(this, arguments);
+        };
+      }()).catch(function () {
         _taroWeapp2.default.hideLoading();
         _taroWeapp2.default.showToast({
           title: "数据拉取失败",
@@ -277,47 +233,8 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         return _this.getPost();
       });
     }, _this.onPost = function (id) {
-      var indexStore = _this.props.indexStore;
-      var posts = indexStore.posts;
-
-      var post = posts[id];
-      console.log(post);
-      if (post.content) {
-        return _taroWeapp2.default.navigateTo({
-          url: "/pages/post/index?&id=" + id
-        });
-      }
-      _taroWeapp2.default.showLoading({
-        title: "请求数据中"
-      });
-      _taroWeapp2.default.request({
-        url: _index.Uri + "post/fetch",
-        data: {
-          pid: id,
-          link: post.url
-        }
-      }).then(function (res) {
-        if (res.data.code === 0) {
-          var data = res.data.data;
-          indexStore.setPost({
-            id: id,
-            pid: data.id,
-            author: data.author,
-            lead_image_url: data.lead_image_url,
-            word_count: data.word_count,
-            content: data.content,
-            content_cn: data.content_cn
-          });
-          _taroWeapp2.default.hideLoading();
-          _taroWeapp2.default.navigateTo({
-            url: "/pages/post/index?&id=" + id
-          });
-        }
-      }).catch(function (err) {
-        _taroWeapp2.default.showToast({
-          title: "拉取数据失败",
-          duration: 2000
-        });
+      _taroWeapp2.default.navigateTo({
+        url: "/pages/post/index?&id=" + id
       });
     }, _this.onSearch = function (e) {
       var keyword = e.detail.value.toLowerCase();
@@ -328,19 +245,19 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       // 授权
       // https://app.dailynow.co/v1/auth/authorize?provider=github&redirect_uri=http://pi.leeapps.cn:5000/?provider=github&code_challenge=hUj93mi0vqKM0zehTG5dXQBvQ8h0-l-R6nlCuc9A_KU
     }, _this.searchTag = function () {
-      var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee5(tag) {
+      var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee4(tag) {
         var result, hits;
-        return _regenerator2.default.wrap(function _callee5$(_context5) {
+        return _regenerator2.default.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
-                _context5.next = 2;
+                _context4.next = 2;
                 return _taroWeapp2.default.request({
                   url: _index.Uri + "daily/v1/tags/search?query=" + tag
                 });
 
               case 2:
-                result = _context5.sent;
+                result = _context4.sent;
                 hits = result.data.hits.map(function (v) {
                   return v.name;
                 });
@@ -348,18 +265,17 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
                 _this.setState({
                   hits: hits
                 });
-                console.log(result);
 
-              case 6:
+              case 5:
               case "end":
-                return _context5.stop();
+                return _context4.stop();
             }
           }
-        }, _callee5, _this2);
+        }, _callee4, _this2);
       }));
 
-      return function (_x) {
-        return _ref6.apply(this, arguments);
+      return function (_x2) {
+        return _ref5.apply(this, arguments);
       };
     }(), _this.onNext = function () {
       _this.props.indexStore.page += 1;
@@ -408,7 +324,7 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         method: "POST",
         data: {
           uid: openid,
-          platform: 'wechat',
+          platform: "wechat",
           tag: tag
         }
       });
@@ -430,27 +346,49 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         method: "POST",
         data: {
           uid: openid,
-          platform: 'wechat',
+          platform: "wechat",
           pub: pub
         }
       });
-    }, _this.savePosts = function (list) {
-      var indexStore = _this.props.indexStore;
+    }, _this.savePosts = function () {
+      var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator2.default.mark(function _callee5(list) {
+        var res, datas;
+        return _regenerator2.default.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return _taroWeapp2.default.request({
+                  url: "https://daily.leeapps.cn/post/create",
+                  method: "POST",
+                  data: {
+                    list: list
+                  }
+                });
 
-      _taroWeapp2.default.request({
-        url: "https://daily.leeapps.cn/post/create",
-        method: "POST",
-        data: {
-          list: list
-        }
-      }).then(function (res) {
-        if (res.data.code === 0) {
-          res.data.data.forEach(function (v) {
-            indexStore.setPost({ id: v.id, title_cn: v.title });
-          });
-        }
-      });
-    }, _this.customComponents = ["IconFont", "Post"], _temp), _possibleConstructorReturn(_this, _ret);
+              case 2:
+                res = _context5.sent;
+                datas = {};
+
+                if (res.data.code === 0) {
+                  res.data.data.forEach(function (v) {
+                    datas[v.id] = v.title;
+                  });
+                }
+                return _context5.abrupt("return", datas);
+
+              case 6:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, _this2);
+      }));
+
+      return function (_x3) {
+        return _ref6.apply(this, arguments);
+      };
+    }(), _this.customComponents = ["IconFont", "Post"], _temp), _possibleConstructorReturn(_this, _ret);
   }
 
   _createClass(Index, [{
@@ -576,7 +514,11 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
   }, {
     key: "componentDidShow",
     value: function componentDidShow() {
-      this.auth();
+      var indexStore = this.props.indexStore;
+
+      if (!indexStore.isAuth) {
+        indexStore.getAuth();
+      }
     }
   }, {
     key: "componentDidHide",
@@ -592,30 +534,30 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
       var __prefix = this.$prefix;
       ;
 
-      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__8"),
+      var _genCompid = (0, _taroWeapp.genCompid)(__prefix + "$compid__10"),
           _genCompid2 = _slicedToArray(_genCompid, 2),
-          $prevCompid__8 = _genCompid2[0],
-          $compid__8 = _genCompid2[1];
+          $prevCompid__10 = _genCompid2[0],
+          $compid__10 = _genCompid2[1];
 
-      var _genCompid3 = (0, _taroWeapp.genCompid)(__prefix + "$compid__9"),
+      var _genCompid3 = (0, _taroWeapp.genCompid)(__prefix + "$compid__11"),
           _genCompid4 = _slicedToArray(_genCompid3, 2),
-          $prevCompid__9 = _genCompid4[0],
-          $compid__9 = _genCompid4[1];
+          $prevCompid__11 = _genCompid4[0],
+          $compid__11 = _genCompid4[1];
 
-      var _genCompid5 = (0, _taroWeapp.genCompid)(__prefix + "$compid__10"),
+      var _genCompid5 = (0, _taroWeapp.genCompid)(__prefix + "$compid__12"),
           _genCompid6 = _slicedToArray(_genCompid5, 2),
-          $prevCompid__10 = _genCompid6[0],
-          $compid__10 = _genCompid6[1];
+          $prevCompid__12 = _genCompid6[0],
+          $compid__12 = _genCompid6[1];
 
-      var _genCompid7 = (0, _taroWeapp.genCompid)(__prefix + "$compid__11"),
+      var _genCompid7 = (0, _taroWeapp.genCompid)(__prefix + "$compid__13"),
           _genCompid8 = _slicedToArray(_genCompid7, 2),
-          $prevCompid__11 = _genCompid8[0],
-          $compid__11 = _genCompid8[1];
+          $prevCompid__13 = _genCompid8[0],
+          $compid__13 = _genCompid8[1];
 
-      var _genCompid9 = (0, _taroWeapp.genCompid)(__prefix + "$compid__12"),
+      var _genCompid9 = (0, _taroWeapp.genCompid)(__prefix + "$compid__14"),
           _genCompid10 = _slicedToArray(_genCompid9, 2),
-          $prevCompid__12 = _genCompid10[0],
-          $compid__12 = _genCompid10[1];
+          $prevCompid__14 = _genCompid10[0],
+          $compid__14 = _genCompid10[1];
 
       var _state = this.__state,
           title = _state.title,
@@ -678,8 +620,8 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
 
         var _genCompid11 = (0, _taroWeapp.genCompid)(__prefix + "czzzzzzzzz" + _anonIdx9, true),
             _genCompid12 = _slicedToArray(_genCompid11, 2),
-            $prevCompid__7 = _genCompid12[0],
-            $compid__7 = _genCompid12[1];
+            $prevCompid__9 = _genCompid12[0],
+            $compid__9 = _genCompid12[1];
 
         _taroWeapp.propsManager.set({
           "pid": id.$original,
@@ -687,9 +629,9 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
           "setting": setting,
           "onPost": _this3.onPost,
           "onTag": _this3.onTag
-        }, $compid__7, $prevCompid__7);
+        }, $compid__9, $prevCompid__9);
         return {
-          $compid__7: $compid__7,
+          $compid__9: $compid__9,
           $original: id.$original
         };
       });
@@ -697,27 +639,27 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         "name": "gengduo",
         "size": 50,
         "color": "#000"
-      }, $compid__8, $prevCompid__8);
+      }, $compid__10, $prevCompid__10);
       _taroWeapp.propsManager.set({
         "name": "caidan",
         "size": 60,
         "color": "#000"
-      }, $compid__9, $prevCompid__9);
+      }, $compid__11, $prevCompid__11);
       _taroWeapp.propsManager.set({
         "name": "sousuo",
         "size": 36,
         "color": "#000"
-      }, $compid__10, $prevCompid__10);
+      }, $compid__12, $prevCompid__12);
       pub && _taroWeapp.propsManager.set({
         "name": "bookmark-add",
         "size": 36,
         "color": isPub ? "#f58301" : "#000"
-      }, $compid__11, $prevCompid__11);
+      }, $compid__13, $prevCompid__13);
       tag && _taroWeapp.propsManager.set({
         "name": "bookmark-add",
         "size": 50,
         "color": isTag ? "#f58301" : "#000"
-      }, $compid__12, $prevCompid__12);
+      }, $compid__14, $prevCompid__14);
       Object.assign(this.__state, {
         anonymousState__temp: anonymousState__temp,
         anonymousState__temp2: anonymousState__temp2,
@@ -729,11 +671,11 @@ var Index = (_temp2 = _class = function (_BaseComponent) {
         anonymousState__temp8: anonymousState__temp8,
         anonymousState__temp9: anonymousState__temp9,
         loopArray12: loopArray12,
-        $compid__8: $compid__8,
-        $compid__9: $compid__9,
         $compid__10: $compid__10,
         $compid__11: $compid__11,
         $compid__12: $compid__12,
+        $compid__13: $compid__13,
+        $compid__14: $compid__14,
         Publications: Publications,
         tags: tags,
         allTags: allTags,
@@ -782,24 +724,6 @@ module.exports = __webpack_require__.p + "pages/index/index.wxml";
 /***/ (function(module) {
 
 module.exports = JSON.parse("{\"miniprogramRoot\":\"./dist\",\"projectname\":\"mapp-coder-daily\",\"description\":\"程序猿日常\",\"appid\":\"wx47cf84f458781f68\",\"setting\":{\"urlCheck\":true,\"es6\":false,\"postcss\":false,\"minified\":false},\"compileType\":\"miniprogram\"}");
-
-/***/ }),
-
-/***/ "./src/api/index.ts":
-/*!**************************!*\
-  !*** ./src/api/index.ts ***!
-  \**************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-var Uri = exports.Uri = 'https://daily.leeapps.cn/';
-var AuthUri = exports.AuthUri = 'https://api.leeapps.cn/koa/';
 
 /***/ }),
 
@@ -864,4 +788,4 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ })
 
-},[["./src/pages/index/index.tsx","runtime","vendors"]]]);
+},[["./src/pages/index/index.tsx","runtime","vendors","common"]]]);

@@ -1,4 +1,6 @@
+import Taro from '@tarojs/taro'
 import { observable, action } from 'mobx'
+import { Uri, AuthUri } from '@api/index'
 
 interface PostInterface {
   id: string
@@ -39,6 +41,7 @@ export interface StoreInterface {
     openid: string
     session_key: string
   }
+  isAuth: boolean
   setting: {
     language: number[] // 0为英文，1为中文，2为双语；系统显示，文章标题，文章内容
     theme: number // o为默认，1为黑暗主题，2为自适应
@@ -60,10 +63,13 @@ export interface StoreInterface {
   setTags: (list: string[]) => void
   setPubs: (list: string[]) => void
   setFavs: (list: string[]) => void
+  getAuth: () => void
+  checkUser: () => void
 }
 
 class Store implements StoreInterface {
   @observable auth = {openid: '', session_key: ''}
+  @observable isAuth: boolean = false
   @observable list: string[] = []
   @observable posts = {}
   @observable tags: string[] = []
@@ -85,6 +91,7 @@ class Store implements StoreInterface {
 
   @action
   setAuth (obj) {
+    this.isAuth = true
     this.auth = obj
   }
 
@@ -116,6 +123,47 @@ class Store implements StoreInterface {
   @action
   setFavs (list) {
     this.favs = list
+  }
+
+  @action
+  getAuth () {
+    Taro.getStorage({
+      key: "auth"
+    })
+      .then(res => {
+        this.setAuth(res.data);
+        setTimeout(() => this.checkUser(), 1000);
+      })
+      .catch(() => {
+        Taro.login().then(res => {
+          Taro.request({
+            url: `${AuthUri}auth?js_code=${res.code}&type=daily`
+          })
+            .then(res1 => res1.data)
+            .then(res2 => {
+              if (res2.openid) {
+                this.setAuth(res2);
+                Taro.setStorageSync("auth", res2);
+                setTimeout(() => this.checkUser(), 1000);
+              }
+            });
+        });
+      });
+  }
+
+  @action
+  checkUser () {
+    const {
+      auth: { openid }
+    } = this;
+    Taro.request({
+      url: `${Uri}user/me?uid=${openid}&platform=wechat`
+    }).then(res => {
+      const { tags, pubs, favs } = res.data.data;
+      this.setTags(tags);
+      this.setPubs(pubs);
+      this.setFavs(favs);
+    });
   }
 }
 

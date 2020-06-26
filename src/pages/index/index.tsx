@@ -99,52 +99,11 @@ class Index extends Component {
   }
 
   componentDidShow() {
-    this.auth();
+    const { indexStore } = this.props
+    if (!indexStore.isAuth) indexStore.getAuth()
   }
 
   componentDidHide() {}
-
-  auth = async () => {
-    const { indexStore } = this.props;
-    Taro.getStorage({
-      key: "auth"
-    })
-      .then(res => {
-        indexStore.setAuth(res.data);
-        setTimeout(() => this.checkUser(), 1000);
-      })
-      .catch(() => {
-        Taro.login().then(res => {
-          Taro.request({
-            url: `${AuthUri}auth?js_code=${res.code}&type=daily`
-          })
-            .then(res1 => res1.data)
-            .then(res2 => {
-              if (res2.openid) {
-                indexStore.setAuth(res2);
-                Taro.setStorageSync("auth", res2);
-                setTimeout(() => this.checkUser(), 1000);
-              }
-            });
-        });
-      });
-  };
-
-  checkUser = async () => {
-    const { indexStore } = this.props;
-    const {
-      auth: { openid }
-    } = indexStore;
-    Taro.request({
-      url: `${Uri}user/me?uid=${openid}&platform=wechat`
-    }).then(res => {
-      console.log(res);
-      const { tags, pubs, favs } = res.data.data;
-      indexStore.setTags(tags);
-      indexStore.setPubs(pubs);
-      indexStore.setFavs(favs);
-    });
-  };
 
   getPubs = async () => {
     let allPubs = await Taro.getStorageSync("publications");
@@ -220,16 +179,18 @@ class Index extends Component {
         variables
       }
     })
-      .then(res => {
+      .then(async res => {
         const data = res.data.data;
         Taro.hideLoading();
         const newPosts = data[mapType[4]];
+        let cns = await this.savePosts(
+          newPosts.map(v => ({ id: v.id, title: v.title }))
+        );
         const ids = newPosts.map(v => {
-          indexStore.setPost(v);
+          indexStore.setPost({ ...v, title_cn: cns[v.id] });
           return v.id;
         });
         indexStore.setList(ids, page > 0);
-        this.savePosts(newPosts.map(v => ({ id: v.id, title: v.title })));
       })
       .catch(() => {
         Taro.hideLoading();
@@ -272,49 +233,9 @@ class Index extends Component {
   };
 
   onPost = id => {
-    const { indexStore } = this.props;
-    const { posts } = indexStore;
-    const post = posts[id];
-    console.log(post);
-    if (post.content) {
-      return Taro.navigateTo({
-        url: `/pages/post/index?&id=${id}`
-      });
-    }
-    Taro.showLoading({
-      title: "请求数据中"
+    Taro.navigateTo({
+      url: `/pages/post/index?&id=${id}`
     });
-    Taro.request({
-      url: `${Uri}post/fetch`,
-      data: {
-        pid: id,
-        link: post.url
-      }
-    })
-      .then(res => {
-        if (res.data.code === 0) {
-          const data = res.data.data;
-          indexStore.setPost({
-            id,
-            pid: data.id,
-            author: data.author,
-            lead_image_url: data.lead_image_url,
-            word_count: data.word_count,
-            content: data.content,
-            content_cn: data.content_cn
-          });
-          Taro.hideLoading();
-          Taro.navigateTo({
-            url: `/pages/post/index?&id=${id}`
-          });
-        }
-      })
-      .catch(err => {
-        Taro.showToast({
-          title: "拉取数据失败",
-          duration: 2000
-        });
-      });
   };
 
   onSearch = e => {
@@ -335,7 +256,6 @@ class Index extends Component {
     this.setState({
       hits
     });
-    console.log(result);
   };
 
   onNext = () => {
@@ -376,7 +296,10 @@ class Index extends Component {
   };
 
   onLikeTag = tag => {
-    let { tags, auth: { openid } } = this.props.indexStore;
+    let {
+      tags,
+      auth: { openid }
+    } = this.props.indexStore;
     if (tags.includes(tag)) {
       tags = tags.filter(v => v !== tag);
     } else {
@@ -388,14 +311,17 @@ class Index extends Component {
       method: "POST",
       data: {
         uid: openid,
-        platform: 'wechat',
+        platform: "wechat",
         tag
       }
     });
   };
 
   onLikePub = pub => {
-    let { pubs, auth: { openid } } = this.props.indexStore;
+    let {
+      pubs,
+      auth: { openid }
+    } = this.props.indexStore;
     if (pubs.includes(pub)) {
       pubs = pubs.filter(v => v !== pub);
     } else {
@@ -407,27 +333,27 @@ class Index extends Component {
       method: "POST",
       data: {
         uid: openid,
-        platform: 'wechat',
+        platform: "wechat",
         pub
       }
     });
   };
 
-  savePosts = list => {
-    const { indexStore } = this.props;
-    Taro.request({
+  savePosts = async list => {
+    const res = await Taro.request({
       url: "https://daily.leeapps.cn/post/create",
       method: "POST",
       data: {
         list
       }
-    }).then(res => {
-      if (res.data.code === 0) {
-        res.data.data.forEach(v => {
-          indexStore.setPost({ id: v.id, title_cn: v.title });
-        });
-      }
     });
+    const datas: any = {};
+    if (res.data.code === 0) {
+      res.data.data.forEach(v => {
+        datas[v.id] = v.title;
+      });
+    }
+    return datas;
   };
 
   render() {
@@ -443,7 +369,15 @@ class Index extends Component {
       tabId,
       hits
     } = this.state;
-    const { list, posts, allPubs, allTags, tags, pubs, setting } = this.props.indexStore;
+    const {
+      list,
+      posts,
+      allPubs,
+      allTags,
+      tags,
+      pubs,
+      setting
+    } = this.props.indexStore;
     const thePub = pub
       ? allPubs.filter(v => v.id === pub)[0]
       : { image: "", name: "" };

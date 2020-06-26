@@ -12,7 +12,7 @@
 
 Component({
   properties: {
-    // bookmark-add | xiala | sousuo | caidan1 | gengduo | check | check1 | home | caidan
+    // home | Settingscontroloptions | bqxin | xin
     name: {
       type: String
     },

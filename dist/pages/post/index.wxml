@@ -1,9 +1,23 @@
 <block wx:if="{{$taroCompReady}}">
-    <view class="post">
+    <view class="{{'post ' + Themes[theme]}}">
         <view class="header" style="{{anonymousState__temp}}">
-            <view bindtap="onHome">
-                <icon-font compid="{{$compid__13}}"></icon-font>
-            </view><text class="title" bindtap="onCopyUrl">{{title}}</text>
+            <view bindtap="onHome" class="btn">
+                <icon-font compid="{{$compid__33}}"></icon-font>
+            </view>
+            <view bindtap="onSet" class="btn">
+                <icon-font compid="{{$compid__34}}"></icon-font>
+            </view>
+            <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
+                <icon-font compid="{{$compid__35}}"></icon-font>
+            </view>
+        </view>
+        <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl">
+            <block wx:if="{{language[1] === 0 || language[1] === 2}}">
+                <view class="text">{{title}}</view>
+            </block>
+            <block wx:if="{{language[1] === 1 || language[1] === 2}}">
+                <view class="text">{{title_cn}}</view>
+            </block>
         </view>
         <view class="content">
             <block wx:if="{{img}}">
