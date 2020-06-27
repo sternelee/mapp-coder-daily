@@ -26,7 +26,7 @@
                 <view class="btn">
                     <icon-font compid="{{$compid__48}}"></icon-font><text>我的频道</text>
                 </view>
-                <scroll-view class="pubs" scroll-x="{{true}}" lower-threshold="{{20}}">
+                <scroll-view class="pubs" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}">
                     <view wx:key="id" class="topic" bindtap="onPub" wx:for="{{mypubs}}" wx:for-item="v" wx:for-index="_anonIdx2" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">
                         <view class="box">
                             <image src="{{v.image}}" mode="aspectFit"></image><text>{{v.name}}</text>
@@ -40,7 +40,7 @@
                 <view class="btn">
                     <icon-font compid="{{$compid__49}}"></icon-font><text>我的关注</text>
                 </view>
-                <scroll-view class="tags" scroll-x="{{true}}" lower-threshold="{{20}}"><text class="tag" wx:key="$original" bindtap="onTag" wx:for="{{loopArray9}}" wx:for-item="mtag" wx:for-index="_anonIdx4" data-e-tap-so="this" data-e-tap-a-a="{{mtag.$original}}">#{{mtag.$loopState__temp5}}</text>
+                <scroll-view class="tags" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}"><text class="tag" wx:key="$original" bindtap="onTag" wx:for="{{loopArray10}}" wx:for-item="mtag" wx:for-index="_anonIdx4" data-e-tap-so="this" data-e-tap-a-a="{{mtag.$original}}">#{{mtag.$loopState__temp5}}</text>
                     <block wx:if="{{tags.length === 0}}"><text class="tag">暂无关注，请搜索添加</text>
                     </block>
                 </scroll-view>
@@ -57,17 +57,17 @@
                 <view class="btn" style="{{anonymousState__temp6}}">
                     <icon-font compid="{{$compid__51}}"></icon-font><text>常见频道</text>
                 </view>
-                <scroll-view class="pubs" scroll-x="{{true}}" lower-threshold="{{20}}">
+                <scroll-view class="pubs" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}">
                     <view wx:key="id" class="topic" bindtap="onPub" wx:for="{{allPubs}}" wx:for-item="v" wx:for-index="_anonIdx8" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">
                         <view class="box">
-                            <image src="{{v.image}}" mode="aspectFit"></image><text>{{v.name}}</text>
+                            <image src="{{v.image}}" mode="aspectFit" lazy-load="{{true}}"></image><text>{{v.name}}</text>
                         </view>
                     </view>
                 </scroll-view>
                 <view class="btn">
                     <icon-font compid="{{$compid__52}}"></icon-font><text>常见标签</text>
                 </view>
-                <scroll-view class="tags" scroll-x="{{true}}" lower-threshold="{{20}}"><text class="tag" wx:key="$original" bindtap="onTag" wx:for="{{loopArray12}}" wx:for-item="mtag" wx:for-index="_anonIdx10" data-e-tap-so="this" data-e-tap-a-a="{{mtag.$original}}">#{{mtag.$loopState__temp8}}</text>
+                <scroll-view class="tags" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}"><text class="tag" wx:key="$original" bindtap="onTag" wx:for="{{loopArray13}}" wx:for-item="mtag" wx:for-index="_anonIdx10" data-e-tap-so="this" data-e-tap-a-a="{{mtag.$original}}">#{{mtag.$loopState__temp8}}</text>
                 </scroll-view>
                 <view class="btn">
                     <icon-font compid="{{$compid__53}}"></icon-font><text>我的收藏</text>
@@ -79,7 +79,7 @@
                     <view wx:key="id" class="btn" bindtap="onPost" wx:for="{{favPost}}" wx:for-item="v" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">{{index + 1}}. {{itemLan === 0 ? v.title : itemLan === 1 ? v.title_cn : v.title + ' (' + v.title_cn + ')'}}</view>
                 </view>
             </scroll-view>
-            <scroll-view scroll-y="{{true}}" lower-threshold="{{80}}" class="posts" style="{{anonymousState__temp10}}" bindscrolltolower="onNext" enable-flex="{{true}}">
+            <scroll-view scroll-y="{{true}}" lower-threshold="{{200}}" class="posts" style="{{anonymousState__temp10}}" bindscrolltolower="onNext" enable-flex="{{true}}">
                 <block wx:if="{{pub}}">
                     <view class="the-topic" bindtap="onLikePub" data-e-tap-so="this" data-e-tap-a-a="{{pub}}">
                         <image src="{{thePub.image}}" mode="aspectFit"></image>
@@ -97,7 +97,7 @@
                         </view>
                     </view>
                 </block>
-                <post wx:key="$original" wx:for="{{loopArray14}}" wx:for-item="id" wx:for-index="_anonIdx12" compid="{{id.$compid__43}}"></post>
+                <post wx:key="$original" wx:for="{{loopArray15}}" wx:for-item="id" wx:for-index="_anonIdx12" compid="{{id.$compid__43}}"></post>
             </scroll-view>
         </view>
     </view>

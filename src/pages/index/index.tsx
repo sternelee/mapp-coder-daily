@@ -213,7 +213,7 @@ class Index extends Component {
       pageSize: 20,
       // ...(pubs && { pubs: pubs.join() }),
       ...(tags && { tags: tags.join() }),
-      sortBy: tabId ? indexStore.setting.order : "creation" // creation, popularity
+      sortBy: indexStore.setting.order // creation, popularity
     };
     return {
       params: inputParams
@@ -464,7 +464,7 @@ class Index extends Component {
               <IconFont name="rss" size={50} color="#323E70" />
               <Text>我的频道</Text>
             </View>
-            <ScrollView className="pubs" scrollX lowerThreshold={20}>
+            <ScrollView className="pubs" scrollX lowerThreshold={20} enableFlex>
               {mypubs.map(v => (
                 <View
                   key={v.id}
@@ -489,7 +489,7 @@ class Index extends Component {
               <IconFont name="tag" size={50} color="#323E70" />
               <Text>我的关注</Text>
             </View>
-            <ScrollView className="tags" scrollX lowerThreshold={20}>
+            <ScrollView className="tags" scrollX lowerThreshold={20} enableFlex>
               {
                 tags.map(mtag => (
                   <Text className="tag" key={mtag} onClick={this.onTag.bind(this, mtag)}>
@@ -525,7 +525,7 @@ class Index extends Component {
               <IconFont name="more1" size={50} color="#323E70" />
               <Text>常见频道</Text>
             </View>
-            <ScrollView className="pubs" scrollX lowerThreshold={20}>
+            <ScrollView className="pubs" scrollX lowerThreshold={20} enableFlex>
               {allPubs.map(v => (
                 <View
                   key={v.id}
@@ -533,7 +533,7 @@ class Index extends Component {
                   onClick={this.onPub.bind(this, v.id)}
                 >
                   <View className="box">
-                    <Image src={v.image} mode="aspectFit" />
+                    <Image src={v.image} mode="aspectFit" lazyLoad />
                     <Text>{v.name}</Text>
                   </View>
                 </View>
@@ -543,7 +543,7 @@ class Index extends Component {
               <IconFont name="more1" size={50} color="#323E70" />
               <Text>常见标签</Text>
             </View>
-            <ScrollView className="tags" scrollX lowerThreshold={20}>
+            <ScrollView className="tags" scrollX lowerThreshold={20} enableFlex>
               {
                 allTags.map(mtag => (
                   <Text className="tag" key={mtag} onClick={this.onTag.bind(this, mtag)}>
@@ -568,7 +568,7 @@ class Index extends Component {
           </ScrollView>
           <ScrollView
             scrollY
-            lowerThreshold={80}
+            lowerThreshold={200}
             className="posts"
             style={{ height: `${innerHeight - top - 50}px` }}
             onScrollToLower={this.onNext}

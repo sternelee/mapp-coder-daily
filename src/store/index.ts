@@ -39,7 +39,7 @@ interface PubInterface {
 export interface ISeeting {
   language: number[] // 0为英文，1为中文，2为双语；系统显示，文章标题，文章内容
   theme: number // o为默认，1为黑暗主题，2为自适应
-  order: 'latest' | 'popularity' // 默认排序
+  order: 'creation' | 'popularity' // 默认排序
   show: boolean
 }
 
@@ -93,7 +93,7 @@ class Store implements StoreInterface {
   @observable setting: ISeeting = {
     language: [0, 2, 2],
     theme: 0,
-    order: 'latest',
+    order: 'creation',
     show: false
   }
 

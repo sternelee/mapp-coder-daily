@@ -1,17 +1,17 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="{{'post ' + Themes[theme]}}">
         <block wx:if="{{setting.show}}">
-            <setting compid="{{$compid__39}}"></setting>
+            <setting compid="{{$compid__28}}"></setting>
         </block>
         <view class="header" style="{{anonymousState__temp}}">
             <view bindtap="onHome" class="btn">
-                <icon-font compid="{{$compid__40}}"></icon-font>
+                <icon-font compid="{{$compid__29}}"></icon-font>
             </view>
             <view bindtap="anonymousFunc0" class="btn">
-                <icon-font compid="{{$compid__41}}"></icon-font>
+                <icon-font compid="{{$compid__30}}"></icon-font>
             </view>
             <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
-                <icon-font compid="{{$compid__42}}"></icon-font>
+                <icon-font compid="{{$compid__31}}"></icon-font>
             </view>
         </view>
         <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl">

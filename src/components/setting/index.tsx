@@ -35,7 +35,7 @@ function Setting(props: IProps) {
           <Text>内容排序: </Text>
           <View className="sort">
             <View className={`btn ${order === 'popularity' ? 'on' : ''}`} onClick={() => onSet('order', 'popularity')}><Text>最热</Text></View>
-            <View className={`btn ${order === 'latest' ? 'on' : ''}`} onClick={() => onSet('order', 'latest')}><Text>最新</Text></View>
+            <View className={`btn ${order === 'creation' ? 'on' : ''}`} onClick={() => onSet('order', 'creation')}><Text>最新</Text></View>
           </View>
         </View>
         <View className="label">
