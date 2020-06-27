@@ -29,6 +29,7 @@ class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   state = {
+    id: this.$router.params.id,
     pid: 0, // 注意在这里：id是指文章id, 而pid只是数据的序号
     title: "",
     title_cn: "",
@@ -55,14 +56,14 @@ class Index extends Component {
   };
 
   onShareAppMessage(ops) {
-    const { title } = this.state;
+    const { title, id } = this.state;
     if (ops.from === "button") {
       // 来自页面内转发按钮
       console.log(ops.target);
     }
     return {
       title: `${title}`,
-      path: `pages/post/index?id=${this.$router.params.id}`,
+      path: `pages/post/index?id=${id}`,
       success: function(res) {
         // 转发成功
         console.log("转发成功:" + JSON.stringify(res));
@@ -75,7 +76,7 @@ class Index extends Component {
   }
 
   async componentDidShow() {
-    const id = this.$router.params.id
+    const { id } = this.state
     const { indexStore } = this.props;
     const { posts, isAuth } = indexStore;
     if (!isAuth) indexStore.getAuth()
@@ -97,9 +98,11 @@ class Index extends Component {
         .then(res => {
           if (res.data.code === 0) {
             data = res.data.data;
+            data.pid = Number(data.id)
+            data.id = id
             indexStore.setPost({
               id,
-              pid: data.id,
+              pid: data.pid,
               author: data.author,
               lead_image_url: data.lead_image_url,
               word_count: data.word_count,
@@ -157,15 +160,18 @@ class Index extends Component {
   };
 
   onLike = () => {
-    let { favs, auth: { openid } } = this.props.indexStore
-    const { pid } = this.state
+    let { favs, auth: { openid }, favPids } = this.props.indexStore
+    const { id, pid } = this.state
     const fav = String(pid)
     if (favs.includes(fav)) {
       favs = favs.filter(v => v !== fav);
+      favPids = favPids.filter(v => v !== id);
     } else {
-      favs.push(fav);
+      favs.unshift(fav);
+      favPids.unshift(id);
     }
     this.props.indexStore.favs = favs
+    this.props.indexStore.favPids = favPids
     Taro.request({
       url: `${Uri}user/me`,
       method: 'POST',
@@ -181,9 +187,9 @@ class Index extends Component {
     const { indexStore } = this.props
     const { setting, favs, posts } = indexStore
     const { language, theme } = setting
-    const { title, top, title_cn, pid, content, content_cn } = this.state;
+    const { id, title, top, title_cn, pid, content, content_cn } = this.state;
     const isLike = favs.includes(String(pid))
-    const post = posts[this.$router.params.id] || {}
+    const post = posts[id] || {}
     const img = post.image || post.lead_image_url || post.placeholder || ''
     return (
       <View className={`post ${Themes[theme]}`}>

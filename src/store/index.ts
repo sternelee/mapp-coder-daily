@@ -171,7 +171,7 @@ class Store implements StoreInterface {
       const { tags, pubs, favs } = res.data.data;
       this.setTags(tags);
       this.setPubs(pubs);
-      this.setFavs(favs);
+      this.setFavs(favs.reverse());
     });
   }
 
