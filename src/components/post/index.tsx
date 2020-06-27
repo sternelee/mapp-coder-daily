@@ -36,7 +36,7 @@ function Post(props) {
         <View className="tags">
           {tags.map((vtag, index) => (
             <Text className="tag" key={pid + index} onClick={() => onTag(vtag)}>
-              #{vtag.toUpperCase()}
+              #{vtag}
             </Text>
           ))}
           {

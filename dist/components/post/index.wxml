@@ -13,7 +13,7 @@
                     <view class="text">{{post.title_cn}}</view>
                 </block>
             </view>
-            <view class="tags"><text class="tag" wx:key="$loopState__temp3" bindtap="anonymousFunc4" wx:for="{{loopArray8}}" wx:for-item="vtag" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{vtag._$indexKey}}">#{{vtag.$loopState__temp5}}</text>
+            <view class="tags"><text class="tag" wx:key="$loopState__temp3" bindtap="anonymousFunc4" wx:for="{{loopArray15}}" wx:for-item="vtag" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{vtag._$indexKey}}">#{{vtag.$original}}</text>
                 <block wx:if="{{post.tags.length > maxLen}}"><text>...</text>
                 </block>
             </view>

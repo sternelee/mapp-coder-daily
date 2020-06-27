@@ -462,7 +462,7 @@ class Index extends Component {
           >
             <View className="btn">
               <IconFont name="rss" size={50} color="#323E70" />
-              <Text>我的频道</Text>
+              <Text>关注的频道</Text>
             </View>
             <ScrollView className="pubs" scrollX lowerThreshold={20} enableFlex>
               {mypubs.map(v => (
@@ -487,13 +487,13 @@ class Index extends Component {
             </ScrollView>
             <View className="btn">
               <IconFont name="tag" size={50} color="#323E70" />
-              <Text>我的关注</Text>
+              <Text>关注的标签</Text>
             </View>
             <ScrollView className="tags" scrollX lowerThreshold={20} enableFlex>
               {
                 tags.map(mtag => (
                   <Text className="tag" key={mtag} onClick={this.onTag.bind(this, mtag)}>
-                    #{mtag.toUpperCase()}
+                    #{mtag}
                   </Text>
                   ))
               }
@@ -547,7 +547,7 @@ class Index extends Component {
               {
                 allTags.map(mtag => (
                   <Text className="tag" key={mtag} onClick={this.onTag.bind(this, mtag)}>
-                    #{mtag.toUpperCase()}
+                    #{mtag}
                   </Text>
                   ))
               }
