@@ -1,6 +1,6 @@
 Component({
   properties: {
-    // gengduo | sousuo | caidan | iconfonttoggleon | more | guan | more1 | home | Settingscontroloptions | bqxin | xin
+    // kefu | aixinjuanzeng | queding | theme | yingwen | zhongwen | language | shoucang | tag | rss | lianjie | tianjia | gengduo | sousuo | caidan | iconfonttoggleon | more | guan | more1 | home | Settingscontroloptions | bqxin | xin
     name: {
       type: String,
     },

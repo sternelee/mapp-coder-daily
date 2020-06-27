@@ -4,7 +4,7 @@
 import Taro, { FunctionComponent } from '@tarojs/taro';
 
 interface Props {
-  name: 'gengduo' | 'sousuo' | 'caidan' | 'iconfonttoggleon' | 'more' | 'guan' | 'more1' | 'home' | 'Settingscontroloptions' | 'bqxin' | 'xin';
+  name: 'kefu' | 'aixinjuanzeng' | 'queding' | 'theme' | 'yingwen' | 'zhongwen' | 'language' | 'shoucang' | 'tag' | 'rss' | 'lianjie' | 'tianjia' | 'gengduo' | 'sousuo' | 'caidan' | 'iconfonttoggleon' | 'more' | 'guan' | 'more1' | 'home' | 'Settingscontroloptions' | 'bqxin' | 'xin';
   size?: number;
   color?: string | string[];
 }

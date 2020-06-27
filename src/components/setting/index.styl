@@ -1,0 +1,68 @@
+.toast
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  height: 100%;
+  top: 0;
+  background: rgba(0,0,0, .5);
+  z-index: 2;
+
+
+.setting
+  padding: 40px;
+  width: 500px;
+  border-radius: 20px;
+  background: #E6E7EE;
+  .title
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text
+      margin-left: 20px;
+    &.btn
+      margin: 40px auto 0;
+      width: 200px;
+      height: 80px;
+  .label
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 30px;
+    font-size: 26px;
+    text
+      margin-right: auto;
+    &.info
+      justify-content: center;
+      margin-top: 30px;
+      button
+        background-color: none;
+        padding: 20px 0;
+        background: transparent;
+        &::after
+          border: none;
+      .btn
+        width: 140px;
+        margin: 0 40px;
+    .sort
+      display: flex;
+      align-items: center;
+      .btn
+        width: 90px;
+        text
+          margin-right: 0;
+  .btn
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 60px;
+    border-radius: 10px;
+    background: #e6e7ee;
+    color: #323E70;
+    box-shadow:  6px 6px 12px #b8b9be,-6px -6px 12px #fff;
+    margin: 0 10px;
+    &.on
+      box-shadow:  inset 2px 2px 5px #b8b9be,inset -3px -3px 7px #fff;

@@ -1,1 +1,1 @@
-{"usingComponents":{"icon-font":"../../components/iconfont/index.weapp","post":"../../components/post/index"},"navigationStyle":"custom"}
+{"usingComponents":{"setting":"../../components/setting/index","icon-font":"../../components/iconfont/index.weapp","post":"../../components/post/index"},"navigationStyle":"custom"}

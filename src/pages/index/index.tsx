@@ -7,6 +7,7 @@ import { StoreInterface } from "@store/index";
 import { Uri } from "@api/index";
 import project from "@project";
 import Post from "@components/post/index";
+import Setting from "@components/setting/index";
 
 import "./index.styl";
 
@@ -37,7 +38,6 @@ class Index extends Component {
     tag: string;
     type: string;
     title: string;
-    tabs: string[];
     tabId: number;
     hits: string[];
     showTabsOptions: boolean;
@@ -50,7 +50,6 @@ class Index extends Component {
     tag: "",
     type: "latest",
     title: "Daily 最新动态",
-    tabs: ["关注", "全部"],
     tabId: 1,
     hits: [],
     showTabsOptions: false
@@ -63,6 +62,7 @@ class Index extends Component {
       top: menuBtn.top + 2,
       innerHeight: info.windowHeight
     });
+    await this.props.indexStore.initSetting()
   }
 
   async componentDidMount() {
@@ -184,6 +184,7 @@ class Index extends Component {
         const data = res.data.data;
         Taro.hideLoading();
         const newPosts = data[mapType[4]];
+        this.props.indexStore.more = newPosts.length === 20
         let cns = await this.savePosts(
           newPosts.map(v => ({ id: v.id, title: v.title }))
         );
@@ -212,14 +213,14 @@ class Index extends Component {
       pageSize: 20,
       // ...(pubs && { pubs: pubs.join() }),
       ...(tags && { tags: tags.join() }),
-      sortBy: tabId ? "popularity" : "creation" // creation, popularity
+      sortBy: tabId ? indexStore.setting.order : "creation" // creation, popularity
     };
     return {
       params: inputParams
     };
   };
 
-  onTopic = (pub: string) => {
+  onPub = (pub: string) => {
     this.props.indexStore.page = 0;
     this.setState(
       {
@@ -227,7 +228,8 @@ class Index extends Component {
         keyword: "",
         type: "pub",
         tag: "",
-        title: `@ ${pub}`
+        title: `@ ${pub}`,
+        show: true
       },
       () => this.getPost()
     );
@@ -242,7 +244,7 @@ class Index extends Component {
   onSearch = e => {
     const keyword = e.detail.value.toLowerCase();
     this.setState({
-      keyword
+      keyword: ''
     });
     this.searchTag(keyword);
     // 授权
@@ -260,6 +262,7 @@ class Index extends Component {
   };
 
   onNext = () => {
+    if (!this.props.indexStore.more) return
     this.props.indexStore.page += 1;
     this.getPost();
   };
@@ -273,7 +276,8 @@ class Index extends Component {
         keyword: "",
         pub: "",
         type: "tag",
-        title: `# ${tag}`
+        title: `# ${tag}`,
+        show: true
       },
       () => this.getPost()
     );
@@ -365,8 +369,20 @@ class Index extends Component {
   };
 
   onTabs = () => {
+    const { showTabsOptions } =this.state
     this.setState({
-      showTabsOptions: true
+      showTabsOptions: !showTabsOptions
+    })
+  }
+
+  onShowPage = () => {
+    const { show } = this.state
+    const { indexStore } = this.props
+    if (show && !indexStore.favsDone) {
+      indexStore.getFavPosts()
+    }
+    this.setState({
+      show: !show
     })
   }
 
@@ -379,11 +395,11 @@ class Index extends Component {
       tag,
       keyword,
       innerHeight,
-      tabs,
       tabId,
       hits,
       showTabsOptions
     } = this.state;
+    const { indexStore } = this.props
     const {
       list,
       posts,
@@ -391,18 +407,23 @@ class Index extends Component {
       allTags,
       tags,
       pubs,
-      setting
-    } = this.props.indexStore;
+      setting,
+      favPids
+    } = indexStore;
     const thePub = pub
       ? allPubs.filter(v => v.id === pub)[0]
       : { image: "", name: "" };
     const isPub = pubs.includes(pub);
     const isTag = tags.includes(tag);
-    const publication1 = allPubs.filter(v => pubs.includes(v.id));
-    const publication2 = allPubs.filter(v => !pubs.includes(v.id));
-    const Publications = [...publication1, ...publication2];
+    const mypubs = allPubs.filter(v => pubs.includes(v.id));
+    const favPost = favPids.map(v => posts[v]);
+    const itemLan = setting.language[1]
     return (
       <View className="index">
+        {
+          setting.show &&
+          <Setting setting={setting} onSet={indexStore.setSetting.bind(indexStore)} />
+        }
         <View
           className="header"
           style={{
@@ -411,10 +432,10 @@ class Index extends Component {
             height: `35px`
           }}
         >
-          <View className="btn">
+          <View className="btn" onClick={this.onShowPage}>
             <IconFont name="gengduo" size={40} color="#323E70" />
           </View>
-          <View className="btn">
+          <View className="btn" onClick={() => this.props.indexStore.setSetting('show', true)}>
             <IconFont name="Settingscontroloptions" size={40} color="#323E70" />
           </View>
           <View className="title">
@@ -436,18 +457,19 @@ class Index extends Component {
           <ScrollView
             className="topics"
             scrollY
-            style={{ height: `${innerHeight - top - 35}px` }}
+            style={{ height: `${innerHeight - top - 50}px` }}
             enableFlex
           >
-            <View style={{ color: "#fff", padding: "20px 0 10px 20px" }}>
-              常见频道
+            <View className="btn">
+              <IconFont name="rss" size={50} color="#323E70" />
+              <Text>我的频道</Text>
             </View>
             <ScrollView className="pubs" scrollX lowerThreshold={20}>
-              {Publications.map(v => (
+              {mypubs.map(v => (
                 <View
                   key={v.id}
                   className="topic"
-                  onClick={this.onTopic.bind(this, v.id)}
+                  onClick={this.onPub.bind(this, v.id)}
                 >
                   <View className="box">
                     <Image src={v.image} mode="aspectFit" />
@@ -456,56 +478,99 @@ class Index extends Component {
                   {/* <IconFont name='home' size={50} color='#000' /> */}
                 </View>
               ))}
-            </ScrollView>
-            <View className="alltags">
-              <View>Ni~关注的标签#TAG</View>
-              {tags.length ? (
-                <View className="my-tags">
-                  {tags.map(mtag => (
-                    <Text key={mtag} onClick={this.onTag.bind(this, mtag)}>
-                      #{mtag}
-                    </Text>
-                  ))}
+              {
+                pubs.length === 0 &&
+                <View>
+                  <Text>暂无关注频道，快去常见频道选择添加吧</Text>
                 </View>
-              ) : (
-                <View className="my-empty">暂无关注，请搜索添加</View>
-              )}
-              <View className="search-tag">
+              }
+            </ScrollView>
+            <View className="btn">
+              <IconFont name="tag" size={50} color="#323E70" />
+              <Text>我的关注</Text>
+            </View>
+            <ScrollView className="tags" scrollX lowerThreshold={20}>
+              {
+                tags.map(mtag => (
+                  <Text className="tag" key={mtag} onClick={this.onTag.bind(this, mtag)}>
+                    #{mtag.toUpperCase()}
+                  </Text>
+                  ))
+              }
+              {
+                tags.length === 0 &&
+                <Text className="tag">暂无关注，请搜索添加</Text>
+              }
+            </ScrollView>
+            <View className="search-tag">
+              <View className="search-tag-box">
                 <View className="search-input">
-                  <IconFont name="home" size={36} color="#000" />
-                  {/* <IconFont name='bookmark-add' size={36} color='#000' /> */}
+                  <IconFont name="sousuo" size={36} color="#000" />
                   <Input
                     value={keyword}
                     onConfirm={this.onSearch}
                     placeholder="搜索标签"
                   />
-                  {/* <View onClick={this.addBookmark}>
-                  <IconFont name='bookmark-add' size={36} color='#000' />
-                  </View> */}
                 </View>
                 <View className="hit-tags">
                   {hits.map(hit => (
                     <Text key={hit} onClick={this.onLikeTag.bind(this, hit)}>
-                      #{hit}
+                      {hit}
                     </Text>
                   ))}
                 </View>
               </View>
-              <View className="tag-tips">常见标签#TAG ( ↕ )</View>
-              <ScrollView scrollY style={{ height: "200px" }} enableFlex>
-                {allTags.map(ptag => (
-                  <Text key={ptag} onClick={this.onTag.bind(this, ptag)}>
-                    #{ptag}
+            </View>
+            <View className="btn" style={{marginTop: "30px"}}>
+              <IconFont name="more1" size={50} color="#323E70" />
+              <Text>常见频道</Text>
+            </View>
+            <ScrollView className="pubs" scrollX lowerThreshold={20}>
+              {allPubs.map(v => (
+                <View
+                  key={v.id}
+                  className="topic"
+                  onClick={this.onPub.bind(this, v.id)}
+                >
+                  <View className="box">
+                    <Image src={v.image} mode="aspectFit" />
+                    <Text>{v.name}</Text>
+                  </View>
+                </View>
+              ))}
+            </ScrollView>
+            <View className="btn">
+              <IconFont name="more1" size={50} color="#323E70" />
+              <Text>常见标签</Text>
+            </View>
+            <ScrollView className="tags" scrollX lowerThreshold={20}>
+              {
+                allTags.map(mtag => (
+                  <Text className="tag" key={mtag} onClick={this.onTag.bind(this, mtag)}>
+                    #{mtag.toUpperCase()}
                   </Text>
-                ))}
-              </ScrollView>
+                  ))
+              }
+            </ScrollView>
+            <View className="btn">
+              <IconFont name="shoucang" size={50} color="#323E70" />
+              <Text>我的收藏</Text>
+            </View>
+            <View className="fav-posts">
+              {
+                favPids.length === 0 &&
+                <View style={{color: '#a9abb3', textAlign: 'center', padding: '10px 0'}}>暂无收藏，快去阅读吧</View>
+              }
+              {
+                favPost.map((v, index) => <View key={v.id} className="btn" onClick={this.onPost.bind(this, v.id)}>{index + 1}. {itemLan === 0 ? v.title : (itemLan === 1 ? v.title_cn : `${v.title}  (${v.title_cn})`)}</View>)
+              }
             </View>
           </ScrollView>
           <ScrollView
             scrollY
-            lowerThreshold={20}
+            lowerThreshold={80}
             className="posts"
-            style={{ height: `${innerHeight - top - 35}px` }}
+            style={{ height: `${innerHeight - top - 50}px` }}
             onScrollToLower={this.onNext}
             enableFlex
           >
@@ -516,14 +581,12 @@ class Index extends Component {
               >
                 <Image src={thePub.image} mode="aspectFit" />
                 <View style={{ display: "flex", alignItems: "center" }}>
-                  <Text style={{ color: isPub ? "#f58301" : "#000" }}>
+                  <Text style={{ color: isPub ? "#f58301" : "#323E70" }}>
                     {title}
                   </Text>
-                  <IconFont
-                    name="home"
-                    size={36}
-                    color={isPub ? "#f58301" : "#000"}
-                  />
+                  <View className={`btn ${isPub ? 'on' : ''}`}>
+                    <IconFont name="rss" size={40} color={isPub ? "#f58301" : "#323E70"} />
+                  </View>
                 </View>
               </View>
             )}
@@ -532,14 +595,12 @@ class Index extends Component {
                 className="the-tag"
                 onClick={this.onLikeTag.bind(this, tag)}
               >
-                <Text style={{ color: isTag ? "#f58301" : "#000" }}>
+                <Text style={{ color: isTag ? "#f58301" : "#323E70" }}>
                   {title}
                 </Text>
-                <IconFont
-                  name="home"
-                  size={50}
-                  color={isTag ? "#f58301" : "#000"}
-                />
+                <View className={`btn ${isTag ? 'on' : ''}`}>
+                  <IconFont name="tag" size={40} color={isTag ? "#f58301" : "#323E70"} />
+                </View>
               </View>
             )}
             {list.map(id => (
@@ -550,6 +611,7 @@ class Index extends Component {
                 setting={setting}
                 onPost={this.onPost}
                 onTag={this.onTag}
+                onPub={this.onPub}
               />
             ))}
           </ScrollView>

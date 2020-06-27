@@ -1,14 +1,1 @@
-(wx["webpackJsonp"] = wx["webpackJsonp"] || []).push([["wemark/wemark.wxml"],{
-
-/***/ "./src/wemark/wemark.wxml":
-/*!********************************!*\
-  !*** ./src/wemark/wemark.wxml ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "wemark/wemark.wxml";
-
-/***/ })
-
-},[["./src/wemark/wemark.wxml","runtime"]]]);
+(wx.webpackJsonp=wx.webpackJsonp||[]).push([[13],{"60":function(p,w,e){p.exports=e.p+"wemark/wemark.wxml"}},[[60,0]]]);

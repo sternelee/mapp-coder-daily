@@ -5,6 +5,7 @@ import IconFont from "@components/iconfont";
 import { Uri, Themes } from "@api/index";
 // eslint-disable-next-line no-unused-vars
 import { StoreInterface } from "@store/index";
+import Setting from "@components/setting/index";
 import { fixUrl } from "@utils/index";
 
 import "./index.styl";
@@ -28,20 +29,21 @@ class Index extends Component {
    * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
    */
   state = {
-    pid: 0,
-    md: "",
+    pid: 0, // 注意在这里：id是指文章id, 而pid只是数据的序号
     title: "",
     title_cn: "",
     top: 0,
     url: "",
-    img: ""
+    content: "",
+    content_cn: ""
   };
 
-  componentWillMount() {
+  async componentWillMount() {
     const menuBtn = Taro.getMenuButtonBoundingClientRect();
     this.setState({
       top: menuBtn.top + 2
     });
+    await this.props.indexStore.initSetting()
   }
 
   config: Config = {
@@ -53,7 +55,6 @@ class Index extends Component {
   };
 
   onShareAppMessage(ops) {
-    const query = this.$router.params;
     const { title } = this.state;
     if (ops.from === "button") {
       // 来自页面内转发按钮
@@ -61,7 +62,7 @@ class Index extends Component {
     }
     return {
       title: `${title}`,
-      path: `pages/post/index?id=${query.id}`,
+      path: `pages/post/index?id=${this.$router.params.id}`,
       success: function(res) {
         // 转发成功
         console.log("转发成功:" + JSON.stringify(res));
@@ -74,11 +75,10 @@ class Index extends Component {
   }
 
   async componentDidShow() {
-    const query = this.$router.params;
+    const id = this.$router.params.id
     const { indexStore } = this.props;
     const { posts, isAuth } = indexStore;
     if (!isAuth) indexStore.getAuth()
-    const id = query.id || '74b935d8749907d4cfad7386b7e6b5e5';
     let data = posts[id] || {};
     if (data && data.content) {
       // 已有数据
@@ -91,7 +91,7 @@ class Index extends Component {
         url: `${Uri}post/fetch`,
         data: {
           pid: id,
-          link: data.url || null
+          link: data.url || ''
         }
       })
         .then(res => {
@@ -120,14 +120,15 @@ class Index extends Component {
   }
 
   setData = (data) => {
-    const content = fixUrl(data.content, data.url);
+    const content = data.content ? fixUrl(data.content, data.url) : '';
+    const content_cn = data.content_cn ? fixUrl(data.content_cn, data.url) : '';
     this.setState({
-      pid: data.id,
+      pid: data.pid,
       title: data.title,
       title_cn: data.title_cn,
       url: data.url,
-      img: data.image,
-      md: content
+      content,
+      content_cn: content_cn
     });
   }
 
@@ -176,21 +177,25 @@ class Index extends Component {
     })
   }
 
-  onSet = () => {
-
-  }
-
   render() {
-    const { setting: { language, theme }, favs } = this.props.indexStore
-    const { md, title, top, img, title_cn, pid } = this.state;
+    const { indexStore } = this.props
+    const { setting, favs, posts } = indexStore
+    const { language, theme } = setting
+    const { title, top, title_cn, pid, content, content_cn } = this.state;
     const isLike = favs.includes(String(pid))
+    const post = posts[this.$router.params.id] || {}
+    const img = post.image || post.lead_image_url || post.placeholder || ''
     return (
       <View className={`post ${Themes[theme]}`}>
+        {
+          setting.show &&
+          <Setting setting={setting} onSet={indexStore.setSetting.bind(indexStore)} />
+        }
         <View className="header" style={{ padding: `${top}px 0 0 10px` }}>
           <View onClick={this.onHome} className="btn">
             <IconFont name="home" size={40} color="#323E70" />
           </View>
-          <View onClick={this.onSet} className="btn">
+          <View onClick={() => this.props.indexStore.setSetting('show', true)} className="btn">
             <IconFont name="Settingscontroloptions" size={40} color="#323E70" />
           </View>
           <View onClick={this.onLike} className={`btn ${isLike ? 'on' : ''}`}>
@@ -209,7 +214,16 @@ class Index extends Component {
         </View>
         <View className="content">
           {img && <Image src={img} mode="aspectFit" />}
-          <wemark md={md} link highlight type="wemark" />
+          {
+            (language[2] === 0 || language[2] === 2) &&
+            content &&
+            <wemark md={content} link highlight type="wemark" />
+          }
+          {
+            (language[2] === 1 || language[2] === 2) &&
+            content_cn &&
+            <wemark md={content_cn} link highlight type="wemark" />
+          }
         </View>
       </View>
     );

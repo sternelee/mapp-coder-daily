@@ -1,0 +1,57 @@
+<block wx:if="{{$taroCompReady}}">
+    <view class="toast">
+        <view class="setting">
+            <view class="title">
+                <icon-font compid="{{$compid__28}}"></icon-font><text>设置中心</text>
+            </view>
+            <view class="label"><text>内容排序: </text>
+                <view class="sort">
+                    <view class="{{'btn ' + (order === 'popularity' ? 'on' : '')}}" bindtap="anonymousFunc0"><text>最热</text>
+                    </view>
+                    <view class="{{'btn ' + (order === 'latest' ? 'on' : '')}}" bindtap="anonymousFunc1"><text>最新</text>
+                    </view>
+                </view>
+            </view>
+            <view class="label"><text>暗色模式:</text>
+                <view class="{{'btn ' + (theme === 1 ? 'on' : '')}}" bindtap="anonymousFunc2">
+                    <icon-font compid="{{$compid__29}}"></icon-font>
+                </view>
+            </view>
+            <view class="label"><text>标题语言:</text>
+                <view class="{{'btn ' + (language[1] === 0 ? 'on' : '')}}" bindtap="anonymousFunc3">
+                    <icon-font compid="{{$compid__30}}"></icon-font>
+                </view>
+                <view class="{{'btn ' + (language[1] === 1 ? 'on' : '')}}" bindtap="anonymousFunc4">
+                    <icon-font compid="{{$compid__31}}"></icon-font>
+                </view>
+                <view class="{{'btn ' + (language[1] === 2 ? 'on' : '')}}" bindtap="anonymousFunc5">
+                    <icon-font compid="{{$compid__32}}"></icon-font>
+                </view>
+            </view>
+            <view class="label"><text>文章语言:</text>
+                <view class="{{'btn ' + (language[2] === 0 ? 'on' : '')}}" bindtap="anonymousFunc6">
+                    <icon-font compid="{{$compid__33}}"></icon-font>
+                </view>
+                <view class="{{'btn ' + (language[2] === 1 ? 'on' : '')}}" bindtap="anonymousFunc7">
+                    <icon-font compid="{{$compid__34}}"></icon-font>
+                </view>
+                <view class="{{'btn ' + (language[2] === 2 ? 'on' : '')}}" bindtap="anonymousFunc8">
+                    <icon-font compid="{{$compid__35}}"></icon-font>
+                </view>
+            </view>
+            <view class="label info">
+                <button open-type="contact">
+                    <view class="btn">
+                        <icon-font compid="{{$compid__36}}"></icon-font>客服</view>
+                </button>
+                <button open-type="contact">
+                    <view class="btn">
+                        <icon-font compid="{{$compid__37}}"></icon-font>捐赠</view>
+                </button>
+            </view>
+            <view class="title btn" bindtap="anonymousFunc9">
+                <icon-font compid="{{$compid__38}}"></icon-font><text>确定</text>
+            </view>
+        </view>
+    </view>
+</block>

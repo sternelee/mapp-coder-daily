@@ -1,11 +1,11 @@
 <block wx:if="{{$taroCompReady}}">
     <view wx:key="pid" class="{{'post ' + Themes[theme]}}">
         <view class="topic">
-            <image src="{{post.publication.image}}" mode="aspectFit"></image><text>{{post.publication.name}}</text><text class="date">{{anonymousState__temp}}</text>
+            <image src="{{pub.image}}" mode="aspectFit" bindtap="anonymousFunc0" lazy-load="{{true}}"></image><text bindtap="anonymousFunc1">{{pub.name}}</text><text class="date">{{anonymousState__temp}}</text>
         </view>
         <view class="content">
-            <image src="{{post.image}}" bindtap="anonymousFunc0"></image>
-            <view class="name" bindtap="anonymousFunc1">
+            <image src="{{post.image}}" bindtap="anonymousFunc2" lazy-load="{{true}}"></image>
+            <view class="name" bindtap="anonymousFunc3">
                 <block wx:if="{{language[1] === 0 || language[1] === 2}}">
                     <view class="text">{{post.title}}</view>
                 </block>
@@ -13,7 +13,7 @@
                     <view class="text">{{post.title_cn}}</view>
                 </block>
             </view>
-            <view class="tags"><text class="tag" wx:key="$loopState__temp3" bindtap="anonymousFunc2" wx:for="{{loopArray202}}" wx:for-item="vtag" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{vtag._$indexKey}}">#{{vtag.$loopState__temp5}}</text>
+            <view class="tags"><text class="tag" wx:key="$loopState__temp3" bindtap="anonymousFunc4" wx:for="{{loopArray15}}" wx:for-item="vtag" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{vtag._$indexKey}}">#{{vtag.$loopState__temp5}}</text>
                 <block wx:if="{{post.tags.length > maxLen}}"><text>...</text>
                 </block>
             </view>

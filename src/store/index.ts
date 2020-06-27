@@ -36,17 +36,20 @@ interface PubInterface {
   twitter: string;
 }
 
+export interface ISeeting {
+  language: number[] // 0为英文，1为中文，2为双语；系统显示，文章标题，文章内容
+  theme: number // o为默认，1为黑暗主题，2为自适应
+  order: 'latest' | 'popularity' // 默认排序
+  show: boolean
+}
+
 export interface StoreInterface {
   auth: {
     openid: string
     session_key: string
   }
   isAuth: boolean
-  setting: {
-    language: number[] // 0为英文，1为中文，2为双语；系统显示，文章标题，文章内容
-    theme: number // o为默认，1为黑暗主题，2为自适应
-    order: 'latest' | 'popularity' // 默认排序
-  }
+  setting: ISeeting
   list: string[]
   posts: {
     [id: string]: PostInterface
@@ -54,9 +57,12 @@ export interface StoreInterface {
   tags: string[]
   pubs: string[]
   favs: string[]
+  favPids: string[]
+  favsDone: boolean
   allTags: string[]
   allPubs: PubInterface[]
   page: number
+  more: boolean
   setAuth: (obj: any) => void
   setList: (list: string[], more: boolean) => void
   setPost: (obj: any) => void
@@ -65,6 +71,9 @@ export interface StoreInterface {
   setFavs: (list: string[]) => void
   getAuth: () => void
   checkUser: () => void
+  getFavPosts: () => void
+  setSetting: (key: 'language' | 'theme' | 'show' | 'order', val: any) => void
+  initSetting: () => void
 }
 
 class Store implements StoreInterface {
@@ -75,17 +84,17 @@ class Store implements StoreInterface {
   @observable tags: string[] = []
   @observable pubs: string[] = []
   @observable favs: string[] = []
+  @observable favPids: string[] = []
+  @observable favsDone: boolean = false
   @observable allTags: string[] = []
   @observable allPubs: PubInterface[] = []
   @observable page: number = 0
-  @observable setting: {
-    language: number[]
-    theme: number
-    order: 'latest' | 'popularity'
-  } = {
-    language: [1, 2, 0],
+  @observable more: boolean = false
+  @observable setting: ISeeting = {
+    language: [0, 2, 2],
     theme: 0,
-    order: 'popularity'
+    order: 'latest',
+    show: false
   }
 
 
@@ -164,6 +173,44 @@ class Store implements StoreInterface {
       this.setPubs(pubs);
       this.setFavs(favs);
     });
+  }
+
+  @action
+  getFavPosts () {
+    if (this.favsDone) return
+    Taro.request({
+      url: `${Uri}post/find?ids=${this.favs}`
+    }).then(res => {
+      this.favsDone = true
+      const list = res.data.data.map(v => {
+        this.setPost({
+          ...v,
+          id: v.pid,
+          pid: v.id
+        })
+        return v.pid
+      })
+      this.favPids = list
+    })
+  }
+
+  @action
+  async initSetting () {
+    const setting = await Taro.getStorageSync('setting');
+    if (setting) {
+      this.setting = setting
+    }
+  }
+
+  @action
+  setSetting (key, val) {
+    const setting = Object.assign({}, this.setting)
+    setting[key] = val
+    this.setting = setting
+    Taro.setStorage({
+      key: 'setting',
+      data: setting
+    })
   }
 }
 
