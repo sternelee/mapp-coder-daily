@@ -376,9 +376,13 @@ class Index extends Component {
   };
 
   onTabs = () => {
-    const { showTabsOptions } =this.state
+    const { showTabsOptions, show } =this.state
+    if (!show) {
+      return this.setState({
+        show: true
+      })
+    }
     this.setState({
-      show: true,
       showTabsOptions: !showTabsOptions
     })
   }
