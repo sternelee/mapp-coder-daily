@@ -204,10 +204,7 @@ class Index extends Component {
     const iconColor = theme ? '#007AFF' : '#323E70'
     return (
       <View className={`post ${Themes[theme]}`}>
-        {
-          setting.show &&
-          <Setting setting={setting} onSet={indexStore.setSetting.bind(indexStore)} />
-        }
+        <Setting setting={setting} onSet={indexStore.setSetting.bind(indexStore)} show={setting.show} />
         <View className="header" style={{ padding: `${top}px 0 10px 10px` }}>
           <View onClick={this.onHome} className="btn">
             <IconFont name="home" size={40} color={iconColor} />

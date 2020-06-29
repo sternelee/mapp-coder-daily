@@ -5,11 +5,12 @@ import IconFont from "@components/iconfont";
 import "./index.styl";
 
 interface IProps {
+  show: boolean
   onPay: () => void;
 }
 
 function Pay(props: IProps) {
-  let { onPay } = props;
+  let { onPay, show } = props;
 
   const saveImg = () => {
     Taro.previewImage({
@@ -18,7 +19,7 @@ function Pay(props: IProps) {
     })
   }
   return (
-    <View className="toast">
+    <View className={show ? "toast on" : "toast"}>
       <View className="setting">
         <View className="title">
           <Image onClick={() => saveImg()} src="https://api.leeapps.cn/uploads/bb5a5f2ba9b2430dac887245cfe9aba1.jpg" mode="aspectFit" />
@@ -33,6 +34,7 @@ function Pay(props: IProps) {
 }
 
 Pay.defaultProps = {
+  show: false,
   onPay: () => null
 }
 

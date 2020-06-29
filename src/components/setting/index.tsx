@@ -8,12 +8,13 @@ import Pay from "./pay";
 import "./index.styl";
 
 interface IProps {
+  show: boolean
   setting: ISeeting;
   onSet: (key, val) => void;
 }
 
 function Setting(props: IProps) {
-  let { setting: { language, theme, tabId, order }, onSet } = props;
+  let { setting: { language, theme, tabId, order }, onSet, show } = props;
   const [ pay, setPay ] = useState(false)
   language = toJS(language)
   const setLan = (index, val) => {
@@ -27,11 +28,8 @@ function Setting(props: IProps) {
   // }
 
   return (
-    <View className="toast">
-      {
-        pay &&
-        <Pay onPay={() => setPay(false)} />
-      }
+    <View className={show ? "toast on" : "toast"}>
+      <Pay onPay={() => setPay(false)} show={pay} />
       <View className="setting">
         <View className="title">
           <IconFont name="Settingscontroloptions" size={70} color="#323E70" />
@@ -85,6 +83,7 @@ function Setting(props: IProps) {
 }
 
 Setting.defaultProps = {
+  show: false,
   setting: {
     language: [0, 2, 2],
     theme: 0,

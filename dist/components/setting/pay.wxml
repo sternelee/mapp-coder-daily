@@ -1,11 +1,11 @@
 <block wx:if="{{$taroCompReady}}">
-    <view class="toast">
+    <view class="{{show ? 'toast on' : 'toast'}}">
         <view class="setting">
             <view class="title">
                 <image bindtap="anonymousFunc0" src="https://api.leeapps.cn/uploads/bb5a5f2ba9b2430dac887245cfe9aba1.jpg" mode="aspectFit"></image>
             </view>
             <view class="title btn" bindtap="anonymousFunc1">
-                <icon-font compid="{{$compid__58}}"></icon-font><text>关闭</text>
+                <icon-font compid="{{$compid__45}}"></icon-font><text>关闭</text>
             </view>
         </view>
     </view>

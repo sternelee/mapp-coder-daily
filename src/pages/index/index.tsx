@@ -74,7 +74,7 @@ class Index extends Component {
   }
 
   async componentDidMount() {
-    await this.getPost();
+    await this.getPost(false);
     this.getPopularTags();
     this.getPubs();
   }
@@ -143,10 +143,13 @@ class Index extends Component {
     }
   };
 
-  getPost = () => {
+  getPost = (isLoading = true) => {
     const { indexStore } = this.props;
     const { page } = indexStore;
     const { type, pub, tag } = this.state;
+    isLoading && Taro.showLoading({
+      title: 'Loading ...'
+    })
     const types = {
       latest: [
         `"sortBy":"popularity"`,
@@ -197,9 +200,10 @@ class Index extends Component {
           return v.id;
         });
         indexStore.setList(ids, page > 0);
+        isLoading && Taro.hideLoading()
       })
       .catch(() => {
-        Taro.hideLoading();
+        isLoading && Taro.hideLoading()
         Taro.showToast({
           title: "数据拉取失败",
           duration: 2000
@@ -267,7 +271,7 @@ class Index extends Component {
   onNext = () => {
     if (!this.props.indexStore.more) return
     this.props.indexStore.page += 1;
-    this.getPost();
+    this.getPost(false);
   };
 
   onTag = tag => {
@@ -374,6 +378,7 @@ class Index extends Component {
   onTabs = () => {
     const { showTabsOptions } =this.state
     this.setState({
+      show: true,
       showTabsOptions: !showTabsOptions
     })
   }
@@ -424,10 +429,7 @@ class Index extends Component {
     const iconColor = '#323E70'
     return (
       <View className="index">
-        {
-          setting.show &&
-          <Setting setting={setting} onSet={indexStore.setSetting.bind(indexStore)} />
-        }
+        <Setting setting={setting} onSet={indexStore.setSetting.bind(indexStore)} show={setting.show} />
         <View
           className="header"
           style={{
