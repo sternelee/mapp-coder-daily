@@ -1,5 +1,5 @@
 import Taro, { Component, Config } from "@tarojs/taro";
-import { View, Text, Image } from "@tarojs/components";
+import { View, Text, Image, ScrollView } from "@tarojs/components";
 import { observer, inject } from "@tarojs/mobx";
 import IconFont from "@components/iconfont";
 import { Uri, Themes } from "@api/index";
@@ -7,6 +7,7 @@ import { Uri, Themes } from "@api/index";
 import { StoreInterface } from "@store/index";
 import Setting from "@components/setting/index";
 import { fixUrl } from "@utils/index";
+import Loading from "@components/loading/index";
 
 import "./index.styl";
 
@@ -33,16 +34,20 @@ class Index extends Component {
     pid: 0, // 注意在这里：id是指文章id, 而pid只是数据的序号
     title: "",
     title_cn: "",
+    innerHeight: 750,
     top: 0,
     url: "",
     content: "",
-    content_cn: ""
+    content_cn: "",
+    isLoading: false
   };
 
   async componentWillMount() {
-    const menuBtn = Taro.getMenuButtonBoundingClientRect();
+    const menuBtn = await Taro.getMenuButtonBoundingClientRect();
+    const info = await Taro.getSystemInfoSync();
     this.setState({
-      top: menuBtn.top + 2
+      top: menuBtn.top + 2,
+      innerHeight: info.windowHeight
     });
     await this.props.indexStore.initSetting()
   }
@@ -85,9 +90,9 @@ class Index extends Component {
       // 已有数据
       this.setData(data)
     } else {
-      Taro.showLoading({
-        title: "请求数据中"
-      });
+      this.setState({
+        isLoading: true
+      })
       Taro.request({
         url: `${Uri}post/fetch`,
         data: {
@@ -96,6 +101,9 @@ class Index extends Component {
         }
       })
         .then(res => {
+          this.setState({
+            isLoading: false
+          })
           if (res.data.code === 0) {
             data = res.data.data;
             data.pid = Number(data.id)
@@ -110,10 +118,12 @@ class Index extends Component {
               content_cn: data.content_cn
             });
             this.setData(data)
-            Taro.hideLoading();
           }
         })
-        .catch(err => {
+        .catch(() => {
+          this.setState({
+            isLoading: false
+          })
           Taro.showToast({
             title: "拉取数据失败",
             duration: 2000
@@ -187,39 +197,49 @@ class Index extends Component {
     const { indexStore } = this.props
     const { setting, favs, posts } = indexStore
     const { language, theme } = setting
-    const { id, title, top, title_cn, pid, content, content_cn } = this.state;
+    const { id, title, top, title_cn, pid, content, content_cn, innerHeight, isLoading } = this.state;
     const isLike = favs.includes(String(pid))
     const post = posts[id] || {}
     const img = post.image || post.lead_image_url || post.placeholder || ''
+    const iconColor = theme ? '#007AFF' : '#323E70'
     return (
       <View className={`post ${Themes[theme]}`}>
         {
           setting.show &&
           <Setting setting={setting} onSet={indexStore.setSetting.bind(indexStore)} />
         }
-        <View className="header" style={{ padding: `${top}px 0 0 10px` }}>
+        <View className="header" style={{ padding: `${top}px 0 10px 10px` }}>
           <View onClick={this.onHome} className="btn">
-            <IconFont name="home" size={40} color="#323E70" />
+            <IconFont name="home" size={40} color={iconColor} />
           </View>
           <View onClick={() => this.props.indexStore.setSetting('show', true)} className="btn">
-            <IconFont name="Settingscontroloptions" size={40} color="#323E70" />
+            <IconFont name="Settingscontroloptions" size={40} color={iconColor} />
           </View>
           <View onClick={this.onLike} className={`btn ${isLike ? 'on' : ''}`}>
-            <IconFont name={isLike ? 'bqxin' : 'xin'} size={40} color="#323E70" />
+            <IconFont name={isLike ? 'bqxin' : 'xin'} size={40} color={iconColor} />
           </View>
         </View>
-        <View className='title' style={{padding: '10px'}} onClick={this.onCopyUrl}>
-          {
-            (language[1] === 0 || language[1] === 2) &&
-            <View className="text">{ title }</View>
-          }
-          {
-            (language[1] === 1 || language[1] === 2) &&
-            <View className="text">{ title_cn }</View>
-          }
-        </View>
-        <View className="content">
+        <ScrollView
+          enableFlex
+          className="content"
+          scrollY
+          style={{ height: `${innerHeight - top - 50}px` }}
+        >
+          <View className='title' style={{padding: '10px'}} onClick={this.onCopyUrl}>
+            {
+              (language[1] === 0 || language[1] === 2) &&
+              <View className="text">{ title }</View>
+            }
+            {
+              (language[1] === 1 || language[1] === 2) &&
+              <View className="text">{ title_cn }</View>
+            }
+          </View>
           {img && <Image src={img} mode="aspectFit" />}
+          {
+            isLoading &&
+            <Loading />
+          }
           {
             (language[2] === 0 || language[2] === 2) &&
             content &&
@@ -230,7 +250,7 @@ class Index extends Component {
             content_cn &&
             <wemark md={content_cn} link highlight type="wemark" />
           }
-        </View>
+        </ScrollView>
       </View>
     );
   }

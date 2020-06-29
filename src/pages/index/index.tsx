@@ -8,6 +8,7 @@ import { Uri } from "@api/index";
 import project from "@project";
 import Post from "@components/post/index";
 import Setting from "@components/setting/index";
+import Loading from "@components/loading/index";
 
 import "./index.styl";
 
@@ -38,9 +39,9 @@ class Index extends Component {
     tag: string;
     type: string;
     title: string;
-    tabId: number;
     hits: string[];
     showTabsOptions: boolean;
+    isRefresh: boolean;
   } = {
     top: 0,
     show: true,
@@ -50,9 +51,9 @@ class Index extends Component {
     tag: "",
     type: "latest",
     title: "Daily 最新动态",
-    tabId: 1,
     hits: [],
-    showTabsOptions: false
+    showTabsOptions: false,
+    isRefresh: false
   };
 
   async componentWillMount() {
@@ -63,6 +64,13 @@ class Index extends Component {
       innerHeight: info.windowHeight
     });
     await this.props.indexStore.initSetting()
+    const refershTime = Taro.getStorageSync('refreshTime')
+    if (!refershTime || (Number(refershTime) >= new Date().getTime() + 1000*60*60*24*7)) {
+      this.setState({
+        isRefresh: true
+      })
+      Taro.setStorage({key: 'refreshTime', data: new Date().getTime()})
+    }
   }
 
   async componentDidMount() {
@@ -108,7 +116,7 @@ class Index extends Component {
 
   getPubs = async () => {
     let allPubs = await Taro.getStorageSync("publications");
-    if (allPubs) {
+    if (allPubs && !this.state.isRefresh) {
       this.props.indexStore.allPubs = allPubs;
     } else {
       Taro.request({
@@ -122,7 +130,7 @@ class Index extends Component {
 
   getPopularTags = async () => {
     let allTags = await Taro.getStorageSync("popularTags");
-    if (allTags) {
+    if (allTags && !this.state.isRefresh) {
       this.props.indexStore.allTags = allTags;
     } else {
       Taro.request({
@@ -164,9 +172,6 @@ class Index extends Component {
     };
     const mapType = types[type];
     const query = `query ${mapType[1]}($params: ${mapType[2]}) { ${mapType[3]}(params: $params) { id,title,url,publishedAt,createdAt,image,ratio,placeholder,views,readTime,publication { id, name, image },tags } }`;
-    Taro.showLoading({
-      title: "Loading ..."
-    });
     let variables = `{"params":{"latest":"${new Date().toISOString()}","page":${page},"pageSize":20,${
       mapType[0]
     }}}`;
@@ -182,7 +187,6 @@ class Index extends Component {
     })
       .then(async res => {
         const data = res.data.data;
-        Taro.hideLoading();
         const newPosts = data[mapType[4]];
         this.props.indexStore.more = newPosts.length === 20
         let cns = await this.savePosts(
@@ -205,8 +209,7 @@ class Index extends Component {
 
   fetchLatestVariables = () => {
     const { indexStore } = this.props;
-    const { tabId } = this.state;
-    const tags = tabId ? [] : indexStore.tags;
+    const tags = indexStore.setting.tabId ? [] : indexStore.tags;
     const inputParams = {
       latest: new Date().toISOString(),
       page: indexStore.page,
@@ -284,18 +287,18 @@ class Index extends Component {
   };
 
   onChangeTab = index => {
-    const { tabId } = this.state
     const { indexStore } = this.props;
-    if (tabId === index) {
-      return this.setState({
-        showTabsOptions: false
-      })
+    this.setState({
+      showTabsOptions: false
+    })
+    if (indexStore.setting.tabId === index) {
+      return
     }
     indexStore.page = 0;
+    if (index !== 2) indexStore.setSetting('tabId', index)
     this.setState(
       {
         showTabsOptions: false,
-        tabId: index === 2 ? tabId : index,
         keyword: "",
         pub: "",
         tag: "",
@@ -395,7 +398,6 @@ class Index extends Component {
       tag,
       keyword,
       innerHeight,
-      tabId,
       hits,
       showTabsOptions
     } = this.state;
@@ -418,6 +420,8 @@ class Index extends Component {
     const mypubs = allPubs.filter(v => pubs.includes(v.id));
     const favPost = favPids.map(v => posts[v]);
     const itemLan = setting.language[1]
+    // const iconColor = setting.theme ? '#007AFF' : '#323E70'
+    const iconColor = '#323E70'
     return (
       <View className="index">
         {
@@ -433,19 +437,19 @@ class Index extends Component {
           }}
         >
           <View className="btn" onClick={this.onShowPage}>
-            <IconFont name="gengduo" size={40} color="#323E70" />
+            <IconFont name="gengduo" size={40} color={iconColor} />
           </View>
           <View className="btn" onClick={() => this.props.indexStore.setSetting('show', true)}>
-            <IconFont name="Settingscontroloptions" size={40} color="#323E70" />
+            <IconFont name="Settingscontroloptions" size={40} color={iconColor} />
           </View>
           <View className="title">
             <View className="btn" onClick={this.onTabs}>
               {/* 根据关注，全部使用不同的颜色，点击可选择 关注、全部、刷新 */}
-              <IconFont name="caidan" size={50} color="#323E70" />
+              <IconFont name="caidan" size={50} color={iconColor} />
             </View>
             <View className={`options ${showTabsOptions ? 'on' : ''}`}>
-              <View className={`option ${tabId === 0 ? 'on' : ''}`} onClick={this.onChangeTab.bind(this, 0)}>关注</View>
-              <View className={`option ${tabId === 1 ? 'on' : ''}`} onClick={this.onChangeTab.bind(this, 1)}>全部</View>
+              <View className={`option ${setting.tabId === 0 ? 'on' : ''}`} onClick={this.onChangeTab.bind(this, 0)}>关注</View>
+              <View className={`option ${setting.tabId === 1 ? 'on' : ''}`} onClick={this.onChangeTab.bind(this, 1)}>全部</View>
               <View className="option" onClick={this.onChangeTab.bind(this, 2)}>刷新</View>
             </View>
           </View>
@@ -461,7 +465,7 @@ class Index extends Component {
             enableFlex
           >
             <View className="btn">
-              <IconFont name="rss" size={50} color="#323E70" />
+              <IconFont name="rss" size={50} color={iconColor} />
               <Text>关注的频道</Text>
             </View>
             <ScrollView className="pubs" scrollX lowerThreshold={20} enableFlex>
@@ -486,7 +490,7 @@ class Index extends Component {
               }
             </ScrollView>
             <View className="btn">
-              <IconFont name="tag" size={50} color="#323E70" />
+              <IconFont name="tag" size={50} color={iconColor} />
               <Text>关注的标签</Text>
             </View>
             <ScrollView className="tags" scrollX lowerThreshold={20} enableFlex>
@@ -522,7 +526,7 @@ class Index extends Component {
               </View>
             </View>
             <View className="btn" style={{marginTop: "30px"}}>
-              <IconFont name="more1" size={50} color="#323E70" />
+              <IconFont name="more1" size={50} color={iconColor} />
               <Text>常见频道</Text>
             </View>
             <ScrollView className="pubs" scrollX lowerThreshold={20} enableFlex>
@@ -540,7 +544,7 @@ class Index extends Component {
               ))}
             </ScrollView>
             <View className="btn">
-              <IconFont name="more1" size={50} color="#323E70" />
+              <IconFont name="more1" size={50} color={iconColor} />
               <Text>常见标签</Text>
             </View>
             <ScrollView className="tags" scrollX lowerThreshold={20} enableFlex>
@@ -553,7 +557,7 @@ class Index extends Component {
               }
             </ScrollView>
             <View className="btn">
-              <IconFont name="shoucang" size={50} color="#323E70" />
+              <IconFont name="shoucang" size={50} color={iconColor} />
               <Text>我的收藏</Text>
             </View>
             <View className="fav-posts">
@@ -573,6 +577,7 @@ class Index extends Component {
             style={{ height: `${innerHeight - top - 50}px` }}
             onScrollToLower={this.onNext}
             enableFlex
+            enableBackToTop
           >
             {pub && (
               <View
@@ -581,11 +586,11 @@ class Index extends Component {
               >
                 <Image src={thePub.image} mode="aspectFit" />
                 <View style={{ display: "flex", alignItems: "center" }}>
-                  <Text style={{ color: isPub ? "#f58301" : "#323E70" }}>
+                  <Text style={{ color: isPub ? "#f58301" : iconColor }}>
                     {title}
                   </Text>
                   <View className={`btn ${isPub ? 'on' : ''}`}>
-                    <IconFont name="rss" size={40} color={isPub ? "#f58301" : "#323E70"} />
+                    <IconFont name="rss" size={40} color={isPub ? "#f58301" : iconColor} />
                   </View>
                 </View>
               </View>
@@ -595,11 +600,11 @@ class Index extends Component {
                 className="the-tag"
                 onClick={this.onLikeTag.bind(this, tag)}
               >
-                <Text style={{ color: isTag ? "#f58301" : "#323E70" }}>
+                <Text style={{ color: isTag ? "#f58301" : iconColor }}>
                   {title}
                 </Text>
                 <View className={`btn ${isTag ? 'on' : ''}`}>
-                  <IconFont name="tag" size={40} color={isTag ? "#f58301" : "#323E70"} />
+                  <IconFont name="tag" size={40} color={isTag ? "#f58301" : iconColor} />
                 </View>
               </View>
             )}
@@ -614,6 +619,7 @@ class Index extends Component {
                 onPub={this.onPub}
               />
             ))}
+            <Loading />
           </ScrollView>
         </View>
       </View>

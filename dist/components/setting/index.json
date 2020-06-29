@@ -1,1 +1,1 @@
-{"component":true,"usingComponents":{"icon-font":"../iconfont/index.weapp"}}
+{"component":true,"usingComponents":{"pay":"./pay","icon-font":"../iconfont/index.weapp"}}

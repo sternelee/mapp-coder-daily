@@ -1,22 +1,22 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="index">
         <block wx:if="{{setting.show}}">
-            <setting compid="{{$compid__44}}"></setting>
+            <setting compid="{{$compid__35}}"></setting>
         </block>
         <view class="header" style="{{anonymousState__temp}}">
             <view class="btn" bindtap="onShowPage">
-                <icon-font compid="{{$compid__45}}"></icon-font>
+                <icon-font compid="{{$compid__36}}"></icon-font>
             </view>
             <view class="btn" bindtap="anonymousFunc0">
-                <icon-font compid="{{$compid__46}}"></icon-font>
+                <icon-font compid="{{$compid__37}}"></icon-font>
             </view>
             <view class="title">
                 <view class="btn" bindtap="onTabs">
-                    <icon-font compid="{{$compid__47}}"></icon-font>
+                    <icon-font compid="{{$compid__38}}"></icon-font>
                 </view>
                 <view class="{{'options ' + (showTabsOptions ? 'on' : '')}}">
-                    <view class="{{'option ' + (tabId === 0 ? 'on' : '')}}" bindtap="onChangeTab" data-e-tap-so="this" data-e-tap-a-a="{{0}}">关注</view>
-                    <view class="{{'option ' + (tabId === 1 ? 'on' : '')}}" bindtap="onChangeTab" data-e-tap-so="this" data-e-tap-a-a="{{1}}">全部</view>
+                    <view class="{{'option ' + (setting.tabId === 0 ? 'on' : '')}}" bindtap="onChangeTab" data-e-tap-so="this" data-e-tap-a-a="{{0}}">关注</view>
+                    <view class="{{'option ' + (setting.tabId === 1 ? 'on' : '')}}" bindtap="onChangeTab" data-e-tap-so="this" data-e-tap-a-a="{{1}}">全部</view>
                     <view class="option" bindtap="onChangeTab" data-e-tap-so="this" data-e-tap-a-a="{{2}}">刷新</view>
                 </view>
             </view>
@@ -24,7 +24,7 @@
         <view class="inner" style="{{anonymousState__temp2}}">
             <scroll-view class="topics" scroll-y="{{true}}" style="{{anonymousState__temp3}}" enable-flex="{{true}}">
                 <view class="btn">
-                    <icon-font compid="{{$compid__48}}"></icon-font><text>关注的频道</text>
+                    <icon-font compid="{{$compid__39}}"></icon-font><text>关注的频道</text>
                 </view>
                 <scroll-view class="pubs" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}">
                     <view wx:key="id" class="topic" bindtap="onPub" wx:for="{{mypubs}}" wx:for-item="v" wx:for-index="_anonIdx2" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">
@@ -38,7 +38,7 @@
                     </block>
                 </scroll-view>
                 <view class="btn">
-                    <icon-font compid="{{$compid__49}}"></icon-font><text>关注的标签</text>
+                    <icon-font compid="{{$compid__40}}"></icon-font><text>关注的标签</text>
                 </view>
                 <scroll-view class="tags" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}"><text class="tag" wx:key="mtag" bindtap="onTag" wx:for="{{tags}}" wx:for-item="mtag" wx:for-index="_anonIdx4" data-e-tap-so="this" data-e-tap-a-a="{{mtag}}">#{{mtag}}</text>
                     <block wx:if="{{tags.length === 0}}"><text class="tag">暂无关注，请搜索添加</text>
@@ -47,7 +47,7 @@
                 <view class="search-tag">
                     <view class="search-tag-box">
                         <view class="search-input">
-                            <icon-font compid="{{$compid__50}}"></icon-font>
+                            <icon-font compid="{{$compid__41}}"></icon-font>
                             <input value="{{keyword}}" bindconfirm="onSearch" placeholder="搜索标签" />
                         </view>
                         <view class="hit-tags"><text wx:key="hit" bindtap="onLikeTag" wx:for="{{hits}}" wx:for-item="hit" wx:for-index="_anonIdx6" data-e-tap-so="this" data-e-tap-a-a="{{hit}}">{{hit}}</text>
@@ -55,7 +55,7 @@
                     </view>
                 </view>
                 <view class="btn" style="{{anonymousState__temp4}}">
-                    <icon-font compid="{{$compid__51}}"></icon-font><text>常见频道</text>
+                    <icon-font compid="{{$compid__42}}"></icon-font><text>常见频道</text>
                 </view>
                 <scroll-view class="pubs" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}">
                     <view wx:key="id" class="topic" bindtap="onPub" wx:for="{{allPubs}}" wx:for-item="v" wx:for-index="_anonIdx8" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">
@@ -65,12 +65,12 @@
                     </view>
                 </scroll-view>
                 <view class="btn">
-                    <icon-font compid="{{$compid__52}}"></icon-font><text>常见标签</text>
+                    <icon-font compid="{{$compid__43}}"></icon-font><text>常见标签</text>
                 </view>
                 <scroll-view class="tags" scroll-x="{{true}}" lower-threshold="{{20}}" enable-flex="{{true}}"><text class="tag" wx:key="mtag" bindtap="onTag" wx:for="{{allTags}}" wx:for-item="mtag" wx:for-index="_anonIdx10" data-e-tap-so="this" data-e-tap-a-a="{{mtag}}">#{{mtag}}</text>
                 </scroll-view>
                 <view class="btn">
-                    <icon-font compid="{{$compid__53}}"></icon-font><text>我的收藏</text>
+                    <icon-font compid="{{$compid__44}}"></icon-font><text>我的收藏</text>
                 </view>
                 <view class="fav-posts">
                     <block wx:if="{{favPids.length === 0}}">
@@ -79,13 +79,13 @@
                     <view wx:key="id" class="btn" bindtap="onPost" wx:for="{{favPost}}" wx:for-item="v" wx:for-index="index" data-e-tap-so="this" data-e-tap-a-a="{{v.id}}">{{index + 1}}. {{itemLan === 0 ? v.title : itemLan === 1 ? v.title_cn : v.title + ' (' + v.title_cn + ')'}}</view>
                 </view>
             </scroll-view>
-            <scroll-view scroll-y="{{true}}" lower-threshold="{{200}}" class="posts" style="{{anonymousState__temp6}}" bindscrolltolower="onNext" enable-flex="{{true}}">
+            <scroll-view scroll-y="{{true}}" lower-threshold="{{200}}" class="posts" style="{{anonymousState__temp6}}" bindscrolltolower="onNext" enable-flex="{{true}}" enable-back-to-top="{{true}}">
                 <block wx:if="{{pub}}">
                     <view class="the-topic" bindtap="onLikePub" data-e-tap-so="this" data-e-tap-a-a="{{pub}}">
                         <image src="{{thePub.image}}" mode="aspectFit"></image>
                         <view style="{{anonymousState__temp7}}"><text style="{{anonymousState__temp8}}">{{title}}</text>
                             <view class="{{'btn ' + (isPub ? 'on' : '')}}">
-                                <icon-font compid="{{$compid__54}}"></icon-font>
+                                <icon-font compid="{{$compid__45}}"></icon-font>
                             </view>
                         </view>
                     </view>
@@ -93,11 +93,12 @@
                 <block wx:if="{{tag}}">
                     <view class="the-tag" bindtap="onLikeTag" data-e-tap-so="this" data-e-tap-a-a="{{tag}}"><text style="{{anonymousState__temp9}}">{{title}}</text>
                         <view class="{{'btn ' + (isTag ? 'on' : '')}}">
-                            <icon-font compid="{{$compid__55}}"></icon-font>
+                            <icon-font compid="{{$compid__46}}"></icon-font>
                         </view>
                     </view>
                 </block>
-                <post wx:key="$original" wx:for="{{loopArray14}}" wx:for-item="id" wx:for-index="_anonIdx12" compid="{{id.$compid__43}}"></post>
+                <post wx:key="$original" wx:for="{{loopArray14}}" wx:for-item="id" wx:for-index="_anonIdx12" compid="{{id.$compid__34}}"></post>
+                <loading></loading>
             </scroll-view>
         </view>
     </view>

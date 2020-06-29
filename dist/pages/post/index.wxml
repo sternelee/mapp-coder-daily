@@ -1,30 +1,33 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="{{'post ' + Themes[theme]}}">
         <block wx:if="{{setting.show}}">
-            <setting compid="{{$compid__28}}"></setting>
+            <setting compid="{{$compid__30}}"></setting>
         </block>
         <view class="header" style="{{anonymousState__temp}}">
             <view bindtap="onHome" class="btn">
-                <icon-font compid="{{$compid__29}}"></icon-font>
-            </view>
-            <view bindtap="anonymousFunc0" class="btn">
-                <icon-font compid="{{$compid__30}}"></icon-font>
-            </view>
-            <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
                 <icon-font compid="{{$compid__31}}"></icon-font>
             </view>
+            <view bindtap="anonymousFunc0" class="btn">
+                <icon-font compid="{{$compid__32}}"></icon-font>
+            </view>
+            <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
+                <icon-font compid="{{$compid__33}}"></icon-font>
+            </view>
         </view>
-        <view class="title" style="{{anonymousState__temp2}}" bindtap="onCopyUrl">
-            <block wx:if="{{language[1] === 0 || language[1] === 2}}">
-                <view class="text">{{title}}</view>
-            </block>
-            <block wx:if="{{language[1] === 1 || language[1] === 2}}">
-                <view class="text">{{title_cn}}</view>
-            </block>
-        </view>
-        <view class="content">
+        <scroll-view enable-flex="{{true}}" class="content" scroll-y="{{true}}" style="{{anonymousState__temp2}}">
+            <view class="title" style="{{anonymousState__temp3}}" bindtap="onCopyUrl">
+                <block wx:if="{{language[1] === 0 || language[1] === 2}}">
+                    <view class="text">{{title}}</view>
+                </block>
+                <block wx:if="{{language[1] === 1 || language[1] === 2}}">
+                    <view class="text">{{title_cn}}</view>
+                </block>
+            </view>
             <block wx:if="{{img}}">
                 <image src="{{img}}" mode="aspectFit"></image>
+            </block>
+            <block wx:if="{{isLoading}}">
+                <loading></loading>
             </block>
             <block wx:if="{{(language[2] === 0 || language[2] === 2) && content}}">
                 <wemark md="{{content}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
@@ -32,6 +35,6 @@
             <block wx:if="{{(language[2] === 1 || language[2] === 2) && content_cn}}">
                 <wemark md="{{content_cn}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
             </block>
-        </view>
+        </scroll-view>
     </view>
 </block>

@@ -1,7 +1,18 @@
+theme-color = #e6e7ee
+// theme-color = #252728
+
+box-color1 = #b8b9be
+box-color2 = #fff
+// box-color1 = #1f2122
+// box-color2 = #2b2d2e
+
+font-color = rgb(0, 31, 63)
+// font-color = #fff
+
 .post
   width: 100%;
   overflow-x: hidden;
-  background: #e6e7ee;
+  background: theme-color;
   height 100%;
 
 .header
@@ -16,10 +27,10 @@
     height: 60px;
     margin-right: 40px;
     border-radius: 10px;
-    background: #e6e7ee;
-    box-shadow:  6px 6px 12px #b8b9be,-6px -6px 12px #fff;
+    background: theme-color;
+    box-shadow:  6px 6px 12px box-color1,-6px -6px 12px box-color2;
     &.on
-      box-shadow: inset 2px 2px 5px #b8b9be,inset -3px -3px 7px #fff;
+      box-shadow: inset 2px 2px 5px box-color1,inset -3px -3px 7px box-color2;
 
 .title
   width: 92%;
@@ -27,19 +38,18 @@
   padding 0 20px;
   box-sizing: border-box;
   border-radius: 20px;
-  background: #e6e7ee;
-  box-shadow:  20px 20px 60px #b4c2c9,
-             -20px -20px 60px #f4ffff;
+  color: font-color;
+  background: theme-color;
+  box-shadow:  20px 20px 60px box-color1, -20px -20px 60px box-color2;
   .text
     margin-top: 10px;
     color: rgb(0, 31, 63);
 
 .content
-  padding 0 20px;
   box-sizing: border-box;
   border-radius: 20px;
   width: 92%;
   margin: 0 auto;
-  background: #e6e7ee;
-  box-shadow:  20px 20px 60px #b4c2c9,
-             -20px -20px 60px #f4ffff;
+  color: font-color;
+  background: theme-color;
+  box-shadow:  20px 20px 60px box-color1, -20px -20px 60px box-color2;

@@ -1,1 +1,1 @@
-{"usingComponents":{"setting":"../../components/setting/index","icon-font":"../../components/iconfont/index.weapp","wemark":"../../wemark/wemark"},"navigationBarTitleText":"详情页","navigationStyle":"custom"}
+{"usingComponents":{"setting":"../../components/setting/index","icon-font":"../../components/iconfont/index.weapp","loading":"../../components/loading/index","wemark":"../../wemark/wemark"},"navigationBarTitleText":"详情页","navigationStyle":"custom"}
