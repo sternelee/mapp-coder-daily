@@ -71,6 +71,10 @@ class Index extends Component {
       })
       Taro.setStorage({key: 'refreshTime', data: new Date().getTime()})
     }
+    const tags = Taro.getStorageSync('tags')
+    if (tags) {
+      this.props.indexStore.tags = tags
+    }
   }
 
   async componentDidMount() {
@@ -147,9 +151,10 @@ class Index extends Component {
     const { indexStore } = this.props;
     const { page } = indexStore;
     const { type, pub, tag } = this.state;
-    isLoading && Taro.showLoading({
-      title: 'Loading ...'
-    })
+    page === 0 && indexStore.setList([], false)
+    // isLoading && Taro.showLoading({
+    //   title: 'Loading ...'
+    // })
     const types = {
       latest: [
         `"sortBy":"popularity"`,
@@ -200,7 +205,7 @@ class Index extends Component {
           return v.id;
         });
         indexStore.setList(ids, page > 0);
-        isLoading && Taro.hideLoading()
+        // isLoading && Taro.hideLoading()
       })
       .catch(() => {
         isLoading && Taro.hideLoading()
@@ -325,6 +330,7 @@ class Index extends Component {
       tags.push(tag);
     }
     this.props.indexStore.tags = tags;
+    Taro.setStorage({key: 'tags', data: tags})
     Taro.request({
       url: `${Uri}user/me`,
       method: "POST",

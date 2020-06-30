@@ -32,8 +32,6 @@ class Index extends Component {
   state = {
     id: this.$router.params.id,
     pid: 0, // 注意在这里：id是指文章id, 而pid只是数据的序号
-    title: "",
-    title_cn: "",
     innerHeight: 750,
     top: 0,
     url: "",
@@ -61,13 +59,15 @@ class Index extends Component {
   };
 
   onShareAppMessage(ops) {
-    const { title, id } = this.state;
+    const { id } = this.state;
+    const { posts } = this.props.indexStore
+    const post = posts[id] || {}
     if (ops.from === "button") {
       // 来自页面内转发按钮
       console.log(ops.target);
     }
     return {
-      title: `${title}`,
+      title: `${post.title} (${post.title_cn})`,
       path: `pages/post/index?id=${id}`,
       success: function(res) {
         // 转发成功
@@ -137,8 +137,6 @@ class Index extends Component {
     const content_cn = data.content_cn ? fixUrl(data.content_cn, data.url) : '';
     this.setState({
       pid: data.pid,
-      title: data.title,
-      title_cn: data.title_cn,
       url: data.url,
       content,
       content_cn: content_cn
@@ -197,7 +195,7 @@ class Index extends Component {
     const { indexStore } = this.props
     const { setting, favs, posts } = indexStore
     const { language, theme } = setting
-    const { id, title, top, title_cn, pid, content, content_cn, innerHeight, isLoading } = this.state;
+    const { id, top, pid, content, content_cn, innerHeight, isLoading } = this.state;
     const isLike = favs.includes(String(pid))
     const post = posts[id] || {}
     const img = post.image || post.lead_image_url || post.placeholder || ''
@@ -225,11 +223,11 @@ class Index extends Component {
           <View className='title' style={{padding: '10px'}} onClick={this.onCopyUrl}>
             {
               (language[1] === 0 || language[1] === 2) &&
-              <View className="text">{ title }</View>
+              <View className="text">{ post.title }</View>
             }
             {
               (language[1] === 1 || language[1] === 2) &&
-              <View className="text">{ title_cn }</View>
+              <View className="text">{ post.title_cn }</View>
             }
           </View>
           {img && <Image src={img} mode="aspectFit" />}
@@ -237,6 +235,7 @@ class Index extends Component {
             isLoading &&
             <Loading />
           }
+          <View className="content-inner">
           {
             (language[2] === 0 || language[2] === 2) &&
             content &&
@@ -247,6 +246,7 @@ class Index extends Component {
             content_cn &&
             <wemark md={content_cn} link highlight type="wemark" />
           }
+          </View>
         </ScrollView>
       </View>
     );

@@ -104,12 +104,13 @@ box-color2 = #fff
       color: #a9abb3
   .tags
     width: 94%;
-    height: 60px;
     white-space: nowrap;
     margin: 20px auto 0;
     .tag
       display: inline-flex;
       margin-left: 20px;
+      height: 100px;
+      line-height: 100px;
       color: #a9abb3;
   .search-tag
     width 100%
@@ -192,14 +193,3 @@ box-color2 = #fff
     text
       margin:0 20px;
 
-.loading
-  display: flex;
-  align-items: center;
-  margin: 50px auto;
-  animation: loading 1s linear;
-
-@keyframes loading
-  0%
-    transform:rotate(0)
-  100%
-    transform: rotate(360deg)

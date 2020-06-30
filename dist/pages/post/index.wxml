@@ -1,24 +1,24 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="{{'post ' + Themes[theme]}}">
-        <setting compid="{{$compid__31}}"></setting>
+        <setting compid="{{$compid__43}}"></setting>
         <view class="header" style="{{anonymousState__temp}}">
             <view bindtap="onHome" class="btn">
-                <icon-font compid="{{$compid__32}}"></icon-font>
+                <icon-font compid="{{$compid__44}}"></icon-font>
             </view>
             <view bindtap="anonymousFunc0" class="btn">
-                <icon-font compid="{{$compid__33}}"></icon-font>
+                <icon-font compid="{{$compid__45}}"></icon-font>
             </view>
             <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
-                <icon-font compid="{{$compid__34}}"></icon-font>
+                <icon-font compid="{{$compid__46}}"></icon-font>
             </view>
         </view>
         <scroll-view enable-flex="{{true}}" class="content" scroll-y="{{true}}" style="{{anonymousState__temp2}}">
             <view class="title" style="{{anonymousState__temp3}}" bindtap="onCopyUrl">
                 <block wx:if="{{language[1] === 0 || language[1] === 2}}">
-                    <view class="text">{{title}}</view>
+                    <view class="text">{{post.title}}</view>
                 </block>
                 <block wx:if="{{language[1] === 1 || language[1] === 2}}">
-                    <view class="text">{{title_cn}}</view>
+                    <view class="text">{{post.title_cn}}</view>
                 </block>
             </view>
             <block wx:if="{{img}}">
@@ -27,12 +27,14 @@
             <block wx:if="{{isLoading}}">
                 <loading></loading>
             </block>
-            <block wx:if="{{(language[2] === 0 || language[2] === 2) && content}}">
-                <wemark md="{{content}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
-            </block>
-            <block wx:if="{{(language[2] === 1 || language[2] === 2) && content_cn}}">
-                <wemark md="{{content_cn}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
-            </block>
+            <view class="content-inner">
+                <block wx:if="{{(language[2] === 0 || language[2] === 2) && content}}">
+                    <wemark md="{{content}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
+                </block>
+                <block wx:if="{{(language[2] === 1 || language[2] === 2) && content_cn}}">
+                    <wemark md="{{content_cn}}" link="{{true}}" highlight="{{true}}" type="wemark"></wemark>
+                </block>
+            </view>
         </scroll-view>
     </view>
 </block>
