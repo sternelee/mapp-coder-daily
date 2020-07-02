@@ -1,15 +1,15 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="{{'post ' + Themes[theme]}}">
-        <setting compid="{{$compid__43}}"></setting>
+        <setting compid="{{$compid__30}}"></setting>
         <view class="header" style="{{anonymousState__temp}}">
             <view bindtap="onHome" class="btn">
-                <icon-font compid="{{$compid__44}}"></icon-font>
+                <icon-font compid="{{$compid__31}}"></icon-font>
             </view>
             <view bindtap="anonymousFunc0" class="btn">
-                <icon-font compid="{{$compid__45}}"></icon-font>
+                <icon-font compid="{{$compid__32}}"></icon-font>
             </view>
             <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
-                <icon-font compid="{{$compid__46}}"></icon-font>
+                <icon-font compid="{{$compid__33}}"></icon-font>
             </view>
         </view>
         <scroll-view enable-flex="{{true}}" class="content" scroll-y="{{true}}" style="{{anonymousState__temp2}}">
@@ -22,7 +22,7 @@
                 </block>
             </view>
             <block wx:if="{{img}}">
-                <image src="{{img}}" mode="aspectFit"></image>
+                <image src="{{img}}" mode="aspectFit" style="{{anonymousState__temp4}}"></image>
             </block>
             <block wx:if="{{isLoading}}">
                 <loading></loading>

@@ -375,7 +375,7 @@ class Index extends Component {
     const datas: any = {};
     if (res.data.code === 0) {
       res.data.data.forEach(v => {
-        datas[v.id] = v.title;
+        datas[v.pid] = v.title_cn;
       });
     }
     return datas;
