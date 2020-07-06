@@ -12,6 +12,8 @@ import Loading from "@components/loading/index";
 
 import "./index.styl";
 
+const defTags = ['java', 'devops', 'development', 'webdev', 'frontend', 'javascript', 'ai', 'golang', 'design', 'python', 'nodejs', 'react', 'android', 'deep-learning', 'kubernetes', 'algorithms', 'ios'];
+
 interface PageStateProps {
   indexStore: StoreInterface;
 }
@@ -218,7 +220,7 @@ class Index extends Component {
 
   fetchLatestVariables = () => {
     const { indexStore } = this.props;
-    const tags = indexStore.setting.tabId ? [] : indexStore.tags;
+    const tags = indexStore.setting.tabId ? defTags : indexStore.tags;
     const inputParams = {
       latest: new Date().toISOString(),
       page: indexStore.page,
