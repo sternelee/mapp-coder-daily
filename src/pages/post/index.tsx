@@ -80,6 +80,28 @@ class Index extends Component {
     };
   }
 
+  onShareTimeline(ops) {
+    const { id } = this.state;
+    const { posts } = this.props.indexStore
+    const post = posts[id] || {}
+    if (ops.from === "button") {
+      // 来自页面内转发按钮
+      console.log(ops.target);
+    }
+    return {
+      title: `${post.title} (${post.title_cn})`,
+      path: `pages/post/index?id=${id}`,
+      success: function(res) {
+        // 转发成功
+        console.log("转发成功:" + JSON.stringify(res));
+      },
+      fail: function(res) {
+        // 转发失败
+        console.log("转发失败:" + JSON.stringify(res));
+      }
+    };
+  }
+
   async componentDidShow() {
     const { id } = this.state
     const { indexStore } = this.props;
