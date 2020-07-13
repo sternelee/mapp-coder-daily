@@ -230,7 +230,7 @@ class Index extends Component {
               <View className="text">{ post.title_cn }</View>
             }
           </View>
-          {img && <Image src={img} mode="aspectFit" style={{margin: '0 auto'}} />}
+          {img && <Image src={img} mode="aspectFit" style={{display: 'block', margin: '0 auto'}} />}
           {
             isLoading &&
             <Loading />

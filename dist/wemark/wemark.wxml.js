@@ -1,1 +1,1 @@
-(wx.webpackJsonp=wx.webpackJsonp||[]).push([[15],{"71":function(p,w,e){p.exports=e.p+"wemark/wemark.wxml"}},[[71,0]]]);
+(wx.webpackJsonp=wx.webpackJsonp||[]).push([[15],{"57":function(p,w,e){p.exports=e.p+"wemark/wemark.wxml"}},[[57,0]]]);

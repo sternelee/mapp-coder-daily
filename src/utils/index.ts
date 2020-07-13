@@ -15,7 +15,7 @@ export const fixUrl = (content, url) => {
     if ($2.indexOf("://") > -1) return $1;
     return `![](${rUrl}${$2})`;
   });
-  return str;
+  return str.replace(/！/g, '!').replace(/\] \(/g, '](');
 };
 
 export const dateForLatest = (timestamp, language = 0) => {
