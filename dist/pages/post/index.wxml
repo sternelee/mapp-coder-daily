@@ -1,15 +1,15 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="{{'post ' + Themes[theme]}}">
-        <setting compid="{{$compid__50}}"></setting>
+        <setting compid="{{$compid__39}}"></setting>
         <view class="header" style="{{anonymousState__temp}}">
             <view bindtap="onHome" class="btn">
-                <icon-font compid="{{$compid__51}}"></icon-font>
+                <icon-font compid="{{$compid__40}}"></icon-font>
             </view>
             <view bindtap="anonymousFunc0" class="btn">
-                <icon-font compid="{{$compid__52}}"></icon-font>
+                <icon-font compid="{{$compid__41}}"></icon-font>
             </view>
             <view bindtap="onLike" class="{{'btn ' + (isLike ? 'on' : '')}}">
-                <icon-font compid="{{$compid__53}}"></icon-font>
+                <icon-font compid="{{$compid__42}}"></icon-font>
             </view>
         </view>
         <scroll-view enable-flex="{{true}}" class="content" scroll-y="{{true}}" style="{{anonymousState__temp2}}">

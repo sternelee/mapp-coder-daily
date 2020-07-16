@@ -451,7 +451,7 @@ class Index extends Component {
       : { image: "", name: "" };
     const isPub = pubs.includes(pub);
     const isTag = tags.includes(tag);
-    const mypubs = allPubs.filter(v => pubs.includes(v.id));
+    // const mypubs = allPubs.filter(v => pubs.includes(v.id));
     const favPost = favPids.map(v => posts[v]);
     const itemLan = setting.language[1]
     // const iconColor = setting.theme ? '#007AFF' : '#323E70'
@@ -548,7 +548,7 @@ class Index extends Component {
                 </View>
                 <View className="hit-tags">
                   {hits.map(hit => (
-                    <Text key={hit} onClick={this.onLikeTag.bind(this, hit)}>
+                    <Text key={hit} onClick={this.onTag.bind(this, hit)}>
                       {hit}
                     </Text>
                   ))}

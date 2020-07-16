@@ -34,7 +34,7 @@
                             <icon-font compid="{{$compid__34}}"></icon-font>
                             <input value="{{keyword}}" bindconfirm="onSearch" placeholder="搜索标签" />
                         </view>
-                        <view class="hit-tags"><text wx:key="hit" bindtap="onLikeTag" wx:for="{{hits}}" wx:for-item="hit" wx:for-index="_anonIdx4" data-e-tap-so="this" data-e-tap-a-a="{{hit}}">{{hit}}</text>
+                        <view class="hit-tags"><text wx:key="hit" bindtap="onTag" wx:for="{{hits}}" wx:for-item="hit" wx:for-index="_anonIdx4" data-e-tap-so="this" data-e-tap-a-a="{{hit}}">{{hit}}</text>
                         </view>
                     </view>
                 </view>
