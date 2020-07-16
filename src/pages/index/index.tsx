@@ -82,7 +82,7 @@ class Index extends Component {
   async componentDidMount() {
     await this.getPost(false);
     this.getPopularTags();
-    this.getPubs();
+    // this.getPubs();
   }
 
   componentWillUnmount() {}
@@ -161,7 +161,7 @@ class Index extends Component {
       Taro.request({
         url: `${Uri}daily/v1/tags/popular`
       }).then(res => {
-        allTags = res.data.map(v => v.name);
+        allTags = res.data.map(v => v.name).filter(v => v.indexOf('new') < 0);
         this.props.indexStore.allTags = allTags;
         Taro.setStorageSync("popularTags", allTags);
       });
@@ -364,25 +364,23 @@ class Index extends Component {
   };
 
   onLikePub = pub => {
-    let {
-      pubs,
-      auth: { openid }
-    } = this.props.indexStore;
-    if (pubs.includes(pub)) {
-      pubs = pubs.filter(v => v !== pub);
-    } else {
-      pubs.push(pub);
-    }
-    this.props.indexStore.pubs = pubs;
-    Taro.request({
-      url: `${Uri}user/me`,
-      method: "POST",
-      data: {
-        uid: openid,
-        platform: "wechat",
-        pub
-      }
-    });
+    return
+    // let { pubs, auth: { openid } } = this.props.indexStore;
+    // if (pubs.includes(pub)) {
+    //   pubs = pubs.filter(v => v !== pub);
+    // } else {
+    //   pubs.push(pub);
+    // }
+    // this.props.indexStore.pubs = pubs;
+    // Taro.request({
+    //   url: `${Uri}user/me`,
+    //   method: "POST",
+    //   data: {
+    //     uid: openid,
+    //     platform: "wechat",
+    //     pub
+    //   }
+    // });
   };
 
   savePosts = async list => {
@@ -497,11 +495,11 @@ class Index extends Component {
             style={{ height: `${innerHeight - top - 50}px` }}
             enableFlex
           >
-            <View className="btn">
+            {/* <View className="btn">
               <IconFont name="rss" size={50} color={iconColor} />
               <Text>关注的频道</Text>
-            </View>
-            <ScrollView className="pubs" scrollX lowerThreshold={20} enableFlex>
+            </View> */}
+            {/* <ScrollView className="pubs" scrollX lowerThreshold={20} enableFlex>
               {mypubs.map(v => (
                 <View
                   key={v.id}
@@ -512,7 +510,6 @@ class Index extends Component {
                     <Image src={v.image} mode="aspectFit" />
                     <Text>{v.name}</Text>
                   </View>
-                  {/* <IconFont name='home' size={50} color='#000' /> */}
                 </View>
               ))}
               {
@@ -521,7 +518,7 @@ class Index extends Component {
                   <Text>暂无关注频道，快去常见频道选择添加吧</Text>
                 </View>
               }
-            </ScrollView>
+            </ScrollView> */}
             <View className="btn">
               <IconFont name="tag" size={50} color={iconColor} />
               <Text>关注的标签</Text>
@@ -558,7 +555,7 @@ class Index extends Component {
                 </View>
               </View>
             </View>
-            <View className="btn" style={{marginTop: "30px"}}>
+            {/* <View className="btn" style={{marginTop: "30px"}}>
               <IconFont name="more1" size={50} color={iconColor} />
               <Text>常见频道</Text>
             </View>
@@ -575,7 +572,7 @@ class Index extends Component {
                   </View>
                 </View>
               ))}
-            </ScrollView>
+            </ScrollView> */}
             <View className="btn">
               <IconFont name="more1" size={50} color={iconColor} />
               <Text>常见标签</Text>

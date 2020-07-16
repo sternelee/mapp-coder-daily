@@ -1,7 +1,7 @@
 <block wx:if="{{$taroCompReady}}">
     <view class="loading-wrap">
         <view class="loading">
-            <icon-font compid="{{$compid__46}}"></icon-font>
+            <icon-font compid="{{$compid__55}}"></icon-font>
         </view>
     </view>
 </block>
