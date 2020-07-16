@@ -5,7 +5,7 @@
                 <image bindtap="anonymousFunc0" src="https://api.leeapps.cn/uploads/bb5a5f2ba9b2430dac887245cfe9aba1.jpg" mode="aspectFit"></image>
             </view>
             <view class="title btn" bindtap="anonymousFunc1">
-                <icon-font compid="{{$compid__43}}"></icon-font><text>关闭</text>
+                <icon-font compid="{{$compid__54}}"></icon-font><text>关闭</text>
             </view>
         </view>
     </view>

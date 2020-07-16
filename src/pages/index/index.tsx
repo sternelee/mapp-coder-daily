@@ -288,7 +288,7 @@ class Index extends Component {
     const result = await Taro.request({
       url: `${Uri}daily/v1/tags/search?query=${tag}`
     });
-    const hits = result.data.hits.map(v => v.name);
+    const hits = result.data.hits.map(v => v.name).filter(v => v.indexOf('new') < 0);
     this.setState({
       hits
     });
